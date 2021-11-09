@@ -1,0 +1,91 @@
+:root {
+    /* Color */
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-dark-grey: #4b4b4d;
+    --color-medium-grey: #656565;
+    --color-grey: #8d8b8b;
+    --color-light-grey: #c5c4c4;
+    --color-puple: #a29bfe;
+
+    --color-red: #ff4f4f;
+    --color-blue: #4f78ff;
+    --color-yellow: #f8ff6e;
+    --color-green: #1cb82e;
+    --color-pastel-sky:#eaeff8;
+    --color-fog-sky:#fbfcfe;
+    --color-deep-blue:#7b9cc1;
+    --color-orange: #f39800;
+
+    /* Font Size */
+    --font-large: 32px;
+    --font-medium: 24px;
+    --font-small: 16px;
+    --font-micro: 10px;
+}
+
+/* font */
+@font-face {
+    font-family: 'Cafe24SsurroundAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Cafe24SsurroundAir', sans-serif;
+    box-sizing: border-box;
+}
+
+/* fixed 포지션 중앙 배치 (정확히는 콘텐츠영역의 앱솔루트 포지션) */
+.fixed-center{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+/* 모든방향 약한 그림자 */
+.all-shadow{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: 1px solid #888;
+    border-radius: 4px;
+}
+
+/* 타요버튼 스타일 */
+.tayo-button{
+    background-color: var(--color-dark-grey);
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+    font-size: small;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tayo-button.purple{
+    background-color: var(--color-puple);
+}
+
+/* 타요인풋 스타일 */
+.tayo-input {
+    outline:none;
+    border: none;
+    padding: 8px;
+    border-bottom: 2px solid var(--color-grey);
+    font-size: var(--font-small);
+    color: var(--color-grey);
+}
+.tayo-input::placeholder {
+    color: var(--color-light-grey);
+}
+
+/* 타요 밑줄 */
+.tayo-under-line {
+    border-bottom: 2px solid var(--color-grey);
+    padding-bottom: 6px;
+}

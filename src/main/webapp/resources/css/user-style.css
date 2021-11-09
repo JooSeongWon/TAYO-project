@@ -1,0 +1,148 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 100vh;
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+
+a {
+    color: var(--color-medium-grey);
+}
+
+/* 헤더 */
+header {
+    z-index: 100;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-small);
+    padding: 16px 24px;
+}
+
+.header-nav {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.header-nav__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header-nav__item:not(.header-nav__item:first-child) {
+    margin-left: 20px;
+}
+
+.header-nav__item.active > a {
+    color: var(--color-puple);
+}
+
+.control-box {
+    display: flex;
+}
+
+.exit {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.control-box__icon {
+    cursor: pointer;
+    user-select: none;
+    transition: all 100ms ease-in;
+}
+
+.control-box__icon:hover {
+    color: var(--color-puple);
+    transform: scale(1.1);
+}
+
+i.control-box__icon {
+    font-size: 26px;
+    margin-right: 8px;
+}
+
+.exit__description {
+    font-size: 6px;
+}
+
+i.bars-button {
+    display: none;
+    font-size: 24px;
+    height: 26px;
+    line-height: 26px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* 콘텐츠 */
+.page-content {
+    background: rgb(109, 123, 246);
+    background: linear-gradient(90deg, rgba(109, 123, 246, 1) 0%, rgba(227, 169, 227, 1) 78%);
+    flex-grow: 1;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    position: relative;
+}
+
+section {
+    background-color: var(--color-white);
+    padding: 30px;
+}
+
+/* 푸터 */
+footer {
+    text-align: center;
+}
+
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    i.bars-button {
+        display: inline-block;
+    }
+
+    header {
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        left: 0;
+    }
+
+    .header-nav {
+        flex-direction: column;
+        margin-top: 8px;
+        display: none;
+    }
+
+    .header-nav.active {
+        display: block;
+    }
+
+    .header-nav__item {
+        padding: 8px 16px;
+        border-top: 1px solid var(--color-light-grey);
+    }
+
+    .header-nav__item:not(.header-nav__item:first-child) {
+        margin-left: 0;
+    }
+
+    .control-box {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+}
