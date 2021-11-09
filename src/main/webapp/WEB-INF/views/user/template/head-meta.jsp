@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/img/favicon.png"/>
 
 <%-- 자바스크립트 --%>
-<script src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js" defer></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js" ></script>
 <script src="${pageContext.request.contextPath}/resources/js/modal.js" defer></script>
 <script src="${pageContext.request.contextPath}/resources/js/common-user.js" defer></script>
 
