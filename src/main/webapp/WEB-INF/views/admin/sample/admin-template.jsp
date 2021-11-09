@@ -9,10 +9,9 @@
 </head>
 <body>
 <c:import url="../template/nav.jsp"/>
-
 <%-- 각자의 내용 작성 --%>
 <section>
-
+ㅇㅋㅇㅋㅇㅋㅇㅋㅇㅋㅇ
 </section>
 </body>
 </html>
