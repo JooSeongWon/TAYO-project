@@ -93,7 +93,7 @@ i.bars-button {
 
     display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
 
     position: relative;
 }
@@ -106,6 +106,7 @@ section {
 /* 푸터 */
 footer {
     text-align: center;
+    padding: 24px 16px;
 }
 
 
