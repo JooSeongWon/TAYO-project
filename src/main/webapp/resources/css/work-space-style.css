@@ -4,6 +4,7 @@ section {
     padding: 0;
     display: flex;
     flex-direction: column;
+    width: 700px;
 }
 
 /* 헤더 */
@@ -82,7 +83,6 @@ section {
 .work-spaces__board {
     display: flex;
     flex-direction: column;
-    margin-top: 16px;
 }
 
 .add-work-space {
@@ -99,6 +99,7 @@ section {
     align-items: flex-end;
     justify-content: space-between;
     font-size: var(--font-small);
+    margin-top: 16px;
 }
 
 .item__head-count {
@@ -136,6 +137,12 @@ section {
 }
 
 @media screen and (max-width: 768px) {
+
+    section {
+        width: auto;
+        margin: 0 16px;
+    }
+
     .work-spaces__item i {
         display: none;
     }
