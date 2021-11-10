@@ -13,7 +13,7 @@ public class QuestionChatController {
 	
 	@RequestMapping(value = "/question/chat")
 	public String Qmain() {
-		log.info("왜 궁금해해?");
+		log.debug("/question/chat ");
 		return "user/question-chat/question-chat";
 	}
 }
