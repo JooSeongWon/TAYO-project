@@ -7,6 +7,27 @@
     <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
     <title>타요 - 1:1채팅문의</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/chat-style.css">
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	sock = new SockJS("/question/chat");
+	
+	
+});
+
+</script>
+
+
+
+
+
+
 </head>
 <body>
 <c:import url="../template/header.jsp"/>

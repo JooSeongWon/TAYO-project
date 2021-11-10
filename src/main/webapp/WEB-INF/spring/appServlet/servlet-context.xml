@@ -3,10 +3,12 @@
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			 xmlns:beans="http://www.springframework.org/schema/beans"
 			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:websocket="http://www.springframework.org/schema/websocket"
 			 xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
 			 xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
@@ -39,5 +41,15 @@
 
 	<context:component-scan base-package="fun.tayo.app" />
 	<context:annotation-config />
+	
+   <!-- 웹소켓 핸들러설정 -->
+   <websocket:handlers>
+      <websocket:mapping handler="handlerChat" path="/question/chat" />
+      <websocket:handshake-interceptors>
+         <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+      </websocket:handshake-interceptors>
+      <websocket:sockjs websocket-enabled="true" />
+   </websocket:handlers>
+   <beans:bean id="handlerChat" class="fun.tayo.app.websocket.QuestionChatHandler" />
 	
 </beans:beans>
