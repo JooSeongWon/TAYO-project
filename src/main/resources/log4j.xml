@@ -14,7 +14,7 @@
 	<logger name="fun.tayo.app">
 		<level value="debug" />
 	</logger>
-	
+
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
 		<level value="info" />

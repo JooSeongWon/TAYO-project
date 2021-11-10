@@ -1,0 +1,63 @@
+package fun.tayo.app.service.impl;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import fun.tayo.app.common.SessionConst;
+import fun.tayo.app.dao.MemberDao;
+import fun.tayo.app.dto.Member;
+import fun.tayo.app.dto.MemberLoginParam;
+import fun.tayo.app.dto.MemberSession;
+import fun.tayo.app.dto.ResponseData;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+
+	//서블릿 컨텍스트 객체
+	@Autowired ServletContext context;
+	
+	private final MemberDao memberDao;
+	
+	public ResponseData login(MemberLoginParam param, HttpSession session) {
+        if(!StringUtils.hasText(param.getEmail()) || !StringUtils.hasText(param.getPassword())){
+            return new ResponseData(false, "빈칸을 채워주세요");
+        }
+
+        final Member member = getMemberByEmail(param.getEmail());
+
+        if(member == null || !member.getPassword().equals(param.getPassword())) {
+            return new ResponseData(false, "일치하는 회원정보가 없습니다.");
+        }
+
+        //로그인 완료
+        setLogin(member, session);
+        log.debug("profile {}", member.getProfile());
+        return new ResponseData(true, "로그인 성공");		
+		
+	}
+
+	public void setLogin(Member member, HttpSession session) {
+		
+		session.setAttribute(SessionConst.LOGIN_MEMBER, new MemberSession(member));
+		
+	}
+
+	public Member getMemberByEmail(String email) {
+		
+		return memberDao.selectByEmail(email);
+	}
+
+	public void join(MemberLoginParam login) {
+		
+		
+	}
+
+}

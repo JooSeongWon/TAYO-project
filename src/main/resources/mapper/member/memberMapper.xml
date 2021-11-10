@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fun.tayo.app.dao.MemberDao">
+
+	<select id="selectByEmail" resultType="Member">
+		select M.*, upload_file.saved_name profile from (select id, name, phone, email, password, create_date,
+		grade, ban, file_id from MEMBER where EMAIL = #{email}) M
+		left outer join upload_file on M.file_id = upload_file.id
+	</select>
+
+</mapper>
