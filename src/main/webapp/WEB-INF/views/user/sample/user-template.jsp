@@ -10,8 +10,8 @@
 <body>
 <c:import url="../template/header.jsp"/>
 
-<%-- 각자의 내용 작성 fixed-center 나 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
-<section class="all-shadow fixed-center">
+<%-- 각자의 내용 작성 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
+<section class="all-shadow">
 
     <%--아래내용 지우고 사용--%>
     <h3 class="tayo-under-line" style="text-align: center">테스트 페이지</h3>

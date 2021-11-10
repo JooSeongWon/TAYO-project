@@ -1,0 +1,146 @@
+
+section {
+    background: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.work-spaces__header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.header__left {
+    display: flex;
+    margin-right: 36px;
+}
+
+.left__profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-grey);
+}
+
+.left__nick {
+    margin-left: 8px;
+    line-height: 40px;
+    font-size: var(--font-regular);
+    font-weight: bold;
+    color: var(--color-white);
+}
+
+.header__right {
+    display: flex;
+    align-items: flex-end;
+}
+
+.invitation-code-input {
+    outline:none;
+    border: none;
+    border-radius: 4px;
+    height: 30px;
+    padding: 0 8px;
+    line-height: 30px;
+    color: var(--color-dark-grey);
+}
+
+.invitation-code-input::placeholder {
+    color: var(--color-light-grey);
+}
+
+.invitation-code-submit {
+    height: 30px;
+    line-height: 30px;
+    margin-left: 8px;
+    transition: all 100ms linear;
+}
+
+.invitation-code-submit:hover {
+    color: var(--color-puple);
+}
+
+
+/* 바디 */
+
+.work-spaces__body {
+    background-color: var(--color-white);
+    padding: 30px;
+}
+
+.work-spaces__title {
+    display: block;
+    width: 200px;
+    text-align: center;
+    margin: auto;
+}
+
+.work-spaces__board {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.add-work-space {
+    display: block;
+    color: var(--color-green);
+    text-align: right;
+    cursor: pointer;
+    user-select: none;
+    font-size: var(--font-medium);
+}
+
+.work-spaces__item {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    font-size: var(--font-small);
+}
+
+.item__head-count {
+    display: flex;
+    align-items: flex-end;
+}
+
+.item__count {
+    margin-left: 16px;
+}
+
+.item__profile-img {
+    width: var(--font-medium);
+    height: var(--font-medium);
+    border-radius: 50%;
+    border: 1px solid var(--color-light-grey);
+}
+
+.item__title {
+    user-select: none;
+    cursor: pointer;
+    margin: 0 16px;
+}
+
+.fa-cog {
+    font-size: var(--font-regular);
+    color: var(--color-light-grey);
+    cursor: pointer;
+}
+
+.fa-sign-out-alt {
+    font-size: var(--font-regular);
+    color: var(--color-red);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .work-spaces__item i {
+        display: none;
+    }
+
+    .item__profile-img {
+        display: none;
+    }
+}

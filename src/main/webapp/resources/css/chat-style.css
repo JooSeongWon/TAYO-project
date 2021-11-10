@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+section {
+	/* 컨테이너 설정 */
+    display: flex;
+	/* 세로 배치 */
+    flex-direction: column;
+
+	/* 아이템 정렬 */
+    justify-content: space-between;
+	user-select: none;
+	flex-basis: content;
+	
+	min-width: 500px;
+	min-height: 500px;
+}
+
+.con-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+	padding-bottom: 10px;
+}
+
+.con-box__description {
+}
+
+.con-box__icon {
+}
+
+.chat-box {
+	flex-grow: 1;
+    display: flex;
+	flex-basis: 200px; 
+	background-color: #ffeaea;
+    flex-direction: column;
+
+}
+
+.chat-input {
+	display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    
+  	padding-top: 10px;
+}
+
+.chat-message{
+	background-color: var(--color-light-grey);
+	border: none;
+	margin-right: 20px;
+	flex-grow: 7;
+
+}
+
+.tayo-button{
+	flex-grow: 3;
+	text-align:center;
+}
