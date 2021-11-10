@@ -14,7 +14,7 @@
 <section class="all-shadow fixed-center">
 
 <div>
-<form action="/member/login" method="post" >
+<form action="" method="post" >
 <div class="form-group">
     <label for="email" >아이디 : </label>
     <div>
