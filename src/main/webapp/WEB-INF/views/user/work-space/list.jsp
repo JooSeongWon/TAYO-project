@@ -39,6 +39,9 @@
             <%-- 가상공간 --%>
             <div class="work-spaces__list">
                 <div class="work-spaces__item tayo-under-line">
+                    <%--<div class="no-item">
+                        작업공간이 없습니다.
+                    </div>--%>
                     <div class="item__head-count">
                         <img src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="인원표시 이미지" class="item__profile-img">
                         <div class="item__count">(5/5)</div>
