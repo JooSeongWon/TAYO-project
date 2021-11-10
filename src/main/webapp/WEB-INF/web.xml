@@ -56,4 +56,22 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+
+	<!-- 에러 페이지 -->
+	<error-page>
+		<exception-type>java.lang.RuntimeException</exception-type>
+		<location>/error-page/500</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error-page/400</location>
+	</error-page>
+	<error-page>
+		<error-code>405</error-code>
+		<location>/error-page/400</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error-page/500</location>
+	</error-page>
 </web-app>

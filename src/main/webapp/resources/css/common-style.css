@@ -32,9 +32,13 @@
     font-style: normal;
 }
 
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Cafe24SsurroundAir', sans-serif;
-    box-sizing: border-box;
 }
 
 /* fixed 포지션 중앙 배치 (정확히는 콘텐츠영역의 앱솔루트 포지션) */
