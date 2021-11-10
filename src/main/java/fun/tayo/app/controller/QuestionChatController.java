@@ -15,5 +15,5 @@ public class QuestionChatController {
 	public String Qmain() {
 		log.debug("/question/chat ");
 		return "user/question-chat/question-chat";
-	}
+	} 
 }
