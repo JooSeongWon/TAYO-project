@@ -16,8 +16,13 @@
     <%--아래내용 지우고 사용--%>
     <h3 class="tayo-under-line" style="text-align: center">테스트 페이지</h3>
     <p style="text-align: center">업로드 경로 : ${path}</p>
-    <p style="text-align: center">db 유저네임 : ${dbUserName}</p>
-    <p style="text-align: center">테스트 유저 이메일 : ${loginMember.EMAIL}</p>
+    <c:if test="${empty sessionScope.loginMember}">
+        <p style="text-align: center">비로그인 상태</p>
+    </c:if>
+    <c:if test="${not empty sessionScope.loginMember}">
+        <p style="text-align: center">유저네임 : ${sessionScope.loginMember}</p>
+        <p style="text-align: center">테스트 유저 이메일 : ${sessionScope.loginMember.email}</p>
+    </c:if>
     <p style="text-align: center">테스트 경로 : question</p>
     <div class="tayo-button">타요버튼</div>
     <div class="tayo-button purple">타요버튼 퍼플</div>
