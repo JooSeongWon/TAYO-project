@@ -16,6 +16,6 @@ public class Member {
 	private Date createDate;
 	private char grade;
 	private char ban;
-	private String profile;
+	private Integer profile;
 	
 }
