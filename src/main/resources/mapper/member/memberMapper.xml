@@ -6,10 +6,18 @@
 
 <mapper namespace="fun.tayo.app.dao.MemberDao">
 
-	<select id="selectByEmail" resultType="Member">
-		select M.*, upload_file.saved_name profile from (select id, name, phone, email, password, create_date,
-		grade, ban, file_id from MEMBER where EMAIL = #{email}) M
+<!-- 	<select id="selectByEmail" resultType="Member">
+		select M.*, upload_file.saved_name profile from (
+			select id, name, phone, email, password, create_date,
+			grade, ban, file_id from MEMBER where EMAIL = #{email}) M
 		left outer join upload_file on M.file_id = upload_file.id
+	</select> -->
+	
+	<select id="selectByEmail" resultType="Member">
+		select 
+			id, name, phone, email, password, create_date,
+			grade, ban, file_id AS profile
+		from MEMBER where EMAIL = #{email}
 	</select>
 
 </mapper>

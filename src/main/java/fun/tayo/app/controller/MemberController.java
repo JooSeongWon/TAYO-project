@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fun.tayo.app.dto.MemberLoginParam;
 import fun.tayo.app.dto.ResponseData;
-import fun.tayo.app.service.impl.MemberService;
+import fun.tayo.app.service.face.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -64,3 +65,4 @@ public class MemberController {
 	
 
 }
+

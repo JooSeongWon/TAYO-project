@@ -13,13 +13,14 @@ import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberLoginParam;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
+import fun.tayo.app.service.face.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberServiceImpl implements MemberService{
 
 	//서블릿 컨텍스트 객체
 	@Autowired ServletContext context;
@@ -40,6 +41,7 @@ public class MemberService {
         //로그인 완료
         setLogin(member, session);
         log.debug("profile {}", member.getProfile());
+        
         return new ResponseData(true, "로그인 성공");		
 		
 	}
