@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fun.tayo.app.dao.WorkSpaceDao">
+
+    <select id="selectsByMemberId" resultType="WorkSpace">
+        select WS.id, WS.member_id, WS.name, WS.head_count
+        from (select * from TEAM_MEMBER where MEMBER_ID = #{memberId}) TM
+                 inner join WORK_SPACE WS on TM.WORK_SPACE_ID = WS.ID
+    </select>
+
+</mapper>
