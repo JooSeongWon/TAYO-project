@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fun.tayo.app.dao.NoticeDao">
+	
+	<resultMap type="fun.tayo.app.dto.Notice" id="Notice">
+		<result column="write_date" property="writeDate" />
+	</resultMap>
+
+    <select id="selectNotice" resultMap="Notice">
+        SELECT id, write_date, content FROM NOTICE
+        ORDER BY id DESC 
+    </select>
+
+</mapper>
