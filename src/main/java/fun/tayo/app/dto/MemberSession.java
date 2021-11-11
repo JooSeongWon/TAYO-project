@@ -9,7 +9,7 @@ public class MemberSession {
 
 	private int id;
 	private String email;
-	private String profile;
+	private Integer profile;
 	private String name;
 	private char grade;
 	
@@ -31,4 +31,6 @@ public class MemberSession {
 	public String toString() {
 		return String.format("%s #%04d", name, id);
 	}
+	
+	public boolean hasProfile() { return this.profile != null;}
 }

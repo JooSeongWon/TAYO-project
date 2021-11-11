@@ -7,11 +7,15 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class ResponseData {
 	
-    private final boolean result;
-    private final String message;
+    private boolean result;
+    private String message;
     
     public ResponseData(boolean result, String message) {
         this.result = result;
         this.message = message;
+    }
+
+    public boolean getResult() {
+        return result;
     }
 }

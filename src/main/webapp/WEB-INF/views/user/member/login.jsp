@@ -16,20 +16,20 @@
 <div>
 <form action="" method="post" >
 <div class="form-group">
-    <label for="email" >아이디 : </label>
+    <label for="email" >EMAIL</label>
     <div>
-      <input type="text" id="email" name="email" placeholder="email">
+      <input type="text" id="email" name="email" class="tayo-input" placeholder="Email">
     </div>
-</div>
+</div><br>
 <div class="form-group">
-    <label for="password" >패스워드 : </label>
+    <label for="password" >패스워드</label>
     <div>
-      <input type="text" id="password" name="password" placeholder="password">
+      <input type="password" id="password" name="password" class="tayo-input" placeholder="password">
     </div>
-</div>
+</div><br>
 <div>
-    <div>
-      <button>로그인</button>
+    <div style="margin: auto; width: 75px;">
+    	<button>로그인</button>
     </div>
 </div>
 </form>
