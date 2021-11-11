@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fun.tayo.app.dao.FileDao">
+
+    <select id="selectByFileId" resultType="UploadFile">
+        select id, saved_name, origin_name, member_id
+        from UPLOAD_FILE
+        where ID = #{fileId}
+    </select>
+
+</mapper>

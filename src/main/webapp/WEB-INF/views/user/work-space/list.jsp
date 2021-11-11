@@ -20,8 +20,14 @@
     <div class="work-spaces__header">
         <%-- 좌측 프로필 --%>
         <div class="header__left">
-            <img src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="프로필 사진"
-                 class="left__profile-img">
+            <c:if test="${empty sessionScope.loginMember.profile}">
+                <img src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="사진 없음"
+                     class="left__profile-img">
+            </c:if>
+            <c:if test="${not empty sessionScope.loginMember.profile}">
+                <img src="${pageContext.request.contextPath}/img/${sessionScope.loginMember.profile}" alt="프로필 사진"
+                     class="left__profile-img">
+            </c:if>
             <div class="left__nick">${sessionScope.loginMember}</div>
         </div>
 
