@@ -13,20 +13,22 @@ const modalZIndex = 9999;
 //다이얼로그 윈도우
 const modalStyleObj = {
     display: 'flex',
-    flexFlow: 'column',
+    flexDirection: 'column',
     zIndex: modalZIndex,
     width: '300px',
     padding: '20px 20px',
     backgroundColor: '#fefefe',
 };
 const modalBackGroundStyleObj = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'fixed',
     zIndex: modalZIndex - 1,
     left: '0px',
     top: '0px',
     width: '100%',
     height: '100%',
-    overflow: 'auto',
     backgroundColor: 'rgba(0,0,0,0.4)'
 };
 
@@ -39,7 +41,6 @@ const modalOkBtnDomObj = document.createElement('div');
 const modalCancelBtnDomObj = document.createElement('div');
 
 //돔 트리 구성
-modalDomObj.classList.add('fixed-center');
 modalDomObj.classList.add('all-shadow');
 modalButtonSetDomObj.appendChild(modalOkBtnDomObj);
 modalButtonSetDomObj.appendChild(modalCancelBtnDomObj);

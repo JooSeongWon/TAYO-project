@@ -7,8 +7,8 @@
     <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
     <title>타요 - 가상공간</title>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/work-space-style.css ">
-    <script src="${pageContext.request.contextPath}/resources/js/work-space-script.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/work-space-list-style.css ">
+    <script src="${pageContext.request.contextPath}/resources/js/work-space-list-script.js" defer></script>
 </head>
 <body>
 <c:import url="../template/header.jsp"/>

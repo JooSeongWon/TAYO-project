@@ -1,10 +1,12 @@
 
 section {
+    position: relative;
     background: none;
     padding: 0;
     display: flex;
     flex-direction: column;
     width: 700px;
+    margin: 0 16px;
 }
 
 /* 헤더 */
@@ -136,12 +138,56 @@ section {
     cursor: pointer;
 }
 
-@media screen and (max-width: 768px) {
+.item__leader {
+    width: var(--font-regular);
+    height: var(--font-regular);
+    line-height: var(--font-regular);
 
-    section {
-        width: auto;
-        margin: 0 16px;
-    }
+    text-align: center;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: var(--color-blue);
+    color: var(--color-yellow);
+    font-weight: bold;
+}
+
+/* 생성 폼 */
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    padding: 24px;
+    margin: 0 16px;
+    background-color: var(--color-white);
+}
+
+.form__title {
+    color: var(--color-dark-grey);
+    width: 100%;
+    padding: 8px;
+}
+
+.form__input {
+    margin-top: 8px;
+}
+
+.form__buttons {
+    display: flex;
+    margin-top: 36px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.form__buttons > * {
+    display: flex;
+    width: 120px;
+}
+
+.form__buttons > *:first-child {
+    margin-right: 16px;
+}
+
+@media screen and (max-width: 768px) {
 
     .work-spaces__item i {
         display: none;
@@ -149,5 +195,13 @@ section {
 
     .item__profile-img {
         display: none;
+    }
+
+    .form__buttons > * {
+        margin: 8px;
+    }
+
+    .form__buttons > *:first-child {
+        margin-right: 8px;
     }
 }

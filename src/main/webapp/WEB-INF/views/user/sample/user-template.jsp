@@ -24,7 +24,7 @@
         <p style="text-align: center">테스트 유저 이메일 : ${sessionScope.loginMember.email}</p>
     </c:if>
     <p style="text-align: center">테스트 경로 : question</p>
-    <div class="tayo-button">타요버튼</div>
+        <a href="/login"><div class="tayo-button">타요버튼 로그인Test</div></a>
     <div class="tayo-button purple">타요버튼 퍼플</div>
     <input type="text" class="tayo-input" placeholder="hold text here">
 
