@@ -21,7 +21,7 @@ public class WorkSpaceController {
     private final WorkSpaceService workSpaceService;
 
     @GetMapping
-    public String workSpaces(
+    public String workSpaces( //워크스페이스 목록
             Model model,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
     ) {
@@ -34,7 +34,7 @@ public class WorkSpaceController {
 
     @ResponseBody
     @PostMapping
-    public ResponseData createWorkSpace(
+    public ResponseData createWorkSpace( //워크스페이스 생성
             @RequestParam String name,
             @RequestParam int headCount,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
@@ -44,10 +44,19 @@ public class WorkSpaceController {
 
     @ResponseBody
     @PostMapping("/{workSpaceId}")
-    public ResponseObject workSpaceDetail(
+    public ResponseObject workSpaceDetail( //워크스페이스 정보
             @PathVariable int workSpaceId,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
     ) {
         return workSpaceService.findDetailWorkSpaceOfMember(workSpaceId, memberSession.getId());
+    }
+
+    @ResponseBody
+    @PostMapping("/{workSpaceId}/invitation-code")
+    public ResponseData changeInvitationCode( //초대코드 갱신
+            @PathVariable int workSpaceId,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        return workSpaceService.changeInvitationCode(workSpaceId, memberSession.getId());
     }
 }

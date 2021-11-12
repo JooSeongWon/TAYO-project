@@ -58,6 +58,18 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
         return (workSpace == null) ? new ResponseObject(false, "잘못된 접근입니다.") : new ResponseObject(true, workSpace);
     }
 
+    @Override
+    @Transactional
+    public ResponseData changeInvitationCode(int workSpaceId, int memberId) {
+        WorkSpace workSpaceParam = new WorkSpace();
+        workSpaceParam.setId(workSpaceId);
+        workSpaceParam.setMemberId(memberId);
+        workSpaceParam.setInvitationCode(createInvitationCode());
+
+        final int result = workSpaceDao.updateInvitationCode(workSpaceParam);
+        return result == 0 ? new ResponseData(false, "잘못된 접근입니다.") : new ResponseData(true, workSpaceParam.getInvitationCode());
+    }
+
     private String createInvitationCode() {
         return UUID.randomUUID().toString().replace("-", "").substring(0,20);
     }

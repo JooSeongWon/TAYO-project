@@ -23,4 +23,9 @@ public interface WorkSpaceService {
      * 멤버가 만든 가상공간중 id와 일치하는것 자세히 조회
      */
     ResponseObject findDetailWorkSpaceOfMember(int workSpaceId, int memberId);
+
+    /**
+     * 초대코드 변경
+     */
+    ResponseData changeInvitationCode(int workSpaceId, int memberId);
 }

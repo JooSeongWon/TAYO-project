@@ -70,9 +70,9 @@ const createCountInputField = function () {
 }
 
 //숫자 프로토타입으로 입력 길이만큼 앞에 0을 채운 문자열 반환
-Number.prototype.fillZero = function(width){
+Number.prototype.fillZero = function (width) {
     let n = String(this);//문자열 변환
-    return n.length >= width ? n:new Array(width-n.length+1).join('0')+n;//남는 길이만큼 0으로 채움
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;//남는 길이만큼 0으로 채움
 }
 
 /* 가상공간 생성 폼 */
@@ -185,6 +185,9 @@ let invitationCodeText;
 let invitationCodeWrap;
 let workSpace = {};
 
+let oldName;
+let oldCount;
+
 function showUpdateForm(id) {
 
 
@@ -242,18 +245,40 @@ function showUpdateForm(id) {
 
         //초대코드 복사
         const copyInvitationCode = function () {
-            if(invitationCodeText.value) {
+            if (invitationCodeText.value) {
                 //선택 - 복사 - 선택해제
                 invitationCodeText.select();
                 document.execCommand('copy');
                 invitationCodeText.setSelectionRange(0, 0);
-                
+
                 //copied class 추가
-                if(!invitationCodeWrap.classList.contains('copied')){
+                if (!invitationCodeWrap.classList.contains('copied')) {
                     invitationCodeWrap.classList.add('copied');
                 }
             }
         }
+
+        //초대코드 갱신
+        const changeInvitationCode = function () {
+            $.ajax({
+                type: 'POST',
+                url: `/work-spaces/${workSpace.id}/invitation-code`,
+                dataType: 'json',
+                success: data => {
+                    if (!data.result) { //실패
+                        showModal('오류', data.message);
+                        return;
+                    }
+
+                    //성공
+                    invitationCodeText.value = data.message;
+                    if (invitationCodeWrap.classList.contains('copied')) {
+                        invitationCodeWrap.classList.remove('copied');
+                    }
+                },
+                error: () => showModal('오류', '해당 요청을 처리할 수 없습니다.')
+            });
+        };
 
 
         //dom node 만들기
@@ -346,6 +371,7 @@ function showUpdateForm(id) {
         //버튼 이벤트
         cancelBtn.addEventListener('click', cancelUpdate);
         invitationCodeCopyBtn.addEventListener('click', copyInvitationCode);
+        invitationCodeBtn.addEventListener('click', changeInvitationCode);
 
         //돔트리 구성
         buttons.appendChild(updateBtn);
@@ -388,12 +414,14 @@ function showUpdateForm(id) {
         url: `/work-spaces/${workSpace.id}`,
         dataType: 'json',
         async: false,
-        success: data => {responseData = data},
+        success: data => {
+            responseData = data
+        },
         error: () => showModal('오류', '해당 요청을 처리할 수 없습니다.')
     });
 
     //상세정보 파싱 실패
-    if(!responseData.result) {
+    if (!responseData.result) {
         showModal('오류', responseData.object);
         return;
     }
@@ -402,7 +430,7 @@ function showUpdateForm(id) {
     workSpace = responseData.object;
     updateNameInput.value = workSpace.name;
     updateCountInput.value = workSpace.headCount;
-    if(workSpace.invitationCode) invitationCodeText.value = workSpace.invitationCode;
+    if (workSpace.invitationCode) invitationCodeText.value = workSpace.invitationCode;
 
     //멤버목록 채우기 및 멤버노드등록
     const myNode = document.createElement('div');
@@ -418,7 +446,7 @@ function showUpdateForm(id) {
 
     updateMemberList.appendChild(myNode);
 
-    for(let i = 1; i < workSpace.members.length; i++) {
+    for (let i = 1; i < workSpace.members.length; i++) {
         const memberNode = document.createElement('div');
         memberNode.classList.add('member');
         const memberNodeName = document.createElement('div');
@@ -434,6 +462,10 @@ function showUpdateForm(id) {
         updateMemberList.appendChild(memberNode);
         //추방이벤트 등록해야함
     }
+
+    //바뀐내용 없으면 ajax 요청 안하기 위해 기존 값들 저장
+    oldName = updateNameInput.value;
+    oldCount = updateCountInput.value;
 
     //보여주기
     formBackground.innerHTML = '';

@@ -7,16 +7,16 @@
 <mapper namespace="fun.tayo.app.dao.WorkSpaceDao">
 
     <resultMap id="workspaceDetail" type="WorkSpace">
-        <id property="id" column="id" />
-        <result property="memberId" column="member_id" />
-        <result property="name" column="name" />
-        <result property="invitationCode" column="invitation_code" />
-        <result property="headCount" column="head_count" />
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="name" column="name"/>
+        <result property="invitationCode" column="invitation_code"/>
+        <result property="headCount" column="head_count"/>
 
         <collection property="members" ofType="TeamMember">
-            <id property="memberId" column="m_id" />
-            <result property="workSpaceId" column="id" />
-            <result property="memberName" column="m_name" />
+            <id property="memberId" column="m_id"/>
+            <result property="workSpaceId" column="id"/>
+            <result property="memberName" column="m_name"/>
         </collection>
     </resultMap>
 
@@ -47,5 +47,12 @@
         insert into TEAM_MEMBER(work_space_id, member_id)
         VALUES (#{workSpaceId}, #{memberId})
     </insert>
+
+    <update id="updateInvitationCode" parameterType="WorkSpace">
+        update WORK_SPACE
+        set INVITATION_CODE = #{invitationCode}
+        where MEMBER_ID = #{memberId}
+          and ID = #{id}
+    </update>
 
 </mapper>

@@ -26,4 +26,9 @@ public interface WorkSpaceDao {
      * 해당 멤버가 만든 가상공간의 자세한 정보
      */
     WorkSpace selectDetail(TeamMember teamMember);
+
+    /**
+     * memberId, workSpaceId 가 일치하는 데이터의 초대코드 변경
+     */
+    int updateInvitationCode(WorkSpace workSpace);
 }
