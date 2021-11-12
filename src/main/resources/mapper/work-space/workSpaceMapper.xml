@@ -13,7 +13,7 @@
         <result property="invitationCode" column="invitation_code"/>
         <result property="headCount" column="head_count"/>
 
-        <collection property="members" ofType="TeamMember">
+        <collection property="members" ofType="WorkSpaceAndMember">
             <id property="memberId" column="m_id"/>
             <result property="workSpaceId" column="id"/>
             <result property="memberName" column="m_name"/>
@@ -27,7 +27,7 @@
         order by decode(WS.MEMBER_ID, #{memberId}, 1), WS.ID desc
     </select>
 
-    <select id="selectDetail" parameterType="TeamMember" resultMap="workspaceDetail">
+    <select id="selectDetail" parameterType="WorkSpaceAndMember" resultMap="workspaceDetail">
         select WS.ID, WS.MEMBER_ID, WS.NAME, WS.INVITATION_CODE, WS.HEAD_COUNT, M.ID m_id, M.NAME m_name
         from (select id, member_id, name, invitation_code, head_count
               from WORK_SPACE
@@ -38,12 +38,18 @@
         order by decode(m_id, #{memberId}, 1)
     </select>
 
+    <select id="selectCntTeamMember" parameterType="_int" resultType="_int">
+        select count(*)
+        from TEAM_MEMBER
+        where WORK_SPACE_ID = #{workSpaceId}
+    </select>
+
     <insert id="insert" parameterType="WorkSpace" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into WORK_SPACE(id, member_id, name, invitation_code, head_count)
         VALUES (WORK_SPACE_SEQ.nextval, #{memberId}, #{name}, #{invitationCode}, #{headCount})
     </insert>
 
-    <insert id="insertTeamMember" parameterType="TeamMember">
+    <insert id="insertTeamMember" parameterType="WorkSpaceAndMember">
         insert into TEAM_MEMBER(work_space_id, member_id)
         VALUES (#{workSpaceId}, #{memberId})
     </insert>
@@ -51,8 +57,23 @@
     <update id="updateInvitationCode" parameterType="WorkSpace">
         update WORK_SPACE
         set INVITATION_CODE = #{invitationCode}
-        where MEMBER_ID = #{memberId}
-          and ID = #{id}
+        where ID = #{id}
+          and MEMBER_ID = #{memberId}
     </update>
+
+    <update id="update" parameterType="WorkSpace">
+        update WORK_SPACE
+        set NAME       = #{name},
+            HEAD_COUNT = #{headCount}
+        where ID = #{id}
+          and MEMBER_ID = #{memberId}
+    </update>
+
+    <delete id="delete" parameterType="WorkSpaceAndMember">
+        delete
+        from WORK_SPACE
+        where ID = #{workSpaceId}
+          and MEMBER_ID = #{memberId}
+    </delete>
 
 </mapper>

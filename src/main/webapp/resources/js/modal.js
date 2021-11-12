@@ -104,8 +104,6 @@ function modalBtnClicked(callback) {
         return;
     }
 
-    callback();
-
     if (modalCancelEvent !== undefined) {
         modalCancelBtnDomObj.removeEventListener('click', modalCancelEvent);
         modalCancelEvent = undefined;
@@ -114,6 +112,7 @@ function modalBtnClicked(callback) {
     modalParentNode.removeChild(modalBackGroundDomObj);
 
     isShowModal = false;
+    callback();
     return false;
 }
 

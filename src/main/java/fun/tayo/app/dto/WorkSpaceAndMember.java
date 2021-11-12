@@ -5,15 +5,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString
-public class TeamMember {
+public class WorkSpaceAndMember {
     private int memberId;
     private int workSpaceId;
     private String memberName;
 
-    public TeamMember() {
+    public WorkSpaceAndMember() {
     }
 
-    public TeamMember(int memberId, int workSpaceId) {
+    public WorkSpaceAndMember(int memberId, int workSpaceId) {
         this.memberId = memberId;
         this.workSpaceId = workSpaceId;
     }

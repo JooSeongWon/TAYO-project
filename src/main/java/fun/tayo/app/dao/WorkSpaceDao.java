@@ -1,6 +1,6 @@
 package fun.tayo.app.dao;
 
-import fun.tayo.app.dto.TeamMember;
+import fun.tayo.app.dto.WorkSpaceAndMember;
 import fun.tayo.app.dto.WorkSpace;
 
 import java.util.List;
@@ -20,15 +20,30 @@ public interface WorkSpaceDao {
     /**
      * 새 팀맴버 등록
      */
-    void insertTeamMember(TeamMember teamMember);
+    void insertTeamMember(WorkSpaceAndMember workSpaceAndMember);
 
     /**
      * 해당 멤버가 만든 가상공간의 자세한 정보
      */
-    WorkSpace selectDetail(TeamMember teamMember);
+    WorkSpace selectDetail(WorkSpaceAndMember workSpaceAndMember);
 
     /**
-     * memberId, workSpaceId 가 일치하는 데이터의 초대코드 변경
+     * 해당 멤버가 만든 가상공간의 데이터의 초대코드 변경
      */
     int updateInvitationCode(WorkSpace workSpace);
+
+    /**
+     * 해당 멤버가 만든 가상공간의 headCount와 name만 업데이트
+     */
+    int update(WorkSpace workSpace);
+
+    /**
+     * 해당 workspace 인원 수 체크
+     */
+    int selectCntTeamMember(int workSpaceId);
+
+    /**
+     * 해당 멤버가 만든 가상공간 삭제
+     */
+    int delete(WorkSpaceAndMember workSpaceAndMember);
 }

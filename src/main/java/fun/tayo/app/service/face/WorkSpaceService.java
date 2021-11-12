@@ -20,12 +20,22 @@ public interface WorkSpaceService {
     ResponseData createWorkSpace(String name, int headCount, MemberSession memberSession);
 
     /**
-     * 멤버가 만든 가상공간중 id와 일치하는것 자세히 조회
+     * (멤버가 만든 가상공간인지 체크 포함) workspace 조회 - 가입멤버 포함
      */
     ResponseObject findDetailWorkSpaceOfMember(int workSpaceId, int memberId);
 
     /**
-     * 초대코드 변경
+     * (멤버가 만든 가상공간인지 체크 포함) 초대코드 변경
      */
     ResponseData changeInvitationCode(int workSpaceId, int memberId);
+
+    /**
+     * (멤버가 만든 가상공간인지 체크 포함) name, headCount 업데이트
+     */
+    ResponseData updateWorkSpace(int workSpaceId, int memberId, String name, int headCount);
+
+    /**
+     *  (멤버가 만든 가상공간인지 체크 포함) workspace 삭제
+     */
+    ResponseData deleteWorkSpace(int workSpaceId, int memberId);
 }

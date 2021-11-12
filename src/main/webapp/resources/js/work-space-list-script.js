@@ -19,24 +19,24 @@ const section = document.querySelector('.page-content');
 
 /* 글로벌 사용 함수 */
 //입력값 검증
-const validateInputData = function () {
-    if (!creationNameInput.value ||
-        !creationCountInput.value ||
-        creationNameInput.value === '' ||
-        creationCountInput.value === ''
+const validateInputData = function (name, count) {
+    if (!name ||
+        !count ||
+        name === '' ||
+        count === ''
     ) { //빈 데이터
         showModal('입력오류', '이름과 팀원 수를 정확히 입력하세요!');
         return false;
     }
 
-    const nameRegex = /^[a-zA-Z0-9가-힣]{2,20}$/;
+    const nameRegex = /^[a-zA-Z0-9가-힣 ]{2,20}$/;
 
-    if (!nameRegex.test(creationNameInput.value)) { //이름 형식
+    if (!nameRegex.test(name)) { //이름 형식
         showModal('입력오류', '이름은 영문, 숫자, 한글 2~20자 사이로 입력하세요!');
         return false;
     }
 
-    if (creationCountInput.value < 2 || creationCountInput.value > 10) { //숫자 범위
+    if (count < 2 || count > 10) { //숫자 범위
         showModal('입력오류', '인원은 2~10인 까지 설정 가능합니다.');
         return false;
     }
@@ -97,7 +97,7 @@ function showCreationForm() {
 
         //생성
         const createWorkSpace = function () {
-            if (!validateInputData()) {
+            if (!validateInputData(creationNameInput.value, creationCountInput.value)) {
                 return;
             }
 
@@ -213,7 +213,13 @@ function showUpdateForm(id) {
 
         //수정
         const updateWorkSpace = function () {
-            if (!validateInputData()) {
+            //수정내용 없으면 아무일도 안함
+            if (updateNameInput.value === oldName && updateCountInput.value === oldCount) {
+                showModal('오류', '변경내역이 없습니다.');
+                return;
+            }
+
+            if (!validateInputData(updateNameInput.value, updateCountInput.value)) {
                 return;
             }
 
@@ -223,8 +229,27 @@ function showUpdateForm(id) {
             //서버 요청
             $.ajax({
                 type: 'PUT',
-                url: '/work-spaces',
-                data: {name: name, headCount: headCount},
+                url: `/work-spaces/${workSpace.id}`,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                        name: name,
+                        headCount: Number(headCount)
+                    }
+                ),
+                dataType: 'json',
+                success: noticeUpdateResult,
+                error: () => showModal('오류', '해당 요청을 처리할 수 없습니다.')
+            });
+
+        }
+
+        //삭제
+        const deleteWorkSpace = function () {
+
+            //삭제 요청
+            $.ajax({
+                type: 'DELETE',
+                url: `/work-spaces/${workSpace.id}`,
                 dataType: 'json',
                 success: noticeUpdateResult,
                 error: () => showModal('오류', '해당 요청을 처리할 수 없습니다.')
@@ -235,12 +260,12 @@ function showUpdateForm(id) {
         //결과
         const noticeUpdateResult = function (data) {
             if (!data.result) { //실패
-                showModal('입력오류', data.message);
+                showModal('실패', data.message);
                 return;
             }
 
             //성공
-            showModal('완료', '성공적으로 반영되었습니다.', location.reload);
+            showModal('완료', '성공적으로 반영되었습니다.', () => location.reload());
         }
 
         //초대코드 복사
@@ -372,6 +397,12 @@ function showUpdateForm(id) {
         cancelBtn.addEventListener('click', cancelUpdate);
         invitationCodeCopyBtn.addEventListener('click', copyInvitationCode);
         invitationCodeBtn.addEventListener('click', changeInvitationCode);
+        updateBtn.addEventListener('click', () =>
+            showModal('수정 확인', '수정내용을 반영하시겠 습니까?', updateWorkSpace, () => {
+            }));
+        updateFormHeaderDelBtn.addEventListener('click', () =>
+            showModal('삭제 확인', '삭제시에 복구가 불가능합니다.<br>정말 삭제하시겠습니까?', deleteWorkSpace, () => {
+            }));
 
         //돔트리 구성
         buttons.appendChild(updateBtn);

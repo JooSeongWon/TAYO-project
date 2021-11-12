@@ -13,7 +13,7 @@ public class WorkSpace {
     private String name;
     private String invitationCode;
     private int headCount;
-    private List<TeamMember> members;
+    private List<WorkSpaceAndMember> members;
 
     public boolean isOwner(int memberId) {
         return this.memberId == memberId;
