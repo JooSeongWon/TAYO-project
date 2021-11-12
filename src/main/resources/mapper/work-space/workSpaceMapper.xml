@@ -10,7 +10,7 @@
         select WS.id, WS.member_id, WS.name, WS.head_count
         from (select * from TEAM_MEMBER where MEMBER_ID = #{memberId}) TM
                  inner join WORK_SPACE WS on TM.WORK_SPACE_ID = WS.ID
-        order by decode(WS.MEMBER_ID, #{memberId}, 1), WS.ID
+        order by decode(WS.MEMBER_ID, #{memberId}, 1), WS.ID desc
     </select>
 
     <insert id="insert" parameterType="WorkSpace" useGeneratedKeys="true" keyProperty="id" keyColumn="id">

@@ -2,6 +2,8 @@
 
 //기존 모달 알림창 배경색 조정 (완전 투명)
 modalBackGroundDomObj.style.backgroundColor = 'rgba(0,0,0,0)';
+//부모노드 변경
+setModalParentNode(document.querySelector('.page-content'));
 
 //z인덱스
 const formZIndex = 9990;
@@ -90,7 +92,7 @@ function showCreationForm() {
             //성공
             creationNameInput.value = '';
             creationCountInput.value = '';
-            showModal('성공', '디비언넝 확인바람 치직');
+            location.reload();
         }
 
 
@@ -153,3 +155,71 @@ function showCreationForm() {
 
 const addWorkSpaceBtn = document.querySelector('.add-work-space');
 addWorkSpaceBtn.addEventListener('click', showCreationForm);
+
+
+/* 가상공간 수정 폼 */
+let updateForm;
+let updateNameInput;
+let updateCountInput;
+let invitationCode;
+
+function showUpdateForm(workspaceId) {
+    //초기화 한적 없을경우 초기화
+    if(updateForm === undefined) {
+
+        /* 가상공간 수정 사용 함수 */
+        //취소
+        const cancelUpdate = function (){
+            section.removeChild(formBackground);
+            formBackground.removeChild(updateForm);
+        };
+
+        //수정
+        const updateWorkSpace = function (){
+            if(!validateInputData()){
+                return;
+            }
+
+            const name = updateNameInput.value;
+            const headCount = updateCountInput.value;
+
+                //서버 요청
+            $.ajax({
+                type: 'PUT',
+                url: '/work-spaces',
+                data: {name:name, headCount:headCount},
+                dataType: 'json',
+                success: noticeUpdateResult,
+                error: () => showModal('서버오류', '해당 요청을 처리할 수 없습니다.')
+            });
+
+        }
+
+        //생성 결과
+        const noticeUpdateResult = function (data){
+            if(!data.result) { //실패
+                showModal('입력오류', data.object);
+                return;
+            }
+
+            //성공
+            updateNameInput.value = '';
+            updateCountInput.value = '';
+            invitationCode.value = '';
+            location.reload();
+        }
+
+
+        //dom node 만들기
+
+
+    }
+
+
+
+}
+
+const updateWorkSpaceBtnList = document.querySelectorAll('.fa-cog');
+for (const updateWorkSpaceBtn of updateWorkSpaceBtnList) {
+    updateWorkSpaceBtn.addEventListener('click', () => showUpdateForm(updateWorkSpaceBtn.dataset.workspaceId));
+}

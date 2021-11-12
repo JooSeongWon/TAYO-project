@@ -70,10 +70,10 @@
                         </div>
 
                         <c:if test="${item.isOwner(sessionScope.loginMember.id)}">
-                            <i class="fas fa-cog"></i>
+                            <i class="fas fa-cog" data-workspaceId="${item.id}"></i>
                         </c:if>
                         <c:if test="${not item.isOwner(sessionScope.loginMember.id)}">
-                            <i class="fas fa-sign-out-alt"></i>
+                            <i class="fas fa-sign-out-alt" data-workspaceId="${item.id}"></i>
                         </c:if>
                     </div>
                 </c:forEach>
