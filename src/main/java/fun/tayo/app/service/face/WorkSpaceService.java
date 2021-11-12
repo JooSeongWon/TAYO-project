@@ -1,6 +1,7 @@
 package fun.tayo.app.service.face;
 
 import fun.tayo.app.dto.MemberSession;
+import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.dto.ResponseObject;
 import fun.tayo.app.dto.WorkSpace;
 
@@ -16,5 +17,10 @@ public interface WorkSpaceService {
     /**
      * 가상공간 생성
      */
-    ResponseObject createWorkSpace(String name, int headCount, MemberSession memberSession);
+    ResponseData createWorkSpace(String name, int headCount, MemberSession memberSession);
+
+    /**
+     * 멤버가 만든 가상공간중 id와 일치하는것 자세히 조회
+     */
+    ResponseObject findDetailWorkSpaceOfMember(int workSpaceId, int memberId);
 }

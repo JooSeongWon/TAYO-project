@@ -21,4 +21,9 @@ public interface WorkSpaceDao {
      * 새 팀맴버 등록
      */
     void insertTeamMember(TeamMember teamMember);
+
+    /**
+     * 해당 멤버가 만든 가상공간의 자세한 정보
+     */
+    WorkSpace selectDetail(TeamMember teamMember);
 }

@@ -6,11 +6,36 @@
 
 <mapper namespace="fun.tayo.app.dao.WorkSpaceDao">
 
+    <resultMap id="workspaceDetail" type="WorkSpace">
+        <id property="id" column="id" />
+        <result property="memberId" column="member_id" />
+        <result property="name" column="name" />
+        <result property="invitationCode" column="invitation_code" />
+        <result property="headCount" column="head_count" />
+
+        <collection property="members" ofType="TeamMember">
+            <id property="memberId" column="m_id" />
+            <result property="workSpaceId" column="id" />
+            <result property="memberName" column="m_name" />
+        </collection>
+    </resultMap>
+
     <select id="selectsByMemberId" resultType="WorkSpace">
         select WS.id, WS.member_id, WS.name, WS.head_count
         from (select * from TEAM_MEMBER where MEMBER_ID = #{memberId}) TM
                  inner join WORK_SPACE WS on TM.WORK_SPACE_ID = WS.ID
         order by decode(WS.MEMBER_ID, #{memberId}, 1), WS.ID desc
+    </select>
+
+    <select id="selectDetail" parameterType="TeamMember" resultMap="workspaceDetail">
+        select WS.ID, WS.MEMBER_ID, WS.NAME, WS.INVITATION_CODE, WS.HEAD_COUNT, M.ID m_id, M.NAME m_name
+        from (select id, member_id, name, invitation_code, head_count
+              from WORK_SPACE
+              where ID = #{workSpaceId}
+                and MEMBER_ID = #{memberId}) WS
+                 inner join TEAM_MEMBER TM on WS.ID = TM.WORK_SPACE_ID
+                 inner join MEMBER M on TM.MEMBER_ID = M.ID
+        order by decode(m_id, #{memberId}, 1)
     </select>
 
     <insert id="insert" parameterType="WorkSpace" useGeneratedKeys="true" keyProperty="id" keyColumn="id">

@@ -127,7 +127,7 @@ function showModal(title, msg, okCallBack, cancelCallBack) {
     } : okCallBack;
 
     modalTitleDomObj.innerText = title;
-    modalDescriptionDomObj.innerText = msg;
+    modalDescriptionDomObj.innerHTML = msg;
 
     modalOkEvent = () => modalBtnClicked(okCallBackT);
     modalOkBtnDomObj.addEventListener('click', modalOkEvent);

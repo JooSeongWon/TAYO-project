@@ -2,6 +2,7 @@ package fun.tayo.app.controller;
 
 import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.MemberSession;
+import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.dto.ResponseObject;
 import fun.tayo.app.dto.WorkSpace;
 import fun.tayo.app.service.face.WorkSpaceService;
@@ -22,7 +23,7 @@ public class WorkSpaceController {
     @GetMapping
     public String workSpaces(
             Model model,
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
     ) {
 
         final List<WorkSpace> workSpaceList = workSpaceService.getWorkSpaces(memberSession);
@@ -33,11 +34,20 @@ public class WorkSpaceController {
 
     @ResponseBody
     @PostMapping
-    public ResponseObject createWorkSpace(
+    public ResponseData createWorkSpace(
             @RequestParam String name,
             @RequestParam int headCount,
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
     ) {
         return workSpaceService.createWorkSpace(name, headCount, memberSession);
+    }
+
+    @ResponseBody
+    @PostMapping("/{workSpaceId}")
+    public ResponseObject workSpaceDetail(
+            @PathVariable int workSpaceId,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        return workSpaceService.findDetailWorkSpaceOfMember(workSpaceId, memberSession.getId());
     }
 }
