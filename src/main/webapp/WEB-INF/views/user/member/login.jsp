@@ -6,6 +6,7 @@
     <c:import url="../template/head-meta.jsp"/>
     <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
     <title>타요 - 로그인</title>
+    
 </head>
 <body>
 <c:import url="../template/header.jsp"/>
@@ -18,7 +19,7 @@
 <div class="form-group">
     <label for="email" >EMAIL</label>
     <div>
-      <input type="text" id="email" name="email" class="tayo-input" placeholder="Email">
+      <input type="email" id="email" name="email" class="tayo-input" placeholder="Email">
     </div>
 </div><br>
 <div class="form-group">

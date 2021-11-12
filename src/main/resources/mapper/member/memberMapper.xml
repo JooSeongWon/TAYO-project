@@ -20,4 +20,14 @@
 		from MEMBER where EMAIL = #{email}
 	</select>
 
+	<select id="selectCntByEmail" resultType="int" parameterType="Member">
+		SELECT count(*) FROM member
+		WHERE email = #{email }
+	</select>
+	
+	<insert id="insert" parameterType="Member">
+		INSERT INTO member ( id, name, phone, email, password, file_id )
+		VALUES ( member_seq.nextval, #{name}, #{phone}, #{email}, #{password}, #{profile} )
+	</insert>
+
 </mapper>

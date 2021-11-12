@@ -28,13 +28,16 @@ public class MemberServiceImpl implements MemberService{
 	private final MemberDao memberDao;
 	
 	public ResponseData login(MemberLoginParam param, HttpSession session) {
+		
         if(!StringUtils.hasText(param.getEmail()) || !StringUtils.hasText(param.getPassword())){
+        	
             return new ResponseData(false, "빈칸을 채워주세요");
         }
 
         final Member member = getMemberByEmail(param.getEmail());
 
         if(member == null || !member.getPassword().equals(param.getPassword())) {
+        	
             return new ResponseData(false, "일치하는 회원정보가 없습니다.");
         }
 
@@ -42,8 +45,9 @@ public class MemberServiceImpl implements MemberService{
         setLogin(member, session);
         log.debug("profile {}", member.getProfile());
         
-        return new ResponseData(true, "로그인 성공");		
+        return new ResponseData(true, "로그인 성공") ;		
 		
+        
 	}
 
 	public void setLogin(Member member, HttpSession session) {
@@ -57,9 +61,35 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.selectByEmail(email);
 	}
 
-	public void join(MemberLoginParam login) {
+
+	/*
+	 * @Override public boolean join(Member member) {
+	 * 
+	 * //중복 ID 확인 if( memberDao.selectCntByEmail(member) > 0 ) { return false; }
+	 * 
+	 * //회원가입(삽입) memberDao.insert(member);
+	 * 
+	 * //회원가입 결과 확인 if( memberDao.selectCntByEmail(member) > 0 ) { return true; }
+	 * 
+	 * return false; }
+	 */
+	@Override
+	public boolean join(Member member) {
+				
+		//중복 ID 확인
+		if( memberDao.selectCntByEmail(member) > 0 ) {
+			return false;
+		}
 		
+		//회원가입(삽입)
+		memberDao.insert(member);
 		
+		//회원가입 결과 확인
+		if( memberDao.selectCntByEmail(member) > 0 ) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

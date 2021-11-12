@@ -1,15 +1,16 @@
 package fun.tayo.app.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fun.tayo.app.common.SessionConst;
+import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberLoginParam;
 import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.MemberService;
@@ -25,8 +26,10 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@GetMapping("/login")
-	public String loginForm() {
+	public String login() {
+		
 		return "user/member/login";
+		
 	}
 
 	@ResponseBody
@@ -46,23 +49,52 @@ public class MemberController {
 		}
 		
 	}
-
-	@RequestMapping(value = "/join", method=RequestMethod.GET)
-	public void join() {}
 	
-	@RequestMapping(value = "/join", method=RequestMethod.POST)
-	public String joinProc(MemberLoginParam login) {
-		
-		log.info("전달 파라미터 {}", login);
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+    	
+        final HttpSession session = request.getSession(false);
+        
+        if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
+        	
+            return "redirect:/";
+            
+        }
 
-		//회원가입 처리 - LoginService 이용
-		memberService.join(login);
+        session.invalidate();
+        
+        return "redirect:/";
+    }
+
+    
+	@GetMapping(value = "/join")
+	public String join() {
 		
-		//메인페이지로 리다이렉트
-		return "redirect:/login";		
+		return "user/member/join";
 		
+	}
+	
+	
+	@PostMapping(value = "/join")
+	public String joinProc(Member member) {
+		
+		boolean joinResult = memberService.join(member);
+		
+		if(joinResult) {
+			
+			log.info("회원가입 성공");
+			
+			return "redirect:/";
+			
+		} else {
+			
+			log.info("회원가입 실패");
+			
+			return "redirect:/member/join";
+		}
 	}	
 	
-
 }
+
+
 

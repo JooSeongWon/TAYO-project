@@ -8,4 +8,10 @@ public interface MemberDao {
 	Member selectByEmail(String email);
 
 
+	int selectCntByEmail(Member member);
+
+
+	void insert(Member member);
+
+
 }
