@@ -8,9 +8,17 @@
 		<result column="write_date" property="writeDate" />
 	</resultMap>
 
-    <select id="selectNotice" resultMap="Notice">
-        SELECT id, write_date, content FROM NOTICE
-        ORDER BY id DESC 
+    <select id="selectNotice" resultMap="Notice" parameterType="fun.tayo.app.common.util.Paging">
+        SELECT * FROM(SELECT rownum rnum, N.* FROM(
+        	SELECT
+        		id, write_date, content
+        	FROM NOTICE
+        	ORDER BY id DESC) N
+        ) NOTICE
+        WHERE rnum BETWEEN #{startNo} AND #{endNo}
     </select>
 
+	  	<select id="selectCntAll" resultType="int">
+	  		SELECT count(*) FROM notice
+	  	</select>
 </mapper>

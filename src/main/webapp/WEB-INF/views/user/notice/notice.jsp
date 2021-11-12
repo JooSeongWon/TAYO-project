@@ -4,8 +4,12 @@
 <html lang="ko">
 <head>
     <c:import url="../template/head-meta.jsp"/>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>   
     
     <title>타요 - 공지사항</title>
+
 <style type="text/css">
 
 section {
@@ -35,40 +39,87 @@ padding-left: 45px;
 margin: 0px;
 padding: 0px;
 text-align: left;
+
 }
 
 .wrap {
     width: 800px;
-    height: 550px;
+    height: 540px;
     margin: 50ps auto;
 
     background: aqua;
     overflow-y: scroll;
 }
+
+.no {
+	float: right;
+}
+.child {
+
+}
 </style>
 
 <script type="text/javascript">
 
-// $(document).ready(function(){
+$(document).ready(function(){
 	
-// 	$("#test").click(function() {
-// 		console.log("clicked")
-// 		$.ajax({
-// 				type:"post",
-// 				url:"/notice/notice",
-// 				data: {},
-// 				dataType: 'json',
-// 				success: function(data){
-// 					$('.data').test(data)
-// 				},
-// 				error: function(){
-// 					alert("error")
-// 				}
-// 			}		
-// 		)
-// 	})
-// })
+	$("#test").click(function() {
+		console.log("clicked")
+		$.ajax({
+				type:"post",
+				url:"/notice/notice",
+				data: {},
+				dataType: 'json',
+				success: function(data){
+					$('.data').test(data)
+				},
+				error: function(){
+					alert("error")
+				}
+			}		
+		)
+	})
+})
+const wrap = document.querySelector('.wrap'); //.wrap 
+
+const options = {
+    root: wrap,
+    rootMargin : '0px',
+    threshold: 1
+}; //wrap 옵션
+
+const observer = new IntersectionObserver(callback, options);
+
+addChildrean();
+
+function addChildrean(){
+
+    for(let i = 0; i < 15; i++){ 
+        const child = document.createElement('div'); //child(div)
+        child.classList.add('child'); //childList생성
+
+        wrap.appendChild(child); //wrap맨밑에 child추가
+
+        child.innerText = i+1; //수 세기
+        
+    }
+
+    let lastChild = document.querySelector('.child:last-child') //마지막 child
+    observer.observe(lastChild); 
+}
+
+
+
+
+function callback(entries){ //마지막공지가 사라지면 0.5초후
+    if(entries[0].isIntersecting){
+        observer.unobserve(entries[0].target);
+        setTimeout(addChildrean, 500);
+    }
+
+}
 </script>
+
 
 </head>
 <body>
@@ -79,14 +130,18 @@ text-align: left;
     <h1 class="tayo-under-line" style="text-align: center">NOTICE</h3>
 		<div class="wrap">
     <c:forEach items="${list }" var="notice">
-			<span class="date">${notice.writeDate }</span><br>
+		<div class="child">
+			<span class="date">${notice.writeDate }</span>
+			<span class="no" data-no="${notice.id }">${notice.id }</span><br>
 			<div class="noticeBox">
 			<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
-		</div> <!-- noticeBox -->
+			</div> <!-- noticeBox -->
+		</div> <!-- child -->
     </c:forEach>
 		</div> <!-- wrap -->
 </section>
 
+<c:import url="../notice/paging.jsp"/>
 <c:import url="../template/footer.jsp"/>
 </body>
 </html>

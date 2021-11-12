@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dto.Notice;
 import fun.tayo.app.service.face.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -26,26 +27,25 @@ public class NoticeController {
 	
 	@RequestMapping(value ="/notice/notice", method=RequestMethod.GET)
 	public String noticeList(Model model) {
-		List<Notice> list = noticeService.noticeList();
+	
+		Paging paging = noticeService.getPaging(1);
+		List<Notice> list = noticeService.noticeList(paging);
 		model.addAttribute("list", list);
 		
-//		for(Notice n : list) {
-//		logger.debug("{}", n);
-//		}
 		return "user/notice/notice";	
 	}
 	
 //	공지사항 리스트
 	@ResponseBody
 	@RequestMapping(value ="/notice/notice", method=RequestMethod.POST)
-	public List<Notice> getNoticeList(){
+	public List<Notice> getNoticeList(int curPage){
 		
-		List<Notice> list = noticeService.noticeList();
+		Paging paging = noticeService.getPaging(curPage);
+		List<Notice> list = noticeService.noticeList(paging);
 //		for(Notice n : list) {
 //			logger.debug("{}", n);
 //		}
 		log.debug("list{}",list);
 		return list;
 	}
-	
 }
