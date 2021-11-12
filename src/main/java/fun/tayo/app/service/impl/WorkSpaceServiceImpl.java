@@ -4,6 +4,7 @@ import fun.tayo.app.dao.WorkSpaceDao;
 import fun.tayo.app.dto.*;
 import fun.tayo.app.service.face.WorkSpaceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -12,8 +13,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class WorkSpaceServiceImpl implements WorkSpaceService {
 
     private final WorkSpaceDao workSpaceDao;
@@ -95,6 +98,31 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
         final int result = workSpaceDao.delete(workSpaceAndMember);
 
         return result == 0 ? new ResponseData(false, "잘못된 접근입니다.") : new ResponseData(true, "ok");
+    }
+
+    @Override
+    @Transactional
+    public ResponseData joinWorkSpaceByInvCode(int memberId, String invitationCode) {
+        final WorkSpace workSpace = workSpaceDao.selectDetailByInvCode(invitationCode);
+
+        //유효성 검사
+        if (workSpace == null) {
+            return new ResponseData(false, "초대코드를 확인하세요.");
+        }
+        if (workSpace.getHeadCount() <= workSpace.getMembers().size()) {
+            return new ResponseData(false, "정원이 가득 찼습니다.");
+        }
+
+        final List<WorkSpaceAndMember> members = workSpace.getMembers();
+        for (WorkSpaceAndMember member : members) {
+            if (member.getMemberId() == memberId) {
+                return new ResponseData(false, "이미 가입한 팀입니다.");
+            }
+        }
+
+        workSpaceDao.insertTeamMember(new WorkSpaceAndMember(memberId, workSpace.getId()));
+
+        return new ResponseData(true, String.format("축하합니다!<br>팀 '%s'의 새 멤버가 되셨습니다.", workSpace.getName()));
     }
 
     private int getCurrentHeadCountFrom(int workSpaceId) {

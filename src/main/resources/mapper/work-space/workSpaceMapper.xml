@@ -38,6 +38,15 @@
         order by decode(m_id, #{memberId}, 1)
     </select>
 
+    <select id="selectDetailByInvCode" parameterType="String" resultMap="workspaceDetail">
+        select WS.ID, WS.MEMBER_ID, WS.NAME, WS.INVITATION_CODE, WS.HEAD_COUNT, M.ID m_id, M.NAME m_name
+        from (select id, member_id, name, invitation_code, head_count
+              from WORK_SPACE
+              where INVITATION_CODE = #{invitationCode}) WS
+                 inner join TEAM_MEMBER TM on WS.ID = TM.WORK_SPACE_ID
+                 inner join MEMBER M on TM.MEMBER_ID = M.ID
+    </select>
+
     <select id="selectCntTeamMember" parameterType="_int" resultType="_int">
         select count(*)
         from TEAM_MEMBER

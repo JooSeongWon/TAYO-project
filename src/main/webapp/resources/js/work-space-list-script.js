@@ -509,3 +509,49 @@ const updateWorkSpaceBtnList = document.querySelectorAll('.fa-cog');
 for (const updateWorkSpaceBtn of updateWorkSpaceBtnList) {
     updateWorkSpaceBtn.addEventListener('click', () => showUpdateForm(updateWorkSpaceBtn.getAttribute('data-workspaceId')));
 }
+
+/* 초대코드로 팀 가입 */
+const invitationCodeInput = document.querySelector('.invitation-code-input');
+const invitationCodeSubmit = document.querySelector('.invitation-code-submit');
+
+const submitInvitationCode = function () {
+    //유효성 검사
+    if (!invitationCodeInput.value) {
+        showModal('실패', '코드를 확인하세요!');
+        invitationCodeInput.value = '';
+        return;
+    }
+    if (invitationCodeInput.value.length !== 12) {
+        showModal('실패', '코드를 확인하세요!');
+        invitationCodeInput.value = '';
+        return;
+    }
+
+    const invJoinResult = function (data) {
+        if (!data.result) {
+            showModal('실패', data.message);
+            invitationCodeInput.value = '';
+            return;
+        }
+
+        showModal('성공', data.message, () => location.reload());
+    }
+
+    //서버 요청
+    $.ajax({
+        type: 'POST',
+        url: '/work-spaces/invitation/join',
+        data: {invitationCode: invitationCodeInput.value},
+        dataType: 'json',
+        success: invJoinResult,
+        error: () => {
+            showModal('실패', '해당 요청을 처리할 수 없습니다.');
+            invitationCodeInput.value = '';
+        }
+    });
+};
+
+invitationCodeSubmit.addEventListener('click', submitInvitationCode);
+invitationCodeInput.addEventListener('keydown', (e) =>{
+    if(e.key === 'Enter') invitationCodeSubmit.click();
+})

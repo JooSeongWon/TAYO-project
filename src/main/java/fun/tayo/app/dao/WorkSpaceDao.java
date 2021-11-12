@@ -28,6 +28,11 @@ public interface WorkSpaceDao {
     WorkSpace selectDetail(WorkSpaceAndMember workSpaceAndMember);
 
     /**
+     * 초대코드로 가상공간 조회
+     */
+    WorkSpace selectDetailByInvCode(String invitationCode);
+
+    /**
      * 해당 멤버가 만든 가상공간의 데이터의 초대코드 변경
      */
     int updateInvitationCode(WorkSpace workSpace);

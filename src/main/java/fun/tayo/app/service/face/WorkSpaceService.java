@@ -35,7 +35,12 @@ public interface WorkSpaceService {
     ResponseData updateWorkSpace(int workSpaceId, int memberId, String name, int headCount);
 
     /**
-     *  (멤버가 만든 가상공간인지 체크 포함) workspace 삭제
+     * (멤버가 만든 가상공간인지 체크 포함) workspace 삭제
      */
     ResponseData deleteWorkSpace(int workSpaceId, int memberId);
+
+    /**
+     * 초대코드로 팀 가입하기
+     */
+    ResponseData joinWorkSpaceByInvCode(int memberId, String invitationCode);
 }

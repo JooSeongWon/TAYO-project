@@ -92,4 +92,14 @@ public class WorkSpaceController {
     ) {
         return workSpaceService.changeInvitationCode(workSpaceId, memberSession.getId());
     }
+
+    //초대코드로 가입
+    @ResponseBody
+    @PostMapping("/invitation/join")
+    public ResponseData changeInvitationCode(
+            @RequestParam String invitationCode,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        return workSpaceService.joinWorkSpaceByInvCode(memberSession.getId(), invitationCode);
+    }
 }
