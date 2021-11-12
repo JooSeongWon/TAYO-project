@@ -35,6 +35,8 @@ section {
 	flex-basis: 200px; 
 	background-color: #ffeaea;
     flex-direction: column;
+    
+    overflow-y: scroll;
 
 }
 
