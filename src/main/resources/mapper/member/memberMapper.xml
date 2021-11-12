@@ -29,5 +29,10 @@
 		INSERT INTO member ( id, name, phone, email, password, file_id )
 		VALUES ( member_seq.nextval, #{name}, #{phone}, #{email}, #{password}, #{profile} )
 	</insert>
+	
+	<insert id="insertkakao" parameterType="MemberJoinParam">
+        insert into MEMBER(id, name, email, password)
+        values (member_SEQ.nextval, #{name}, #{email}, #{password})
+    </insert>
 
 </mapper>
