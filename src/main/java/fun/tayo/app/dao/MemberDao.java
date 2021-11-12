@@ -12,6 +12,5 @@ public interface MemberDao {
 
 
 	void insert(Member member);
-
-
+	
 }

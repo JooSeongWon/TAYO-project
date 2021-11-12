@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberLoginParam;
+import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +94,7 @@ public class MemberController {
 			
 			return "redirect:/member/join";
 		}
-	}	
+	}
 	
 }
 
