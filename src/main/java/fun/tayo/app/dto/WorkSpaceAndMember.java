@@ -2,16 +2,18 @@ package fun.tayo.app.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter @Setter
-public class TeamMember {
+@Getter @Setter @ToString
+public class WorkSpaceAndMember {
     private int memberId;
     private int workSpaceId;
+    private String memberName;
 
-    public TeamMember() {
+    public WorkSpaceAndMember() {
     }
 
-    public TeamMember(int memberId, int workSpaceId) {
+    public WorkSpaceAndMember(int memberId, int workSpaceId) {
         this.memberId = memberId;
         this.workSpaceId = workSpaceId;
     }

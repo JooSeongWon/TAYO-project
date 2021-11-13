@@ -7,6 +7,9 @@
 //모달 사용중
 let isShowModal = false;
 
+//부모 노드
+let modalParentNode = document.body;
+
 //모달 z인덱스
 const modalZIndex = 9999;
 
@@ -23,7 +26,7 @@ const modalBackGroundStyleObj = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'fixed',
+    position: 'absolute',
     zIndex: modalZIndex - 1,
     left: '0px',
     top: '0px',
@@ -101,16 +104,15 @@ function modalBtnClicked(callback) {
         return;
     }
 
-    callback();
-
     if (modalCancelEvent !== undefined) {
         modalCancelBtnDomObj.removeEventListener('click', modalCancelEvent);
         modalCancelEvent = undefined;
     }
     modalOkBtnDomObj.removeEventListener('click', modalOkEvent);
-    document.body.removeChild(modalBackGroundDomObj);
+    modalParentNode.removeChild(modalBackGroundDomObj);
 
     isShowModal = false;
+    callback();
     return false;
 }
 
@@ -124,7 +126,7 @@ function showModal(title, msg, okCallBack, cancelCallBack) {
     } : okCallBack;
 
     modalTitleDomObj.innerText = title;
-    modalDescriptionDomObj.innerText = msg;
+    modalDescriptionDomObj.innerHTML = msg;
 
     modalOkEvent = () => modalBtnClicked(okCallBackT);
     modalOkBtnDomObj.addEventListener('click', modalOkEvent);
@@ -137,7 +139,7 @@ function showModal(title, msg, okCallBack, cancelCallBack) {
         modalCancelBtnDomObj.style.display = 'inline-block';
     }
 
-    document.body.appendChild(modalBackGroundDomObj);
+    modalParentNode.appendChild(modalBackGroundDomObj);
     modalOkBtnDomObj.focus();
     isShowModal = true;
 }
@@ -149,3 +151,9 @@ modalOkBtnDomObj.addEventListener('keydown', e => {
         modalOkBtnDomObj.click();
     }
 });
+
+
+//부모노드 설정
+function setModalParentNode(parentNode) {
+    modalParentNode = parentNode;
+}
