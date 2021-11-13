@@ -18,6 +18,7 @@ import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.QuestionMessage;
 import fun.tayo.app.dto.QusetionChat;
 import fun.tayo.app.dto.ResponseData;
+import fun.tayo.app.dto.ResponseObject;
 import fun.tayo.app.service.face.QuestionChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,24 +57,19 @@ public class QuestionChatController {
 	public String joinChatRoom(
 			@PathVariable("questionId") int questionId,
 			@SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
-			QusetionChat qusetionchat,
 			Model model			
 			) {
-		
-			log.debug("info  {}" , questionId);
-			
-			//채팅방 메세지 받기
-			List<QuestionMessage> mList = questionChatService.messageList(questionId);
-			log.debug("{}" , mList);
-
-//		qusetionchat.setId(questionId);
-//		qusetionchat.setMemberId(memberSession.getId());
-//		String chatName = memberSession.toString();
-//		
-		model.addAttribute("mList", mList);
+		String memberName = memberSession.toString();
+		model.addAttribute("memberName", memberName);
+		model.addAttribute("questionId", questionId);
 		
 		return "user/question-chat/question-chat";
 	}
 	
+	@ResponseBody
+	@PostMapping(value = "/service/{questionId}")
+	public ResponseObject joinChatRoomProc(@PathVariable int questionId) {
+		return questionChatService.messageList(questionId);
+	}
 	
 }

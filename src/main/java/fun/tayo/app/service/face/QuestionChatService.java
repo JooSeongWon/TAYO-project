@@ -4,7 +4,9 @@ import java.util.List;
 
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.QuestionMessage;
+import fun.tayo.app.dto.QusetionChat;
 import fun.tayo.app.dto.ResponseData;
+import fun.tayo.app.dto.ResponseObject;
 
 public interface QuestionChatService {
 	
@@ -21,6 +23,12 @@ public interface QuestionChatService {
 	 * @param questionId
 	 * @return
 	 */
-	List<QuestionMessage> messageList(int questionId);
+	ResponseObject messageList(int questionId);
+	
+	QusetionChat selectChatRoom(int questionChatId);
+
+	int insertMessage(QuestionMessage questionMessage);
+
+
 
 }

@@ -12,12 +12,8 @@
 	</select>
 	
 	<insert id="insertChatRoom" parameterType="MemberSession">
-		<selectKey order="BEFORE" resultType="int" keyProperty="ChatId">
-			SELECT QUESTION_CHAT_SEQ.nextval FROM dual
-		</selectKey>
-		
-		INSERT INTO QUESTION_CHAT ( id, memberId )
-		VALUES ( #{ChatId}, #{id})
+		INSERT INTO QUESTION_CHAT ( id, member_id )
+		VALUES ( QUESTION_CHAT_SEQ.nextval , #{id})
 	</insert>
 	
 	<select id="selectChatRoom" resultType="int">
@@ -26,9 +22,20 @@
 	</select>
 	
 	<select id="selectMessage" parameterType="int" resultType="QuestionMessage">
-		SELECT id, content, send_date, read, member_id, question_chat_id
+		SELECT id, content, send_date, read, member_id, question_chat_id, name
 		FROM QUESTION_MESSAGE
 		WHERE question_chat_id = #{roomId }
 	</select>
 
+	<select id="selectChatRoomByQuestionId" parameterType="int" resultType="QusetionChat">
+		SELECT id FROM Question_Chat
+		WHERE id = #{questionChatId }
+	</select>
+	
+	<insert id="insertChatMessage" parameterType="QuestionMessage">
+		INSERT INTO QUESTION_MESSAGE 
+			(id, content, name, member_id, read, question_chat_id)
+		VALUES (QUESTION_CHAT_SEQ.nextval, #{content}, #{name}, #{memberId},#{read}, #{questionChatId})
+	</insert>
+	
 </mapper>

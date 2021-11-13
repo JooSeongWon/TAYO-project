@@ -13,29 +13,29 @@ section {
 	
 	min-width: 500px;
 	min-height: 500px;
+	
+	padding: 0px;
+	padding-top: 5px;
+	padding-bottom: 30px;
 }
 
 .con-box {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
+    margin-left: 10px;
 	padding-bottom: 10px;
 }
 
-.con-box__description {
-}
-
-.con-box__icon {
-}
 
 .chat-box {
 	flex-grow: 1;
     display: flex;
 	flex-basis: 200px; 
-	background-color: #ffeaea;
     flex-direction: column;
     
+    margin-left: 10px;
+    margin-right: 2px;
     overflow-y: scroll;
 
 }
@@ -45,13 +45,15 @@ section {
     flex-direction: row;
     justify-content: space-around;
     
-  	padding-top: 10px;
+  	padding-top: 15px;
+  	margin: 0px 10px;
 }
 
 .chat-message{
 	background-color: var(--color-light-grey);
 	border: none;
 	margin-right: 20px;
+	margin-left: 10px;
 	flex-grow: 7;
 
 }
@@ -60,3 +62,45 @@ section {
 	flex-grow: 3;
 	text-align:center;
 }
+
+
+
+
+.message{
+	display: flex;
+	flex-direction: column;
+	margin: 20px 10px;
+}
+
+.right{
+	align-items: flex-end;
+}
+
+.content{
+	text-align: center;
+	background-color: var(--color-dark-grey);
+	color: var(--color-white);
+	padding: 10px;
+	margin: 5px 0px;
+	border-radius: 5px;
+	width: 50%;
+	max-width: 230px;
+	
+}
+
+.day{
+	font-size: 12px;
+}
+
+
+.chat-box::-webkit-scrollbar {
+	width: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+	background-color: var(--color-dark-grey);
+	border-radius: 10px;
+	background-clip: padding-box;
+	border: 2px solid transparent;
+}
+

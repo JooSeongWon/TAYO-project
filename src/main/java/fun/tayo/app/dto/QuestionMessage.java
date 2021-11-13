@@ -14,4 +14,5 @@ public class QuestionMessage {
 	private String read;
 	private int memberId;
 	private int questionChatId;
+	private String name;
 }
