@@ -378,6 +378,7 @@ function showUpdateForm(id) {
 
         const updateFormRight = document.createElement('div');
         updateFormRight.classList.add('update-right');
+        updateFormRight.classList.add('scroll-bar');
 
         updateMemberList = document.createElement('div');
         updateMemberList.classList.add('member-list');
