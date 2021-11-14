@@ -9,28 +9,6 @@ section {
     margin: 0 16px;
 }
 
-/* 스크롤바 */
-.scroll-bar::-webkit-scrollbar {
-    width: 6px;
-}
-.scroll-bar::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-.scroll-bar::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: var(--color-light-grey);
-}
-.scroll-bar::-webkit-scrollbar-button {
-    width: 0;
-    height: 0;
-}
-
-/* 파이어 폭스 스크롤바 */
-.scroll-bar {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-light-grey) transparent;
-}
-
 /* 헤더 */
 .work-spaces__header {
     display: flex;
@@ -286,11 +264,11 @@ section {
     overflow-y: auto;
 }
 
-.update-right.scroll-bar::-webkit-scrollbar-thumb {
+.update-right.tayo-scroll-bar::-webkit-scrollbar-thumb {
     background-color: #ffa7a7;
 }
 
-.update-right.scroll-bar {
+.update-right.tayo-scroll-bar {
     scrollbar-color: #ffa7a7 transparent;
 }
 

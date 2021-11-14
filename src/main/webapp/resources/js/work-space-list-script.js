@@ -378,7 +378,7 @@ function showUpdateForm(id) {
 
         const updateFormRight = document.createElement('div');
         updateFormRight.classList.add('update-right');
-        updateFormRight.classList.add('scroll-bar');
+        updateFormRight.classList.add('tayo-scroll-bar');
 
         updateMemberList = document.createElement('div');
         updateMemberList.classList.add('member-list');
@@ -524,6 +524,7 @@ function showUpdateForm(id) {
 
 }
 
+//설정 버튼
 const updateWorkSpaceBtnList = document.querySelectorAll('.fa-cog');
 for (const updateWorkSpaceBtn of updateWorkSpaceBtnList) {
     updateWorkSpaceBtn.addEventListener('click', () => showUpdateForm(updateWorkSpaceBtn.getAttribute('data-workspaceId')));
@@ -570,7 +571,34 @@ const submitInvitationCode = function () {
     });
 };
 
+//초대코드 입력
 invitationCodeSubmit.addEventListener('click', submitInvitationCode);
 invitationCodeInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') invitationCodeSubmit.click();
 })
+
+//탈퇴 버튼
+const exitTeamBtnList = document.querySelectorAll('.fa-sign-out-alt');
+for (const exitTeamBtn of exitTeamBtnList) {
+    exitTeamBtn.addEventListener('click', () => {
+        showModal('탈퇴확인', '정말 탈퇴하시겠습니까?', () => {
+            $.ajax({
+                type: 'DELETE',
+                url: `/work-spaces/${exitTeamBtn.getAttribute('data-workspaceId')}/members`,
+                dataType: 'json',
+                success: (data) => {
+                    if (!data.result) {
+                        showModal('실패', data.message);
+                        return;
+                    }
+
+                    showModal('성공', '팀을 탈퇴하였습니다.', () => {
+                        location.reload()
+                    });
+                },
+                error: () => showModal('실패', '해당 요청을 처리할 수 없습니다.')
+            });
+        }, () => {
+        });
+    });
+}
