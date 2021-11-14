@@ -378,6 +378,7 @@ function showUpdateForm(id) {
 
         const updateFormRight = document.createElement('div');
         updateFormRight.classList.add('update-right');
+        updateFormRight.classList.add('tayo-scroll-bar');
 
         updateMemberList = document.createElement('div');
         updateMemberList.classList.add('member-list');
@@ -452,6 +453,9 @@ function showUpdateForm(id) {
     });
 
     //상세정보 파싱 실패
+    if (responseData === undefined) {
+        return;
+    }
     if (!responseData.result) {
         showModal('오류', responseData.object);
         return;
@@ -473,7 +477,6 @@ function showUpdateForm(id) {
     myNodeIcon.innerText = 'L';
     myNode.appendChild(myNodeName);
     myNode.appendChild(myNodeIcon);
-    workSpace.members[0].node = myNode;
 
     updateMemberList.appendChild(myNode);
 
@@ -488,10 +491,29 @@ function showUpdateForm(id) {
         memberNodeExile.classList.add('member-exile');
         memberNode.appendChild(memberNodeName);
         memberNode.appendChild(memberNodeExile);
-        workSpace.members[i].node = memberNode;
 
         updateMemberList.appendChild(memberNode);
-        //추방이벤트 등록해야함
+
+        //추방이벤트
+        memberNodeExile.addEventListener('click', () => {
+            showModal('추방확인', '추방은 즉시 반영되며 되돌릴 수 없습니다.<br>정말 추방하시겠습니까?', () => {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/work-spaces/${workSpace.id}/members/${workSpace.members[i].memberId}`,
+                    dataType: 'json',
+                    success: data => {
+                        if (data.result) {
+                            showModal('성공', '멤버를 추방했습니다.');
+                            updateMemberList.removeChild(memberNode);
+                            return;
+                        }
+                        showModal('실패', data.message);
+                    },
+                    error: () => showModal('오류', '해당 요청을 처리할 수 없습니다.')
+                });
+            }, () => {
+            });
+        });
     }
 
     //바뀐내용 없으면 ajax 요청 안하기 위해 기존 값들 저장
@@ -505,6 +527,7 @@ function showUpdateForm(id) {
 
 }
 
+//설정 버튼
 const updateWorkSpaceBtnList = document.querySelectorAll('.fa-cog');
 for (const updateWorkSpaceBtn of updateWorkSpaceBtnList) {
     updateWorkSpaceBtn.addEventListener('click', () => showUpdateForm(updateWorkSpaceBtn.getAttribute('data-workspaceId')));
@@ -551,7 +574,34 @@ const submitInvitationCode = function () {
     });
 };
 
+//초대코드 입력
 invitationCodeSubmit.addEventListener('click', submitInvitationCode);
-invitationCodeInput.addEventListener('keydown', (e) =>{
-    if(e.key === 'Enter') invitationCodeSubmit.click();
+invitationCodeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') invitationCodeSubmit.click();
 })
+
+//탈퇴 버튼
+const exitTeamBtnList = document.querySelectorAll('.fa-sign-out-alt');
+for (const exitTeamBtn of exitTeamBtnList) {
+    exitTeamBtn.addEventListener('click', () => {
+        showModal('탈퇴확인', '정말 탈퇴하시겠습니까?', () => {
+            $.ajax({
+                type: 'DELETE',
+                url: `/work-spaces/${exitTeamBtn.getAttribute('data-workspaceId')}/members`,
+                dataType: 'json',
+                success: (data) => {
+                    if (!data.result) {
+                        showModal('실패', data.message);
+                        return;
+                    }
+
+                    showModal('성공', '팀을 탈퇴하였습니다.', () => {
+                        location.reload()
+                    });
+                },
+                error: () => showModal('실패', '해당 요청을 처리할 수 없습니다.')
+            });
+        }, () => {
+        });
+    });
+}

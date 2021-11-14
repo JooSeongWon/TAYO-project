@@ -19,12 +19,10 @@ public class HomeController {
     public String main(Model model) {
 
         model.addAttribute("path", path);
-        model.addAttribute("question", true);
-
         return "user/sample/user-template";
     }
 
-    @GetMapping("/admin-test")
+    @GetMapping("/admin")
     public String adminMain() {
 
         return "admin/sample/admin-template";

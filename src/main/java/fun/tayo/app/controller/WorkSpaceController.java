@@ -102,4 +102,25 @@ public class WorkSpaceController {
     ) {
         return workSpaceService.joinWorkSpaceByInvCode(memberSession.getId(), invitationCode);
     }
+
+    //팀원 추방
+    @ResponseBody
+    @DeleteMapping("/{workSpaceId}/members/{memberId}")
+    public ResponseData expelMember(
+            @PathVariable int workSpaceId,
+            @PathVariable(value = "memberId") int targetId,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        return workSpaceService.expelTeamMember(workSpaceId, memberSession.getId(), targetId);
+    }
+
+    //팀 탈퇴
+    @ResponseBody
+    @DeleteMapping("/{workSpaceId}/members")
+    public ResponseData expelMember(
+            @PathVariable int workSpaceId,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        return workSpaceService.exitTeam(workSpaceId, memberSession.getId());
+    }
 }

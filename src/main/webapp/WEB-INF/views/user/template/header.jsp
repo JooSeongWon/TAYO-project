@@ -12,10 +12,13 @@
     <c:if test="${not empty loginMember}">
         <i class="fas fa-bars bars-button"></i>
         <ul class="header-nav">
-            <li class="header-nav__item <c:if test="${not empty cafe}">active</c:if>"><a href="${pageContext.request.contextPath}/work-spaces">Workspace</a></li>
+            <li class="header-nav__item <c:if test="${not empty workspaces}">active</c:if>"><a href="${pageContext.request.contextPath}/work-spaces">Workspace</a></li>
             <li class="header-nav__item <c:if test="${not empty profile}">active</c:if>"><a href="${pageContext.request.contextPath}/profile">Profile</a></li>
             <li class="header-nav__item <c:if test="${not empty notice}">active</c:if>"><a href="${pageContext.request.contextPath}/notice">Notice</a></li>
             <li class="header-nav__item <c:if test="${not empty question}">active</c:if>"><a href="${pageContext.request.contextPath}/question">Question</a></li>
+            <c:if test="${loginMember.isAdmin()}">
+                <li class="header-nav__item"><a href="${pageContext.request.contextPath}/admin">Admin</a></li>
+            </c:if>
         </ul>
     </c:if>
     <c:if test="${empty loginMember}">

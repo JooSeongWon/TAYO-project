@@ -94,3 +94,25 @@ body {
     border-bottom: 2px solid var(--color-grey);
     padding-bottom: 6px;
 }
+
+/* 스크롤바 */
+.tayo-scroll-bar::-webkit-scrollbar {
+    width: 6px;
+}
+.tayo-scroll-bar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+.tayo-scroll-bar::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: var(--color-light-grey);
+}
+.tayo-scroll-bar::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+}
+
+/* 파이어 폭스 스크롤바 */
+.tayo-scroll-bar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-light-grey) transparent;
+}

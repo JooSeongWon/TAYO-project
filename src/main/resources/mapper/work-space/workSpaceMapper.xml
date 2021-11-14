@@ -85,4 +85,10 @@
           and MEMBER_ID = #{memberId}
     </delete>
 
+    <delete id="deleteTeamMember" parameterType="WorkSpaceAndMember">
+        delete
+        from TEAM_MEMBER
+        where WORK_SPACE_ID = #{workSpaceId}
+          and MEMBER_ID = #{memberId}
+    </delete>
 </mapper>

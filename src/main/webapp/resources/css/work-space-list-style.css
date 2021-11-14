@@ -264,6 +264,14 @@ section {
     overflow-y: auto;
 }
 
+.update-right.tayo-scroll-bar::-webkit-scrollbar-thumb {
+    background-color: #ffa7a7;
+}
+
+.update-right.tayo-scroll-bar {
+    scrollbar-color: #ffa7a7 transparent;
+}
+
 .member-list {
     display: flex;
     flex-direction: column;
