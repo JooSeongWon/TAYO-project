@@ -41,8 +41,7 @@
     <%-- 바디 --%>
     <div class="all-shadow work-spaces__body">
         <h3><span class="tayo-under-line work-spaces__title"> MY WORK LIST </span></h3>
-        <i class="fas fa-plus-circle add-work-space"
-           <c:if test="${workSpaceList ne null and workSpaceList.size() > 6}">style="padding-right: 30px" </c:if>></i>
+        <i class="fas fa-plus-circle add-work-space"></i>
         <div class="work-spaces__board tayo-scroll-bar">
             <%-- 가상공간 --%>
             <div class="work-spaces__list">

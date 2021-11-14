@@ -150,7 +150,7 @@ text-align: left;
 <section class="all-shadow">
 <button id="test">test</button>
     <h1 class="tayo-under-line" style="text-align: center">NOTICE</h1>
-		<div class="wrap">
+		<div class="wrap tayo-scroll-bar">
   		  <c:forEach items="${list }" var="notice">
 
 			<div class="child">
