@@ -14,10 +14,10 @@
 
 	<!-- interceptors -->
 	<interceptors>
-		<!--<interceptor>
+		<interceptor>
 			<mapping path="/admin/**"/>
 			<beans:bean class="fun.tayo.app.interceptor.AdminInterceptor"/>
-		</interceptor>-->
+		</interceptor>
 		<interceptor>
 			<mapping path="/work-spaces/**"/>
 			<mapping path="/profile/**"/>
