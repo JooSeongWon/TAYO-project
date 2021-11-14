@@ -7,29 +7,8 @@
 <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
 <title>타요 - 로그인</title>
 
-<!-- <script type="text/javascript">
+    <script src="${pageContext.request.contextPath}/resources/js/login-script.js" defer></script>
 
-$(document).ready(function(){
-	
-	$("#login").click(function() {
-		console.log("clicked")
-		$.ajax({
-				type:"post",
-				url:"/login",
-				data: {},
-				dataType: 'json',
-				success: function(){
-					
-				},
-				error: function(){
-					
-				}
-			}		
-		)
-	})
-})
-
-</script> -->
 
 
 </head>
@@ -40,7 +19,7 @@ $(document).ready(function(){
 	<section class="all-shadow fixed-center">
 
 		<div>
-			<form action="" method="post">
+			<!-- <form action="" method="post"> -->
 				<div class="form-group">
 					<label for="email">EMAIL</label>
 					<div>
@@ -50,7 +29,7 @@ $(document).ready(function(){
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="password">패스워드</label>
+					<label for="password">Password</label>
 					<div>
 						<input type="password" id="password" name="password"
 							class="tayo-input" placeholder="password">
@@ -58,12 +37,14 @@ $(document).ready(function(){
 				</div>
 				<br>
 				<div>
-					<div style="margin: auto; width: 75px;">
-						<button class="loginbtn" onclick="f_loginCheck();">로그인</button>
-						<button type="button" id="kakaoLoginBtn" onclick="location.href ='https://kauth.kakao.com/oauth/authorize?client_id=d688ecbcd7678fc036df85dfda0efcf3&redirect_uri=https%3a%2f%2flocalhost%3a8443%2flogin%2fkakao&response_type=code'">카카오 로그인</button>
+					<div style="margin: auto;">
+						<button id="loginBtn" class="loginbtn" onclick="f_loginCheck();">Login</button>
+						<button type="button" id="kakaoLoginBtn" 
+						onclick="location.href ='https://kauth.kakao.com/oauth/authorize?client_id=d688ecbcd7678fc036df85dfda0efcf3&redirect_uri=https%3a%2f%2flocalhost%3a8443%2flogin%2fkakao&response_type=code'">kakao Login</button>
+						<button id="join" class="joinBtn" onclick="location.href='/join'">회원가입</button>
 					</div>
 				</div>
-			</form>
+			<!-- </form> -->
 		</div>
 
 
