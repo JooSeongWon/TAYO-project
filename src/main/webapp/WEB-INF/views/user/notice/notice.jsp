@@ -4,10 +4,6 @@
 <html lang="ko">
 <head>
     <c:import url="../template/head-meta.jsp"/>
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>   
-    
     <title>타요 - 공지사항</title>
 
 <style type="text/css">
@@ -55,10 +51,28 @@ text-align: left;
 	float: right;
 }
 .child {
-
 }
 </style>
 
+</head>
+<body>
+<c:import url="../template/header.jsp"/>
+
+<section class="all-shadow">
+<button id="test">test</button>
+    <h1 class="tayo-under-line" style="text-align: center">NOTICE</h3>
+		<div class="wrap">
+  		  <c:forEach items="${list }" var="notice">
+			<div class="child">
+			<span class="date">${notice.writeDate }</span>
+			<span class="no" data-no="${notice.id }">${notice.id }</span><br>
+			<div class="noticeBox">
+			<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
+			</div> <!-- noticeBox -->
+			</div> <!-- child -->
+  		  </c:forEach>
+		</div> <!-- wrap -->
+</section>
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -71,7 +85,7 @@ $(document).ready(function(){
 				data: {},
 				dataType: 'json',
 				success: function(data){
-					$('.data').test(data)
+					$('.data').text(data)
 				},
 				error: function(){
 					alert("error")
@@ -101,8 +115,7 @@ function addChildrean(){
         wrap.appendChild(child); //wrap맨밑에 child추가
 
         child.innerText = i+1; //수 세기
-        
-    }
+     }
 
     let lastChild = document.querySelector('.child:last-child') //마지막 child
     observer.observe(lastChild); 
@@ -119,28 +132,6 @@ function callback(entries){ //마지막공지가 사라지면 0.5초후
 
 }
 </script>
-
-
-</head>
-<body>
-<c:import url="../template/header.jsp"/>
-
-<section class="all-shadow">
-<button id="test">test</button>
-    <h1 class="tayo-under-line" style="text-align: center">NOTICE</h3>
-		<div class="wrap">
-    <c:forEach items="${list }" var="notice">
-		<div class="child">
-			<span class="date">${notice.writeDate }</span>
-			<span class="no" data-no="${notice.id }">${notice.id }</span><br>
-			<div class="noticeBox">
-			<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
-			</div> <!-- noticeBox -->
-		</div> <!-- child -->
-    </c:forEach>
-		</div> <!-- wrap -->
-</section>
-
 <c:import url="../notice/paging.jsp"/>
 <c:import url="../template/footer.jsp"/>
 </body>

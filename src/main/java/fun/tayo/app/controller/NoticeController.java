@@ -31,7 +31,7 @@ public class NoticeController {
 		Paging paging = noticeService.getPaging(1);
 		List<Notice> list = noticeService.noticeList(paging);
 		model.addAttribute("list", list);
-		
+		log.debug("paging{}",paging);
 		return "user/notice/notice";	
 	}
 	
@@ -45,7 +45,8 @@ public class NoticeController {
 //		for(Notice n : list) {
 //			logger.debug("{}", n);
 //		}
-		log.debug("list{}",list);
+//		log.debug("list{}",list);
+//		log.debug("curPage{}",curPage);
 		return list;
 	}
 }
