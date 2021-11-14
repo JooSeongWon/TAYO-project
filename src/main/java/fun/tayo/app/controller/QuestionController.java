@@ -21,7 +21,7 @@ public class QuestionController {
 
 	private final QuestionService questionService;
 	
-	@RequestMapping(value="/question/question", method=RequestMethod.GET)
+	@RequestMapping(value="/question", method=RequestMethod.GET)
 	public String questionList(Model model) {
 		
 		List<Question> list = questionService.questionList();
@@ -31,7 +31,7 @@ public class QuestionController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value ="/question/question", method=RequestMethod.POST)
+	@RequestMapping(value ="/question", method=RequestMethod.POST)
 	public List<Question> getQuestionList(){
 		
 		List<Question> list = questionService.questionList();

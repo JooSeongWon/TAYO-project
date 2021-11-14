@@ -25,19 +25,20 @@ public class NoticeController {
 	private static final Logger logger = LoggerFactory.getLogger(NoticeController.class);
 
 	
-	@RequestMapping(value ="/notice/notice", method=RequestMethod.GET)
+	@RequestMapping(value ="/notice", method=RequestMethod.GET)
 	public String noticeList(Model model) {
 	
 		Paging paging = noticeService.getPaging(1);
 		List<Notice> list = noticeService.noticeList(paging);
 		model.addAttribute("list", list);
+		model.addAttribute("paging", paging);
 		log.debug("paging{}",paging);
 		return "user/notice/notice";	
 	}
 	
 //	공지사항 리스트
 	@ResponseBody
-	@RequestMapping(value ="/notice/notice", method=RequestMethod.POST)
+	@RequestMapping(value ="/notice", method=RequestMethod.POST)
 	public List<Notice> getNoticeList(int curPage){
 		
 		Paging paging = noticeService.getPaging(curPage);

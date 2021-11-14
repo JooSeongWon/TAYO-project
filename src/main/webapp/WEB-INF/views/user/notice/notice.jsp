@@ -41,7 +41,7 @@ text-align: left;
 .wrap {
     width: 800px;
     height: 540px;
-    margin: 50ps auto;
+    margin: 50px auto;
 
     background: aqua;
     overflow-y: scroll;
@@ -53,6 +53,95 @@ text-align: left;
 .child {
 }
 </style>
+<script type="text/javascript">
+
+	let currPage = 1;
+	let totalPage = ${paging.totalPage};
+
+	$(document).ready(function(){
+
+		$("#test").click(function() {
+			console.log("clicked")
+			$.ajax({
+						type:"post",
+						url:"/notice/notice",
+						data: {},
+						dataType: 'json',
+						success: function(data){
+							$('.data').text(data)
+						},
+						error: function(){
+							alert("error")
+						}
+					}
+			)
+		});
+
+
+		const wrap = document.querySelector('.wrap'); //.wrap
+
+		const options = {
+			root: wrap,
+			rootMargin : '0px',
+			threshold: 1
+		}; //wrap 옵션
+
+		const observer = new IntersectionObserver(callback, options);
+
+		function getNextNotices(){
+			if(currPage >= totalPage) {
+				return;
+			}
+
+			//페이징 받아오기 ajax
+			$.ajax({
+						type:"post",
+						url:"/notice",
+						data: {curPage: ++currPage},
+						dataType: 'json',
+						success: appendChildren,
+						error: console.log
+					}
+			)
+
+		}
+
+		function appendChildren(noticeList) {
+			for(let notice of noticeList){
+
+				const child = document.createElement('div');
+				child.classList.add('child');
+
+				child.innerHTML = `<span class="date">\${notice.writeDate }</span>
+									<span class="no" data-no="\${notice.id }">\${notice.id }</span><br>
+									<div class="noticeBox">
+									<p class="text"><textarea cols="95" rows="4" style="border: none">\${notice.content }</textarea></p>
+									</div>`;
+				wrap.appendChild(child);
+			}
+
+			setObserve();
+		}
+
+
+		function callback(entries){ //마지막공지가 사라지면 0.5초후
+			if(entries[0].isIntersecting){
+				observer.unobserve(entries[0].target);
+				getNextNotices();
+			}
+
+		}
+
+		function setObserve() {
+			let lastChild = document.querySelector('.child:last-child'); //마지막 child
+			observer.observe(lastChild);
+		}
+
+
+		setObserve();
+	});
+
+</script>
 
 </head>
 <body>
@@ -60,9 +149,10 @@ text-align: left;
 
 <section class="all-shadow">
 <button id="test">test</button>
-    <h1 class="tayo-under-line" style="text-align: center">NOTICE</h3>
+    <h1 class="tayo-under-line" style="text-align: center">NOTICE</h1>
 		<div class="wrap">
   		  <c:forEach items="${list }" var="notice">
+
 			<div class="child">
 			<span class="date">${notice.writeDate }</span>
 			<span class="no" data-no="${notice.id }">${notice.id }</span><br>
@@ -70,68 +160,11 @@ text-align: left;
 			<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
 			</div> <!-- noticeBox -->
 			</div> <!-- child -->
+
   		  </c:forEach>
 		</div> <!-- wrap -->
 </section>
-<script type="text/javascript">
 
-$(document).ready(function(){
-	
-	$("#test").click(function() {
-		console.log("clicked")
-		$.ajax({
-				type:"post",
-				url:"/notice/notice",
-				data: {},
-				dataType: 'json',
-				success: function(data){
-					$('.data').text(data)
-				},
-				error: function(){
-					alert("error")
-				}
-			}		
-		)
-	})
-})
-const wrap = document.querySelector('.wrap'); //.wrap 
-
-const options = {
-    root: wrap,
-    rootMargin : '0px',
-    threshold: 1
-}; //wrap 옵션
-
-const observer = new IntersectionObserver(callback, options);
-
-addChildrean();
-
-function addChildrean(){
-
-    for(let i = 0; i < 15; i++){ 
-        const child = document.createElement('div'); //child(div)
-        child.classList.add('child'); //childList생성
-
-        wrap.appendChild(child); //wrap맨밑에 child추가
-
-        child.innerText = i+1; //수 세기
-     }
-
-    let lastChild = document.querySelector('.child:last-child') //마지막 child
-    observer.observe(lastChild); 
-}
-
-
-
-
-function callback(entries){ //마지막공지가 사라지면 0.5초후
-    if(entries[0].isIntersecting){
-        observer.unobserve(entries[0].target);
-        setTimeout(addChildrean, 500);
-    }
-
-}
-</script>
 <c:import url="../notice/paging.jsp"/>
 <c:import url="../template/footer.jsp"/>
 </body>

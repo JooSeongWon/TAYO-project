@@ -45,6 +45,7 @@ public class QuestionChatHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		log.debug("close!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		if(sessionList.get(session) != null) {
             RoomList.get(sessionList.get(session)).remove(session);
             sessionList.remove(session);
