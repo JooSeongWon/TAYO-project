@@ -474,7 +474,6 @@ function showUpdateForm(id) {
     myNodeIcon.innerText = 'L';
     myNode.appendChild(myNodeName);
     myNode.appendChild(myNodeIcon);
-    workSpace.members[0].node = myNode;
 
     updateMemberList.appendChild(myNode);
 
@@ -489,10 +488,29 @@ function showUpdateForm(id) {
         memberNodeExile.classList.add('member-exile');
         memberNode.appendChild(memberNodeName);
         memberNode.appendChild(memberNodeExile);
-        workSpace.members[i].node = memberNode;
 
         updateMemberList.appendChild(memberNode);
-        //추방이벤트 등록해야함
+
+        //추방이벤트
+        memberNodeExile.addEventListener('click', () => {
+            showModal('추방확인', '추방은 즉시 반영되며 되돌릴 수 없습니다.<br>정말 추방하시겠습니까?', () => {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/work-spaces/${workSpace.id}/members/${workSpace.members[i].memberId}`,
+                    dataType: 'json',
+                    success: data => {
+                        if (data.result) {
+                            showModal('성공', '멤버를 추방했습니다.');
+                            updateMemberList.removeChild(memberNode);
+                            return;
+                        }
+                        showModal('실패', data.message);
+                    },
+                    error: () => showModal('오류', '해당 요청을 처리할 수 없습니다.')
+                });
+            }, () => {
+            });
+        });
     }
 
     //바뀐내용 없으면 ajax 요청 안하기 위해 기존 값들 저장
@@ -553,6 +571,6 @@ const submitInvitationCode = function () {
 };
 
 invitationCodeSubmit.addEventListener('click', submitInvitationCode);
-invitationCodeInput.addEventListener('keydown', (e) =>{
-    if(e.key === 'Enter') invitationCodeSubmit.click();
+invitationCodeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') invitationCodeSubmit.click();
 })

@@ -51,4 +51,9 @@ public interface WorkSpaceDao {
      * 해당 멤버가 만든 가상공간 삭제
      */
     int delete(WorkSpaceAndMember workSpaceAndMember);
+
+    /**
+     * 팀멤버 삭제
+     */
+    int deleteTeamMember(WorkSpaceAndMember workSpaceAndMember);
 }

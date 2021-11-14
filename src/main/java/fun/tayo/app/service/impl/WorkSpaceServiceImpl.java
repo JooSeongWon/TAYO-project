@@ -125,6 +125,42 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
         return new ResponseData(true, String.format("축하합니다!<br>팀 '%s'의 새 멤버가 되셨습니다.", workSpace.getName()));
     }
 
+    @Override
+    @Transactional
+    public ResponseData expelTeamMember(int workSpaceId, int requesterId, int targetId) {
+        if (workSpaceId == requesterId) {
+            return new ResponseData(false, "처리할 수 없는 요청입니다.");
+        }
+
+        final ResponseObject detailWorkSpaceOfMember = findDetailWorkSpaceOfMember(workSpaceId, requesterId);
+        if (!detailWorkSpaceOfMember.getResult()) {
+            return new ResponseData(false, "처리할 수 없는 요청입니다.");
+        }
+
+        final WorkSpace workSpace = (WorkSpace) detailWorkSpaceOfMember.getObject();
+        final List<WorkSpaceAndMember> members = workSpace.getMembers();
+
+        for (WorkSpaceAndMember member : members) {
+            if (member.getMemberId() == targetId) {
+                final int result = workSpaceDao.deleteTeamMember(new WorkSpaceAndMember(targetId, workSpaceId));
+                if (result == 0) return new ResponseData(false, "서버오류");
+
+                return new ResponseData(true, "ok");
+            }
+        }
+
+        return new ResponseData(false, "없는 회원입니다.");
+    }
+
+    @Override
+    @Transactional
+    public ResponseData exitTeam(int workSpaceId, int memberId) {
+        final int result = workSpaceDao.deleteTeamMember(new WorkSpaceAndMember(memberId, workSpaceId));
+        if (result == 0) return new ResponseData(false, "처리할 수 없는 요청입니다.");
+
+        return new ResponseData(true, "ok");
+    }
+
     private int getCurrentHeadCountFrom(int workSpaceId) {
         return workSpaceDao.selectCntTeamMember(workSpaceId);
     }

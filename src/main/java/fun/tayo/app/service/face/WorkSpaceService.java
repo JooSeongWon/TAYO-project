@@ -43,4 +43,14 @@ public interface WorkSpaceService {
      * 초대코드로 팀 가입하기
      */
     ResponseData joinWorkSpaceByInvCode(int memberId, String invitationCode);
+
+    /**
+     * (멤버가 만든 가상공간인지 체크 포함) 멤버 추방하기
+     */
+    ResponseData expelTeamMember(int workSpaceId, int requesterId, int targetId);
+
+    /**
+     * 가상공간 탈퇴
+     */
+    ResponseData exitTeam(int workSpaceId, int memberId);
 }
