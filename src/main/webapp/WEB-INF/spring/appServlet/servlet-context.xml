@@ -12,6 +12,21 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
+	<!-- interceptors -->
+	<interceptors>
+		<!--<interceptor>
+			<mapping path="/admin/**"/>
+			<beans:bean class="fun.tayo.app.interceptor.AdminInterceptor"/>
+		</interceptor>-->
+		<interceptor>
+			<mapping path="/work-spaces/**"/>
+			<mapping path="/profile/**"/>
+			<mapping path="/notice/**"/>
+			<mapping path="/question/**"/>
+			<beans:bean class="fun.tayo.app.interceptor.LoginInterceptor"/>
+		</interceptor>
+	</interceptors>
+
 	<!-- properties -->
 	<context:property-placeholder location="classpath:application-config/*.properties"/>
 

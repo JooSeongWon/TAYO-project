@@ -453,6 +453,9 @@ function showUpdateForm(id) {
     });
 
     //상세정보 파싱 실패
+    if (responseData === undefined) {
+        return;
+    }
     if (!responseData.result) {
         showModal('오류', responseData.object);
         return;
