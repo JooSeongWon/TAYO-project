@@ -14,9 +14,10 @@ public class Paging {
 	private int startNo;	//화면에 보이는 게시글의 시작 번호
 	private int endNo;	//화면에 보이는 게시글의 끝 번호
 	
+	private String search; //검색어
+
 	
-	
-	
+
 	
 	//디폴트 생성자 - 페이징 계산이 완료되지 않는다
 	public Paging() { }
@@ -65,7 +66,7 @@ public class Paging {
 		
 		//기본값 설정
 		if(curPage == 0)	setCurPage(1);	//첫 페이지를 기본 페이지로 설정한다
-		if(listCount == 0)	setListCount(15);	//화면에 보여질 게시글 수를 기본 10개로 설정한다
+		if(listCount == 0)	setListCount(10);	//화면에 보여질 게시글 수를 기본 10개로 설정한다
 		if(pageCount == 0)	setPageCount(10);	//화면에 보여질 페이지 수를 기본 10페이지로 설정한다
 		
 		//총 페이지 수 계산
@@ -91,9 +92,9 @@ public class Paging {
 	public String toString() {
 		return "Paging [curPage=" + curPage + ", totalCount=" + totalCount + ", listCount=" + listCount + ", totalPage="
 				+ totalPage + ", pageCount=" + pageCount + ", startPage=" + startPage + ", endPage=" + endPage
-				+ ", startNo=" + startNo + ", endNo=" + endNo + "]";
+				+ ", startNo=" + startNo + ", endNo=" + endNo + ", search=" + search + "]";
 	}
-	
+
 	public int getCurPage() {
 		return curPage;
 	}
@@ -148,4 +149,11 @@ public class Paging {
 	public void setEndNo(int endNo) {
 		this.endNo = endNo;
 	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
 }
