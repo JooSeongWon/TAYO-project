@@ -21,6 +21,14 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
             return false;
         }
+
+        //카테고리 저장
+        final String uri = request.getRequestURI();
+        int secSlashIndex = uri.indexOf("/", 1);
+        if(secSlashIndex <= 0) secSlashIndex = uri.length();
+        String category = uri.substring(1, secSlashIndex).replace("-", "");
+        request.setAttribute(category, true);
+
         return true;
     }
 }

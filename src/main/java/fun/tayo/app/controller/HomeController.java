@@ -19,8 +19,6 @@ public class HomeController {
     public String main(Model model) {
 
         model.addAttribute("path", path);
-        model.addAttribute("question", true);
-
         return "user/sample/user-template";
     }
 
