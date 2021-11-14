@@ -69,7 +69,7 @@ public class QuestionChatHandler extends TextWebSocketHandler {
 		
 //		 채팅목록에 채팅방 x
 //		 DB 채팅방 존재
-		if(RoomList.get(questionChat.getId())==null && questionMessage.getContent().equals("CHAT-OPEN")&& questionChat !=null ) {
+		if(RoomList.get(questionChat.getId())==null && questionMessage.getContent().equals("CHAT-OPEN") && questionChat !=null ) {
             
 			// 채팅방에 들어갈 sessionMember
             ArrayList<WebSocketSession> sessionMember = new ArrayList<>();
