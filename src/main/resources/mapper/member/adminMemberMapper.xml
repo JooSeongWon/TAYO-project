@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fun.tayo.app.dao.AdminMemberDao">
+
+   <select id="selectList" resultType="Member" parameterType="fun.tayo.app.common.util.Paging">
+        SELECT * FROM ( SELECT rownum rnum, M.* FROM (
+        	SELECT
+        		id, name, email, phone, create_date, grade, ban
+        	FROM Member
+        	ORDER BY id ) M
+        ) R
+        WHERE rnum BETWEEN #{startNo} AND #{endNo}
+    </select>
+    
+    <select id="selectCntAll" resultType="int" parameterType="fun.tayo.app.common.util.Paging">
+	  		SELECT count(*) FROM member
+	</select>
+
+</mapper>
