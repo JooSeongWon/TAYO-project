@@ -27,7 +27,7 @@ public class AdminMemberServiceImple implements AdminMemberService {
 	@Override
 		public Paging getPaging(Paging paramData) {
 			
-			int totalCount = adminMemberDao.selectCntAll();
+			int totalCount = adminMemberDao.selectCntAll(paramData);
 			
 			Paging paging = new Paging(totalCount, paramData.getCurPage());
 			paging.setSearch(paramData.getSearch());

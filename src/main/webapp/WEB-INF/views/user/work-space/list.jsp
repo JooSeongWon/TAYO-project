@@ -13,7 +13,6 @@
 <body>
 <c:import url="../template/header.jsp"/>
 
-<%-- 각자의 내용 작성 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
 <section class="work-spaces">
 
     <%-- 헤더 --%>
@@ -62,12 +61,12 @@
                             <div class="item__count">(0/${item.headCount})</div>
                         </div>
 
-                        <div class="item__title">
+                        <a href="/work-spaces/${item.id}" class="item__title">
                                 ${item.name}
                             <c:if test="${item.isOwner(sessionScope.loginMember.id)}">
                                 <span class="item__leader">L</span>
                             </c:if>
-                        </div>
+                        </a>
 
                         <c:if test="${item.isOwner(sessionScope.loginMember.id)}">
                             <i class="fas fa-cog" data-workspaceId="${item.id}"></i>
