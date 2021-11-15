@@ -9,8 +9,6 @@
 
     <script src="${pageContext.request.contextPath}/resources/js/login-script.js" defer></script>
 
-
-
 </head>
 <body>
 	<c:import url="../template/header.jsp" />
@@ -19,7 +17,6 @@
 	<section class="all-shadow fixed-center">
 
 		<div>
-			<!-- <form action="" method="post"> -->
 				<div class="form-group">
 					<label for="email">EMAIL</label>
 					<div>
@@ -44,7 +41,6 @@
 						<button id="join" class="joinBtn" onclick="location.href='/join'">회원가입</button>
 					</div>
 				</div>
-			<!-- </form> -->
 		</div>
 
 
