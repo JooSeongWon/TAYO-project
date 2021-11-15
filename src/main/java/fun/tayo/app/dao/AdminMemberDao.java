@@ -9,7 +9,7 @@ public interface AdminMemberDao {
 
 	List<Member> selectList(Paging paging);
 
-	int selectCntAll();
+	int selectCntAll(Paging paramData);
 
 
 //	List<Member> selectAdminMember(Paging paging);
