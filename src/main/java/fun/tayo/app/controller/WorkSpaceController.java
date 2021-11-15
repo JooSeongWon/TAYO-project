@@ -123,4 +123,16 @@ public class WorkSpaceController {
     ) {
         return workSpaceService.exitTeam(workSpaceId, memberSession.getId());
     }
+
+    //워크스페이스 입장
+    @GetMapping("/{workSpaceId}")
+    public String enterWorkSpace(
+            @PathVariable int workSpaceId,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
+            Model model
+    ) {
+
+        model.addAttribute("name", "test");
+        return "user/work-space/work-space";
+    }
 }
