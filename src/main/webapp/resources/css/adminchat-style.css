@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+
+section {
+	/* 컨테이너 설정 */
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+    align-items: center;
+    padding: 30px;
+    
+}
+
+.chat{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	
+	user-select: none;
+	
+	flex-basis: 70%;
+	min-height: 80%;
+	
+	padding: 1.7%;
+	background-color: var(--color-light-grey);
+}
+
+.chat-list{
+	background-color: var(--color-white);
+	display: flex;
+	flex-direction: column;
+	flex-basis: 30%;
+	
+	overflow-y: scroll;
+	
+	margin-right: 2.4%;
+}
+
+.chat-room{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex-basis: 70%;
+	background-color: var(--color-white);
+    padding: 2%;
+	
+}
+
+.chat-box {
+	flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4%;
+    overflow-y: scroll;
+	
+}
+
+.chat-input {
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    min-height: 5%;
+}
+
+.chat-message{
+	background-color: var(--color-light-grey);
+	border: none;
+	flex-grow: 7;
+	margin-right: 2%;
+
+}
+
+.tayo-button{
+	flex-grow: 3;
+	max-width: 150px;
+	text-align:center;
+}
+
+.chat-list::-webkit-scrollbar {
+	width: 10px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+	background-color: var(--color-dark-grey);
+	border-radius: 10px;
+	background-clip: padding-box;
+	border: 2px solid transparent;
+}
+
+.chat-box::-webkit-scrollbar {
+	width: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+	background-color: var(--color-dark-grey);
+	border-radius: 10px;
+	background-clip: padding-box;
+	border: 2px solid transparent;
+}
+
+
+.message{
+	display: flex;
+	flex-direction: column;
+}
+
+.content{
+	text-align: center;
+	background-color: var(--color-dark-grey);
+	color: var(--color-white);	
+	width: 50%;
+	padding: 10px;
+	border-radius: 5px;
+	max-width: 350px;
+    margin: 0.8% 0%;
+}
+
+.profile{
+	display: flex;
+	align-items: flex-end; 
+}
+
+.right{
+	flex-direction: row-reverse;
+}
+
+
+.messageR{
+	align-items: flex-end;
+}
+
+
+.img{
+    width: 50px;
+    height: 50px;
+    overflow:hidden;
+    margin:0;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.thumb {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+  height: 100%; 
+}
+
+.name{
+	margin: 5px;
+}
+
+
+.list-div{
+	display: flex;
+	justify-content: space-between; 
+	flex-wrap: wrap;
+	align-items: center;
+	
+	border: 1px solid ;
+	border-color:var(--color-light-grey);
+	padding: 5%;
+	margin: 10px 0px 10px 10px;
+}
+
+

@@ -35,7 +35,7 @@
 	<insert id="insertChatMessage" parameterType="QuestionMessage">
 		INSERT INTO QUESTION_MESSAGE 
 			(id, content, name, member_id, read, question_chat_id)
-		VALUES (QUESTION_CHAT_SEQ.nextval, #{content}, #{name}, #{memberId},#{read}, #{questionChatId})
+		VALUES (QUESTION_MESSAGE_SEQ.nextval, #{content}, #{name}, #{memberId},#{read}, #{questionChatId})
 	</insert>
 	
 </mapper>

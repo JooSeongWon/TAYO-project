@@ -107,6 +107,10 @@ public class QuestionChatHandler extends TextWebSocketHandler {
     		
     		boolean admin = memberSession.isAdmin();
         	
+    		if(questionMessage.getContent().equals("CHAT-OPEN")) {
+    			return;
+    		}
+    		
     		//관리자 확인
         	if(admin) {
         		questionMessage.setName("상담사");
