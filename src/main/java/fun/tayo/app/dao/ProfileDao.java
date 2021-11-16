@@ -4,6 +4,6 @@ import fun.tayo.app.dto.Member;
 
 public interface ProfileDao {
 
-	Member selectMemberById(String memberId);
+	Member selectMemberById(int memberId);
 
 }

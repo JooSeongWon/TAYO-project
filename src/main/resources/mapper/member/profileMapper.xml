@@ -6,11 +6,11 @@
   
 <mapper namespace="fun.tayo.app.dao.ProfileDao">
 
-	<select id="selectMemberById" resultType="Member" parameterType="String">
+	<select id="selectMemberById" resultType="Member" parameterType="_int">
 		SELECT
-			name, email, file_id, phone, password
+			id, name, email, file_id as profile, phone
 		FROM Member
-		WHERE email = #{email }
+		WHERE id = #{memberId }
 	</select>
 
 </mapper>

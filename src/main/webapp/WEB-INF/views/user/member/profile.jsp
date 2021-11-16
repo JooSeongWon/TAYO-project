@@ -16,7 +16,7 @@
 <h1>My profile</h1>
 <hr>
 
-${info.fileId }
+${info.profile }
 ${info.email }
 ${info.name }
 ${info.phone }

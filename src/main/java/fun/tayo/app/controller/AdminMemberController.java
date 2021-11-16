@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @Controller
-@RequestMapping(value="/admin/member")
+@RequestMapping(value="/admin/members")
 public class AdminMemberController {
 	
 	private final AdminMemberService adminMemberService;
 	
-	@RequestMapping(value="/list")
-	public void list(Paging paramData, Model model) {
+	@RequestMapping
+	public String list(Paging paramData, Model model) {
 		log.debug("/admin/list");
 		
 		//페이징 계산
@@ -37,6 +37,8 @@ public class AdminMemberController {
 		
 		model.addAttribute("paging", paging);
 		model.addAttribute("list", list);
+		
+		return "admin/member/list";
 	}
 	
 //	private final AdminMemberService adminMemberService;
@@ -52,5 +54,4 @@ public class AdminMemberController {
 //		return "admin/member/member";
 //		
 //	}
-
 }

@@ -4,6 +4,6 @@ import fun.tayo.app.dto.Member;
 
 public interface ProfileService {
 
-	Member info(String memberId);
+	Member info(int memberId);
 
 }

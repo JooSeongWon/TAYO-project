@@ -16,7 +16,7 @@ public class ProfileServiceImpl implements ProfileService {
 	private final ProfileDao profileDao;
 	
 	@Override
-	public Member info(String memberId) {
+	public Member info(int memberId) {
 		log.debug("info() memberId : {}", memberId);
 		
 		return profileDao.selectMemberById(memberId);

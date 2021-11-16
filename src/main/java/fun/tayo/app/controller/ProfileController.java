@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.Member;
+import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +23,12 @@ public class ProfileController {
 	@RequestMapping("/profile")
 	public String profile(HttpSession session, Model model) {
 		
-		String memberId = (String) session.getAttribute("memberId");
+		MemberSession member = (MemberSession) session.getAttribute(SessionConst.LOGIN_MEMBER);
 		log.debug("session : {}", session);
-		log.debug("/profile : {}", memberId);
+		log.debug("/profile : {}", member.getId());
 		
 		//로그인된 사용자의 정보 조회
-		Member info = profileService.info( memberId );
+		Member info = profileService.info( member.getId());
 		log.debug("조회결과 info {}", info);
 		
 		//사용자의 정보, 모델값 전달
