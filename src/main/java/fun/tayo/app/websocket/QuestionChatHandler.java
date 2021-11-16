@@ -61,15 +61,19 @@ public class QuestionChatHandler extends TextWebSocketHandler {
 		
 		//Json -> Java
 		QuestionMessage questionMessage = objectMapper.readValue(msg, QuestionMessage.class);
-//		QuestionMessage questionMessage = objectMapper.writeValueAsString(msg, QuestionMessage.class);
+		
+		//Java -> Json 
+		String jsonMsg = objectMapper.writeValueAsString(questionMessage);
+		
+		log.debug("jsonMsg {}", jsonMsg);
 		
 		log.debug("{}", questionMessage);
 		
 		// 받은 메세지에 담긴 채팅방번호로 해당 채팅방 찾기
 		QusetionChat questionChat = questionChatService.selectChatRoom(questionMessage.getQuestionChatId());
 		
-//		 채팅목록에 채팅방 x
-//		 DB 채팅방 존재
+
+		//채팅방 오픈
 		if(RoomList.get(questionChat.getId())==null && questionMessage.getContent().equals("CHAT-OPEN") && questionChat !=null ) {
             
 			// 채팅방에 들어갈 sessionMember
@@ -86,7 +90,7 @@ public class QuestionChatHandler extends TextWebSocketHandler {
             System.out.println("채팅방추가");
 		}
         // 채팅방이 존재 할 때
-        else if(RoomList.get(questionChat.getId()) != null && !questionMessage.getContent().equals("CHAT-OPEN") && questionChat != null) {
+        else if(RoomList.get(questionChat.getId()) != null && questionMessage.getContent().equals("CHAT-OPEN") && questionChat != null) {
             
             // RoomList에서 해당 방번호를 가진 방이 있는지 확인.
         	RoomList.get(questionChat.getId()).add(session);
@@ -120,15 +124,16 @@ public class QuestionChatHandler extends TextWebSocketHandler {
         	questionMessage.setId(userId);
         	
             // 메세지에 이름, 내용, 시간을 담는다.
-            TextMessage textMessage = new TextMessage(questionMessage.getName() + "," + questionMessage.getContent() + "," + questionMessage.getSendDate());
+            TextMessage textMessage = new TextMessage(jsonMsg);
             
             // 현재 session 수
             int sessionCount = 0;
  
             // 해당 채팅방의 session에 뿌려준다.
-            for(WebSocketSession sess : RoomList.get(questionChat.getId())) {
+            for(WebSocketSession sess : RoomList.get(questionChat.getId()) ) {
                 sess.sendMessage(textMessage);
                 sessionCount++;
+                System.out.println("뿌렷어요");
             }
             
             // 읽음확인

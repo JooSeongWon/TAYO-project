@@ -151,6 +151,9 @@ section {
 	margin: 5px;
 }
 
+.list{
+	cursor: pointer;
+}
 
 .list-div{
 	display: flex;

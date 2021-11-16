@@ -31,12 +31,6 @@ public class QuestionChatController {
 	
 	private final QuestionChatService questionChatService;
 	
-	@GetMapping(value = "/sample")
-	public String sample() {
-		
-		return "user/question-chat/sample-script";
-	}
-	
 	@ResponseBody
 	@PostMapping(value = "/service/open")
 	public int openChat(

@@ -38,11 +38,19 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	}
 	
 	@Override
-	public ResponseObject messageList(int questionId) {
+	public ResponseObject messageList(int questionChatId) {
 		//지난 메세지 불러오기
-		List<QuestionMessage> mList = questionChatDao.selectMessage(questionId);
+		List<QuestionMessage> mList = questionChatDao.selectMessage(questionChatId);
 		ResponseObject responseObject = new ResponseObject(true, mList);
 		
+		return responseObject;
+	}
+	
+	//여기예요 여기
+	@Override
+	public ResponseObject adminMessageList(int questionChatId) {
+		List<Map<Integer, Object>> mList = questionChatDao.selectAdminMessage(questionChatId);
+		ResponseObject responseObject = new ResponseObject(true, mList);
 		return responseObject;
 	}
 	
@@ -58,11 +66,12 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	
 	@Override
 	public ResponseObject getList() {
-//		//메세지 리스트 불러오기
-//		ResponseObject responseObject = new ResponseObject(true, );
-//		
-//		return responseObject;
-		return null;
+		//채팅 리스트 불러오기
+		List<Map<Integer, Object>> chatList = questionChatDao.selectChatList();
+		ResponseObject responseObject = new ResponseObject(true, chatList);
+		
+		return responseObject;
+
 	}
 
 }

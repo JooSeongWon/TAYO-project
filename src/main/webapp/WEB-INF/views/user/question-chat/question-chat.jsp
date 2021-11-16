@@ -22,7 +22,7 @@ $(document).ready(function() {
 	//소켓연결
 	sock = new SockJS("/question/chat");
 	sock.onopen = onOpen;
-// 	sock.onmessage = onMessage;
+	sock.onmessage = onMessage;
 	
 	//소켓 연결시 사용자+방번호 보내기
 	function onOpen() {
@@ -41,6 +41,7 @@ $(document).ready(function() {
 	const inputMessage = document.querySelector('.chat-message');
 	
 	var now = new Date();
+	
 	//메세지 보내기
 	inputButton.addEventListener('click', function() {
 		
@@ -53,7 +54,6 @@ $(document).ready(function() {
 		}
 		let jsonData = JSON.stringify(data);
 		sock.send(jsonData)
-		CheckLR(data)
 		inputMessage.value = '';
 	});
 	
@@ -65,8 +65,19 @@ $(document).ready(function() {
 	
 	//메세지 수신
 	function onMessage(event) {
-		const Message = event.data.split(",");
-		CheckLR(Message);
+		const Message = JSON.parse(event.data);
+		
+		console.log(Message)
+		
+		
+		let data = {
+			"name" : Message.name,
+			"content" : Message.content,
+			"sendDate" : Message.sendDate,
+			"memberId" : Message.memberId
+		}
+		
+		CheckLR(data);
 	}
 	
 	const box = document.querySelector('.chat-box');
@@ -80,6 +91,9 @@ $(document).ready(function() {
 		success : function(data) {
 			for(var i = 0; i < data.object.length; i++){
 				CheckLR(data.object[i]);
+				console.log(data.object[i].sendDate);
+				console.log(now.getTime());
+				console.log(now - data.object[i].sendDate )
 			}
 		},
 		error : function() {
@@ -104,7 +118,7 @@ $(document).ready(function() {
 		
         let sendDay = moment(sendDate).format('LT')
 
-		if(now - sendDate > 86399){
+		if(now.getTime() - sendDate > 86400000 ){
 			sendDay = moment(sendDate).format('LL')
 		}
         
