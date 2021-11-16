@@ -17,7 +17,7 @@
 	<button id="wirteBtn">작성</button>
 	<div class="wrap">
 	  <c:forEach items="${list }" var="question">
-		<a class="updateBtn" href="${pageContext.request.contextPath }/admin/question/update"><i id="updateBtn" class="fas fa-edit fa-2x"></i></a>
+		<a class="updateBtn" href="${pageContext.request.contextPath }/admin/question/update/${question.id}"><i id="updateBtn" class="fas fa-edit fa-2x"></i></a>
 <!-- 		<i id="updateBtn" class="fas fa-edit fa-2x"></i> -->
 		<div class="questionBox">
 			<span class="question">

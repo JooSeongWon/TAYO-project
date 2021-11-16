@@ -12,6 +12,6 @@ public interface QuestionService {
 
 	public void update(Question question);
 
-	public Question getQuestionNo(Question question);
+	public Question getQuestion(int questionId);
 
 }

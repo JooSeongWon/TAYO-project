@@ -12,6 +12,6 @@ public interface QuestionDao {
 
 	public void updateQuestion(Question question);
 
-	public Question selectQuestionByNo(Question question);
+	public Question selectQuestionById(int questionId);
 
 }

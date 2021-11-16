@@ -26,9 +26,9 @@
 		WHERE id = #{id} 
 	</update>
 	
-	<select id="selectQuestionByNo" resultMap="Question" parameterType="Question">
+	<select id="selectQuestionById" resultMap="Question" parameterType="Question">
 		SELECT id, question_content, answer_content
 		FROM QUESTION
-		WHERE id = #{id}
+		WHERE id = #{questionId}
 	</select>
 </mapper>

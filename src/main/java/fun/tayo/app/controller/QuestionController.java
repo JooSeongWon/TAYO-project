@@ -63,11 +63,11 @@ public class QuestionController {
 		return "redirect:/admin/question";
 	}
 	
-	@RequestMapping(value="/admin/question/update", method = RequestMethod.GET)
-	public String questionUpdate(Question question, Model model) {
+	@RequestMapping(value="/admin/question/update/{questionId}", method = RequestMethod.GET)
+	public String questionUpdate(@PathVariable int questionId, Model model) {
 	
-		Question questionNo = questionService.getQuestionNo(question);
-		model.addAttribute("questionNo", questionNo);
+		Question question = questionService.getQuestion(questionId);
+		model.addAttribute("question", question);
 		
 		return "/admin/question/update";
 	}

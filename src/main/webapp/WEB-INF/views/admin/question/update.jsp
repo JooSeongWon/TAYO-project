@@ -19,11 +19,11 @@
 <div class="container">
 <div>
 	<label for="question">Q</label>
-	<input type="text" id="questuon" name="questionContent">
+	<input type="text" id="question" name="questionContent" value="${question.questionContent}">
 </div>
 <div>
 	<label for="answer">A</label>
-	<textarea rows="5" id="answer" name="answerContent"></textarea>
+	<textarea rows="5" id="answer" name="answerContent">${question.answerContent}</textarea>
 </div>
 </form>
 <div>
