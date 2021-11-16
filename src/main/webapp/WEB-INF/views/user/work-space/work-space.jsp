@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <i class="fas fa-video active" id="cam"></i>
+        <i class="fas fa-video" id="cam"></i>
         <i class="fas fa-desktop" id="screen"></i>
         <i class="fas fa-microphone" id="mice"></i>
     </div>
