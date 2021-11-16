@@ -26,11 +26,11 @@ section {
 .child {
 	padding-left: 100px;
 }
-#arrow{
+.fa-arrow-down{
 	float: right;
 }
 
-#answer {
+.answer {
 	display: none;
 }
 </style>
@@ -42,13 +42,12 @@ section {
 <section class="all-shadow">
 	<h1 class="tayo-under-line" style="text-align: center">Popular articles</h1>
 	<div class="wrap">
-		<c:forEach items="${list }" var="question">
+	<c:forEach items="${list }" var="question">
 		<div class="child">
-	<span class="question">${question.questionContent}</span>
-	<i id="arrow" class="fas fa-arrow-down" data-questionNo="${question.id}"></i><br>
-	<span id="answer" class="answer">${question.answerContent }</span>
-	<hr>	
-	
+			<span class="question">${question.questionContent}</span>
+			<i class="fas fa-arrow-down"></i><br>
+			<span class="answer">${question.answerContent }</span>
+			<hr>	
 		</div> <!-- child -->
 	</c:forEach>
 	</div> <!-- wrap -->
@@ -57,7 +56,17 @@ section {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$("#arrow").click(function() {
+	const list = document.queryselectorAll('.child');
+	
+	for(let item of list) {
+		item.getChild
+	}
+	
+	
+	
+	
+	
+	$(".fa-arrow-down").click(function() {
 		$.ajax({
 				type:"post",
 				url:"/question",
@@ -66,7 +75,6 @@ $(document).ready(function(){
 				success: function(data){
 					
 					$('.answer').show(data)
-// 					$('#answer').attr("show",$(this).attr("data-questionNo"));
 				},
 				error: function(){
 					alert("error")
