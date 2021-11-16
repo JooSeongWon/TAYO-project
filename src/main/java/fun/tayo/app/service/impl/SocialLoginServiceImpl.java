@@ -29,57 +29,85 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SocialLoginServiceImpl implements SocialLoginService{
 
+	//멤버 서비스
 	private final MemberService memberService;
-
+	
 	@Override
 	public boolean login(String code, HttpServletRequest request) {
-
+		
+		//액세스토큰 받기 
 		final String KakaoAccessToken = getKakaoAccessToken(code);
+		
+		//액세스토큰이 null일경우
 		if(KakaoAccessToken == null) {
+			
 			log.error("액세스토큰 파싱 실패!");
+			
+			//로그인 실패
 			throw new IllegalStateException("엑세스 토큰 파싱 실패");
 		}
 
 		final String email = getEmailFromKakao(KakaoAccessToken);
+		
+		//이메일이 null일 경우
 		if(email == null) {
+			
 			log.error("이메일 파싱 실패!");
+			
+			//로그인 실패
 			throw new IllegalStateException("이메일 파싱 실패");
 
 		}
-
+		
 		final Member member = memberService.getMemberByEmail(email);
+		
+		//이메일이 null일 경우
 		if(member == null) {
-
+			
+			//로그인 실패
 			return false;
 		}
-
+		
+		//세션 받기
 		HttpSession session = request.getSession();
-
+		
+		//로그인 정보 받기
 		memberService.setLogin(member, session);
-
+		
+		//로그인 성공
 		return true;
 	}
-
+	
+	
 	private String getEmailFromKakao(String accessToken) {
+		
+		//카카오API URL
 		String apiURL = "https://kapi.kakao.com/v2/user/me";
-
+		
 		try {
+			
 			URL url = new URL(apiURL);
+			
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			
 			con.setRequestMethod("POST");
 			con.setRequestProperty("Authorization", "Bearer " + accessToken);
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			con.setDoOutput(true);
-
+			
 			return parseEmail(con);
+			
 		} catch (Exception e) {
+			
 			log.error("카카오 로그인 요청 오류", e);
+			
 		}
 
 		return null;
 	}
 
 	private String parseEmail(HttpURLConnection con) throws IOException {
+		
 		String responseBody = parseResponseBody(con);
 
 		if (responseBody == null) {
@@ -87,6 +115,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
+		
 		@SuppressWarnings("unchecked") final Map<String, Object> map = objectMapper.readValue(responseBody, Map.class);
 
 		return ((Map<String, Object>) map.get("kakao_account")).get("email").toString();
@@ -94,13 +123,14 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 
 
 	private String getKakaoAccessToken(String code) {
-		String clientId = "d688ecbcd7678fc036df85dfda0efcf3";//애플리케이션 클라이언트 아이디값";
+		
+		String clientId = "d688ecbcd7678fc036df85dfda0efcf3"; //애플리케이션 클라이언트 아이디값;
 		String redirectURI = "https%3a%2f%2flocalhost%3a8443%2flogin%2fkakao";
 
 
 		String apiURL = "https://kauth.kakao.com/oauth/token";
-
 		String params = "grant_type=authorization_code";
+		
 		params += "&client_id=" + clientId;
 		params += "&redirect_uri=" + redirectURI;
 		params += "&code=" + code;
@@ -111,7 +141,6 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 			con.setRequestMethod("POST");
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			con.setDoOutput(true);
-
 			OutputStream os = con.getOutputStream();
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
 			writer.write(params);
