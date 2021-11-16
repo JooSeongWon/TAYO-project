@@ -17,21 +17,23 @@
 	<button id="wirteBtn">작성</button>
 	<div class="wrap">
 	  <c:forEach items="${list }" var="question">
-		
-		<i id="updateBtn" class="fas fa-edit fa-2x"></i>
+		<a class="updateBtn" href="${pageContext.request.contextPath }/admin/question/update"><i id="updateBtn" class="fas fa-edit fa-2x"></i></a>
+<!-- 		<i id="updateBtn" class="fas fa-edit fa-2x"></i> -->
 		<div class="questionBox">
 			<span class="question">
 				<i id="q" class="fab fa-quora fa-2x"></i>
-					<span>${question.questionContent}</span>
+					<span>${question.questionContent }</span>
 			</span>
 		</div> <!-- questionBox -->
+		
 		<i id="deleteBtn" class="fas fa-eraser fa-2x"></i>
 		<div class="questionBox">
 			<span class="answer">
 				<i id="a" class="fas fa-font fa-2x"></i>
-					<span>${question.answerContent}</span>
+					<span>${question.answerContent }</span>
 			</span>
 		</div>	<!-- questionBox -->
+		
 		<div class="interval"></div>
 	  </c:forEach>
 	</div> <!-- wrap -->

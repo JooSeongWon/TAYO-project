@@ -11,26 +11,26 @@
 <body>
 <c:import url="../template/nav.jsp"/>
 <section>
-<h1>자주묻는 질문 작성</h1>
+<h1>자주묻는 질문 수정</h1>
 <hr>
 
-<form action="/admin/question/write" method="post">
-<!-- <div class="container"> -->
-	<div>
-		<label for="question">질문</label>
-		<input type="text" id="questuon" name="questionContent">
-	</div>
-	<div>
-		<label for="answer">답변</label>
-		<textarea rows="5" id="answer" name="answerContent"></textarea>
-	</div>
+<form action="/admin/question/update" method="post">
+<%-- <input type="hidden" name="id" value="${list.id }"> --%>
+<div class="container">
+<div>
+	<label for="question">Q</label>
+	<input type="text" id="questuon" name="questionContent">
+</div>
+<div>
+	<label for="answer">A</label>
+	<textarea rows="5" id="answer" name="answerContent"></textarea>
+</div>
 </form>
-	
-	<div>
-	<button id="btnWrite">작성</button>
-	<button id="cancel">취소</button>
-	</div>
-<!-- </div> .container -->
+<div>
+<button id="btnUpdate">작성</button>
+<button id="cancel">취소</button>
+</div>
+</div> <!-- .container -->
 
 </section>
 </body>
