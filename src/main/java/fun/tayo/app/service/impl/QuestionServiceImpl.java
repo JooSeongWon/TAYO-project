@@ -22,4 +22,20 @@ public class QuestionServiceImpl implements QuestionService{
 		return questionDao.selectQuestion();
 	}
 
+	@Override
+	public void write(Question question) {
+		questionDao.insertQuestion(question);
+	}
+
+	@Override
+	public void update(Question question) {
+		questionDao.updateQuestion(question);
+	}
+
+	@Override
+	public Question getQuestionNo(Question question) {
+
+		return questionDao.selectQuestionByNo(question);
+
+	}
 }

@@ -8,7 +8,7 @@
 <title>타요 - 로그인</title>
 
     <script src="${pageContext.request.contextPath}/resources/js/login-script.js" defer></script>
-
+    
 </head>
 <body>
 	<c:import url="../template/header.jsp" />
@@ -29,13 +29,13 @@
 					<label for="password">Password</label>
 					<div>
 						<input type="password" id="password" name="password"
-							class="tayo-input" placeholder="password">
+							class="tayo-input" placeholder="password" onKeyDown="login();">
 					</div>
 				</div>
 				<br>
 				<div>
 					<div style="margin: auto;">
-						<button id="loginBtn" class="loginbtn" onclick="f_loginCheck();">Login</button>
+						<button id="loginBtn" class="loginbtn" >Login</button>
 						<button type="button" id="kakaoLoginBtn" 
 						onclick="location.href ='https://kauth.kakao.com/oauth/authorize?client_id=d688ecbcd7678fc036df85dfda0efcf3&redirect_uri=https%3a%2f%2flocalhost%3a8443%2flogin%2fkakao&response_type=code'">kakao Login</button>
 						<button id="join" class="joinBtn" onclick="location.href='/join'">회원가입</button>

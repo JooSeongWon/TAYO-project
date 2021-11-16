@@ -1,0 +1,71 @@
+h1{
+    margin-top: 20px;
+    padding: 50px;
+    margin:0 auto;
+    text-align: center;
+}
+#wirteBtn{
+	float: right;
+	width: 70px;
+}
+	
+section {
+    background-color: var(--color-white);
+    margin-top: 20px;
+/*     padding: 30px; */
+/*     padding-right:100px; */
+    width:57%;
+    margin:0 auto;
+    height: 900px;
+}
+
+.wrap {
+    width: 985px;
+    height: 800px;
+    margin: 50ps auto;
+    overflow-y: scroll;
+}
+
+.questionBox {
+	display: flex;
+    flex-direction: column;
+}
+
+#updateBtn {
+	float: left;
+}
+#deleteBtn {
+	float: left;
+	margin: 2px;
+}
+
+.interval {
+	padding-bottom: 50px;
+}
+.question {
+	padding-left: 10px;
+	padding-bottom: 10px;
+	border :1px solid #ccc;
+	height: 40px;
+}
+
+.answer {
+	padding-left: 10px;
+	background: #c5c4c4;  
+	border :1px solid #ccc;
+	height: 40px;
+}
+
+#q {
+	padding-right: 30px;
+	color: blue;
+}
+
+#a {
+	padding-right: 30px;
+	color: red;
+}
+
+.container {
+	
+}

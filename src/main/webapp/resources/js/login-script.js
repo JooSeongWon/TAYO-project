@@ -7,6 +7,7 @@ const loginBtn = document.querySelector('#loginBtn');
 loginBtn.addEventListener('click', login);
 
 function login() {
+	if(event.keyCode == 13) {
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;
 
@@ -18,6 +19,7 @@ function login() {
         success: loginCallBack,
         error: errorCallBack
     });
+    }
 }
 
 // 로그인에 성공하면 /로 이동
@@ -34,3 +36,7 @@ function loginCallBack(data) {
 function errorCallBack(e) {
     showModal('실패', '요청을 처리할 수 없습니다.');
 }
+
+
+
+

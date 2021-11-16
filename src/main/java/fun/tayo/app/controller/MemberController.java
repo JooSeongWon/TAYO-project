@@ -95,9 +95,11 @@ public class MemberController {
 			
 			log.info("회원가입 실패");
 			
-			return "redirect:/member/join";
+			return "redirect:/user/member/join";
 		}
 	}
+
+	
 	
 	@GetMapping("/login/kakao")
 	public String kakaoLogin(
@@ -111,13 +113,12 @@ public class MemberController {
 	                log.info("로그인 실패! - 미가입자!");
 	            }
 	        } catch (Exception e) {
+	        	
 	            log.error("서버오류 소셜로그인 실패!");
 	        }
 
 	        return "redirect:/";
 	}
-	
-	
 	
 	
 }

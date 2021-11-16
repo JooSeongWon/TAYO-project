@@ -14,4 +14,21 @@
 		FROM QUESTION
 		ORDER BY id DESC
 	</select>
+	
+	<insert id="insertQuestion" parameterType="Question">
+		INSERT INTO QUESTION (id, question_content, answer_content)
+		VALUES (QUESTION_SEQ.nextval, #{questionContent}, #{answerContent})
+	</insert>
+	
+	<update id="updateQuestion" parameterType="Question">
+		UPDATE QUESTION
+		SET question_content = #{questionContent}, answer_content = #{answerContent}
+		WHERE id = #{id} 
+	</update>
+	
+	<select id="selectQuestionByNo" resultMap="Question" parameterType="Question">
+		SELECT id, question_content, answer_content
+		FROM QUESTION
+		WHERE id = #{id}
+	</select>
 </mapper>

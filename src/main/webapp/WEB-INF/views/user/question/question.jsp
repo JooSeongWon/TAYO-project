@@ -4,7 +4,6 @@
 <html lang="ko">
 <head>
     <c:import url="../template/head-meta.jsp"/>
-    <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
     <title>타요 - 자주묻는 질문</title>
    
 <style type="text/css">
@@ -41,7 +40,7 @@ section {
 <c:import url="../template/header.jsp"/>
 
 <section class="all-shadow">
-	<h1 class="tayo-under-line" style="text-align: center">Popular articles</h3>
+	<h1 class="tayo-under-line" style="text-align: center">Popular articles</h1>
 	<div class="wrap">
 		<c:forEach items="${list }" var="question">
 		<div class="child">
@@ -61,11 +60,13 @@ $(document).ready(function(){
 	$("#arrow").click(function() {
 		$.ajax({
 				type:"post",
-				url:"/question/question",
+				url:"/question",
 				data: {},
 				dataType: 'html',
 				success: function(data){
-					$('#answer').show(data)
+					
+					$('.answer').show(data)
+// 					$('#answer').attr("show",$(this).attr("data-questionNo"));
 				},
 				error: function(){
 					alert("error")

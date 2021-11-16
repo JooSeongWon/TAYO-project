@@ -60,22 +60,22 @@ text-align: left;
 
 	$(document).ready(function(){
 
-		$("#test").click(function() {
-			console.log("clicked")
-			$.ajax({
-						type:"post",
-						url:"/notice/notice",
-						data: {},
-						dataType: 'json',
-						success: function(data){
-							$('.data').text(data)
-						},
-						error: function(){
-							alert("error")
-						}
-					}
-			)
-		});
+// 		$("#test").click(function() {
+// 			console.log("clicked")
+// 			$.ajax({
+// 						type:"post",
+// 						url:"/notice/notice",
+// 						data: {},
+// 						dataType: 'json',
+// 						success: function(data){
+// 							$('.data').text(data)
+// 						},
+// 						error: function(){
+// 							alert("error")
+// 						}
+// 					}
+// 			)
+// 		});
 
 
 		const wrap = document.querySelector('.wrap'); //.wrap
@@ -148,7 +148,6 @@ text-align: left;
 <c:import url="../template/header.jsp"/>
 
 <section class="all-shadow">
-<button id="test">test</button>
     <h1 class="tayo-under-line" style="text-align: center">NOTICE</h1>
 		<div class="wrap tayo-scroll-bar">
   		  <c:forEach items="${list }" var="notice">
@@ -165,7 +164,7 @@ text-align: left;
 		</div> <!-- wrap -->
 </section>
 
-<c:import url="../notice/paging.jsp"/>
+<%-- <c:import url="../notice/paging.jsp"/> --%>
 <c:import url="../template/footer.jsp"/>
 </body>
 </html>
