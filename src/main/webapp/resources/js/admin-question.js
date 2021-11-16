@@ -14,6 +14,10 @@ $("#cancel").click(function() {
 //	$(location).attr("href", "/admin/question/");
 });
 
+$("#btnUpdate").click(function() {
+	$("form").submit();
+});
+
 //admin-question 수정버튼
 //$(".fa-quora").click(function() {
 //	$(location).attr("href", "/admin/question/update?question_no="+ $(this).attr("data-questionNo"));
