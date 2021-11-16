@@ -54,9 +54,19 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 		return questionChatDao.insertChatMessage(questionMessage);
 	}
 	
+//	@Override
+//	public ResponseObject getList() {
+//		//지난 메세지 불러오기
+//		List<QuestionMessage> mList = questionChatDao.selectMessage(questionId);
+//		ResponseObject responseObject = new ResponseObject(true, mList);
+//		
+//		return responseObject;
+//	}
+	
 	@Override
 	public ResponseObject getList() {
-		return questionChatDao.selectRoomList();
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
+//	
 }
