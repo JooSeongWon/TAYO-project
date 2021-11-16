@@ -14,4 +14,7 @@ public interface MemberDao {
 
 	void insert(Member member);
 	
+	/* void kakaoinsert(MemberJoinParam memberJoinParam); */
+	
+	
 }
