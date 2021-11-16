@@ -1,6 +1,8 @@
 package fun.tayo.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -56,9 +58,8 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	
 	@Override
 	public ResponseObject getList() {
-//		//지난 메세지 불러오기
-//		List<QuestionMessage> mList = questionChatDao.selectMessage(questionId);
-//		ResponseObject responseObject = new ResponseObject(true, mList);
+//		//메세지 리스트 불러오기
+//		ResponseObject responseObject = new ResponseObject(true, );
 //		
 //		return responseObject;
 		return null;
