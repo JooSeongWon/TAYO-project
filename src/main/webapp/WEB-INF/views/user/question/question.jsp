@@ -53,6 +53,7 @@ section {
 <c:import url="../template/header.jsp"/>
 
 <section class="all-shadow">
+<button id="chatBtn">이양</button>
 	<h1 class="tayo-under-line" style="text-align: center">Popular articles</h1>
 	<div class="wrap">
 	<c:forEach items="${list }" var="question">
@@ -79,11 +80,30 @@ $(document).ready(function(){
 		});
 	}
 
-	
+	$("#chatBtn").click( function() {
+		console.log("Btn")
+
+$.ajax({
+url : "${contextPath}/question/service/open",
+data : {},
+type : "POST",
+dataType : "JSON",
+success : function(data) {
+	console.log(data)
+	location.href = "${contextPath}/question/service/" + data;
+
+},
+error : function() {
+	console.log("openChat 메소드 실패");
+}
+});
+});
 	
 
 })
 </script>
+
+
 <c:import url="../template/footer.jsp"/>
 </body>
 </html>
