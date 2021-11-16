@@ -19,19 +19,32 @@ section {
 .wrap {
     width: 750px;
     height: 540px;
-    margin: 50ps auto;
+    margin: 50px auto;
     overflow-y: scroll;
 }
 
 .child {
 	padding-left: 100px;
 }
-.fa-arrow-down{
+.fa-arrow-down {
 	float: right;
+	cursor: pointer;
+	transition: all 400ms ease;
+}
+
+.fa-arrow-down.active {
+	transform: rotate(0.5turn);
 }
 
 .answer {
-	display: none;
+	display: block;
+	transition: all 400ms ease;
+}
+
+.answer.disabled {
+	height: 0;
+	font-size: 0;
+	line-height: 0;
 }
 </style>
     
@@ -46,7 +59,7 @@ section {
 		<div class="child">
 			<span class="question">${question.questionContent}</span>
 			<i class="fas fa-arrow-down"></i><br>
-			<span class="answer">${question.answerContent }</span>
+			<span class="answer disabled">&nbsp;&nbsp;<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;${question.answerContent }</span>
 			<hr>	
 		</div> <!-- child -->
 	</c:forEach>
@@ -56,32 +69,19 @@ section {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	const list = document.queryselectorAll('.child');
-	
-	for(let item of list) {
-		item.getChild
+	const aList = document.querySelectorAll('.answer');
+	const btnList = document.querySelectorAll('.fa-arrow-down');
+
+	for(let i = 0; i < btnList.length; i++) {
+		btnList[i].addEventListener('click', () => {
+			aList[i].classList.toggle('disabled');
+			btnList[i].classList.toggle('active');
+		});
 	}
+
 	
 	
-	
-	
-	
-	$(".fa-arrow-down").click(function() {
-		$.ajax({
-				type:"post",
-				url:"/question",
-				data: {},
-				dataType: 'html',
-				success: function(data){
-					
-					$('.answer').show(data)
-				},
-				error: function(){
-					alert("error")
-				}
-			}		
-		)
-	})
+
 })
 </script>
 <c:import url="../template/footer.jsp"/>
