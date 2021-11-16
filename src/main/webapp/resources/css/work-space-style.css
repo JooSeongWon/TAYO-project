@@ -5,6 +5,10 @@ body {
     height: 1120px;
 }
 
+section {
+    padding: 0;
+}
+
 .screen {
     border: 10px solid var(--color-white);
     border-radius: 4px;
@@ -177,4 +181,116 @@ body {
     padding-left: 16px;
     font-size: var(--font-small);
     color: var(--color-white);
+}
+
+/* 아바타 */
+.avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    position: absolute;
+
+    user-select: none;
+    transition: all 500ms ease-in-out;
+    left: 30px;
+    top: 30px;
+}
+
+.img-wrap {
+    height: 45px;
+    width: 45px;
+
+    position: relative;
+}
+
+.avatar img {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    border: 3px solid var(--color-light-grey);
+
+    cursor: pointer;
+}
+
+.avatar.user img {
+    border-color: var(--color-green);
+}
+
+.img-wrap > i {
+    font-size: var(--font-micro);
+    width: 17px;
+    height: 17px;
+    text-align: center;
+    line-height: 15px;
+    background-color: var(--color-dark-grey);
+    border: 1px solid var(--color-light-grey);
+    color: var(--color-white);
+    position: absolute;
+    display: none;
+}
+
+.img-wrap > i.active {
+    display: block;
+}
+
+.mute {
+    left: 0;
+    bottom: 0;
+}
+
+.on-air {
+    right: 0;
+    bottom: 0;
+}
+
+.avatar__name {
+    margin-top: 4px;
+    text-align: center;
+    font-size: var(--font-micro);
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 28px;
+    padding: 2px 6px;
+}
+
+/* 말풍선 */
+.speech-bubble-wrap {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: 150px;
+    transform: translate(-20%, -100%);
+    transition: all 500ms ease-in-out;
+    user-select: none;
+    text-align: center;
+
+    left: 30px;
+    top: 15px;
+}
+.speech-bubble {
+    word-wrap: break-word;
+    min-width: 49px;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 16px;
+    padding: 8px;
+    border: solid 1px rgba(100,100,100,0.6);
+}
+
+.speech-bubble-wrap .arrow-down {
+    width: 0;
+    height: 0;
+
+    position: absolute;
+    left: 64px;
+    bottom: -9px;
+    border-top: 10px solid rgba(255,255,255,0.9);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+
+.speech-bubble-wrap.active
+{
+    transition: all 500ms ease-in-out, opacity 3000ms linear;
+    opacity: 0;
 }
