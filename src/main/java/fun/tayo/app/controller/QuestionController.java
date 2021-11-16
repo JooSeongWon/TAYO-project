@@ -72,12 +72,13 @@ public class QuestionController {
 		return "/admin/question/update";
 	}
 	
-	@RequestMapping(value="/admin/question/update", method = RequestMethod.POST)
-	public String questionUpdateProc(Question question) {
+	@RequestMapping(value="/admin/question/update/{questionId}", method = RequestMethod.POST)
+	public String questionUpdateProc(Question question, @PathVariable int questionId) {
 		
+		question.setId(questionId);
 		questionService.update(question);
 		
-		return null;
+		return "redirect:/admin/question";
 	}
 }
 

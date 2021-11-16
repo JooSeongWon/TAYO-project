@@ -14,9 +14,9 @@
 <h1>자주묻는 질문 수정</h1>
 <hr>
 
-<form action="/admin/question/update" method="post">
+<form action="/admin/question/update/${question.id}" method="post">
 <%-- <input type="hidden" name="id" value="${list.id }"> --%>
-<div class="container">
+<!-- <div class="container"> -->
 <div>
 	<label for="question">Q</label>
 	<input type="text" id="question" name="questionContent" value="${question.questionContent}">
@@ -30,7 +30,7 @@
 <button id="btnUpdate">작성</button>
 <button id="cancel">취소</button>
 </div>
-</div> <!-- .container -->
+<!-- </div> .container -->
 
 </section>
 </body>
