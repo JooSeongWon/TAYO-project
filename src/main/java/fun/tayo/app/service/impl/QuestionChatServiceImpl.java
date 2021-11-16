@@ -62,11 +62,5 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 //		
 //		return responseObject;
 //	}
-	
-	@Override
-	public ResponseObject getList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-//	
+
 }
