@@ -111,6 +111,7 @@ public class MemberController {
 	                log.info("로그인 성공!");
 	            } else {
 	                log.info("로그인 실패! - 미가입자!");
+	                return "user/member/kakao-join";
 	            }
 	        } catch (Exception e) {
 	        	
@@ -119,6 +120,14 @@ public class MemberController {
 
 	        return "redirect:/";
 	}
+	
+	/*
+	 * @GetMapping("/kakao-join") public String kakaoJoin( ) {
+	 * 
+	 * }
+	 */
+
+	
 	
 	
 }

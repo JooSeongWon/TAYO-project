@@ -61,15 +61,17 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		
 		final Member member = memberService.getMemberByEmail(email);
 		
-		//이메일이 null일 경우
+		//세션 받기
+		HttpSession session = request.getSession();
+		
+		//미가입자
 		if(member == null) {
 			
+			session.setAttribute("kakaoEmail", email);
 			//로그인 실패
 			return false;
 		}
 		
-		//세션 받기
-		HttpSession session = request.getSession();
 		
 		//로그인 정보 받기
 		memberService.setLogin(member, session);
