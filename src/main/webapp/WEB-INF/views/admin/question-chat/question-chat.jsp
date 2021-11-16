@@ -16,6 +16,27 @@ $(document).ready(function() {
 	const memberId = ${sessionScope.loginMember.id};
 	var now = new Date();
 	
+	
+	function getList() {
+		//채팅방 리스트 불러오기
+		$.ajax({
+			url : "${contextPath}/admin/question/service/list",
+			data : {},
+			type : "POST",
+			dataType : "JSON",
+			success : function(list) {
+				for(var i = 0; i < list.object.length; i++){
+					CheckLR(list.object[i]);
+				}
+			},
+			error : function() {
+				showModal('서버오류' , '페이지 새로 고침 또는 새 브라우저 창을 열어주세요.')
+				console.log("getList 메소드 실패");
+			}
+		});
+	}
+	
+	
 	//버튼 이벤트 걸기
 	const inputButton = document.querySelector('.chat-button');
 	const inputMessage = document.querySelector('.chat-message');	

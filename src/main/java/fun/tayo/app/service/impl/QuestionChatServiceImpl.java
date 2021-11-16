@@ -52,5 +52,11 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	@Override
 	public int insertMessage(QuestionMessage questionMessage) {
 		return questionChatDao.insertChatMessage(questionMessage);
-	}	
+	}
+	
+	@Override
+	public ResponseObject getList() {
+		return questionChatDao.selectRoomList();
+	}
+	
 }

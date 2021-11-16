@@ -29,6 +29,8 @@ public interface QuestionChatService {
 
 	int insertMessage(QuestionMessage questionMessage);
 
+	ResponseObject getList();
+
 
 
 }

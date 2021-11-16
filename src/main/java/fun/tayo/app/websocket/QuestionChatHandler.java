@@ -86,7 +86,7 @@ public class QuestionChatHandler extends TextWebSocketHandler {
             System.out.println("채팅방추가");
 		}
         // 채팅방이 존재 할 때
-        else if(RoomList.get(questionChat.getId()) != null && questionMessage.getContent().equals("") && questionChat != null) {
+        else if(RoomList.get(questionChat.getId()) != null && !questionMessage.getContent().equals("CHAT-OPEN") && questionChat != null) {
             
             // RoomList에서 해당 방번호를 가진 방이 있는지 확인.
         	RoomList.get(questionChat.getId()).add(session);
