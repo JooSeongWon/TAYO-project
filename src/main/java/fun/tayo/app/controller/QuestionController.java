@@ -80,6 +80,19 @@ public class QuestionController {
 		
 		return "redirect:/admin/question";
 	}
+	
+	@RequestMapping(value="/admin/question/delete/{questionId}", method = RequestMethod.GET)
+	public String questionDelete(@PathVariable int questionId, Question question) {
+		
+		question.setId(questionId);
+		questionService.delete(question);
+		
+		return "redirect:/admin/question";
+	}
+	
+	
+	
+	
 }
 
 

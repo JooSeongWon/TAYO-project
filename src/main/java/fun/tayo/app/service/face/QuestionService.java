@@ -14,4 +14,6 @@ public interface QuestionService {
 
 	public Question getQuestion(int questionId);
 
+	public void delete(Question question);
+
 }

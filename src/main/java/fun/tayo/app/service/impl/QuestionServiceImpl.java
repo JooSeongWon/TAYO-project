@@ -38,4 +38,10 @@ public class QuestionServiceImpl implements QuestionService{
 		return questionDao.selectQuestionById(questionId);
 
 	}
+
+	@Override
+	public void delete(Question question) {
+		questionDao.deleteQuestion(question);
+		
+	}
 }

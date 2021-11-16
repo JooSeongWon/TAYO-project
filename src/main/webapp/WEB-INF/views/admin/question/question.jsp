@@ -15,10 +15,11 @@
 <section>
 	<h1>자주묻는 질문 </h1>
 	<button id="wirteBtn">작성</button>
+	
 	<div class="wrap">
 	  <c:forEach items="${list }" var="question">
+		
 		<a class="updateBtn" href="${pageContext.request.contextPath }/admin/question/update/${question.id}"><i id="updateBtn" class="fas fa-edit fa-2x"></i></a>
-<!-- 		<i id="updateBtn" class="fas fa-edit fa-2x"></i> -->
 		<div class="questionBox">
 			<span class="question">
 				<i id="q" class="fab fa-quora fa-2x"></i>
@@ -26,7 +27,7 @@
 			</span>
 		</div> <!-- questionBox -->
 		
-		<i id="deleteBtn" class="fas fa-eraser fa-2x"></i>
+		<a class="deleteBtn" href="${pageContext.request.contextPath }/admin/question/delete/${question.id}"><i id="deleteBtn" class="fas fa-eraser fa-2x"></i></a>
 		<div class="questionBox">
 			<span class="answer">
 				<i id="a" class="fas fa-font fa-2x"></i>
@@ -37,6 +38,7 @@
 		<div class="interval"></div>
 	  </c:forEach>
 	</div> <!-- wrap -->
+	
 </section>
 </body>
 </html>

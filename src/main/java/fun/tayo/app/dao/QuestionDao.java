@@ -14,4 +14,6 @@ public interface QuestionDao {
 
 	public Question selectQuestionById(int questionId);
 
+	public void deleteQuestion(Question question);
+
 }
