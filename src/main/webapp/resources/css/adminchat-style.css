@@ -151,6 +151,10 @@ section {
 	margin: 5px;
 }
 
+.day{
+	font-size: 12px;
+}
+
 .list{
 	cursor: pointer;
 }
