@@ -18,6 +18,7 @@
 			id, name, phone, email, password, create_date,
 			grade, ban, file_id AS profile
 		from MEMBER where EMAIL = #{email}
+		ORDER BY id
 	</select>
 
 	<select id="selectCntByEmail" resultType="int" parameterType="Member">
@@ -30,9 +31,14 @@
 		VALUES ( member_seq.nextval, #{name}, #{phone}, #{email}, #{password}, #{profile} )
 	</insert>
 	
-<!-- 	<insert id="insertkakao" parameterType="MemberJoinParam">
-        insert into MEMBER(id, name, email, password)
-        values (member_SEQ.nextval, #{name}, #{email}, #{password})
-    </insert> -->
+ 	<insert id="kakaoinsert" parameterType="Member">
+        insert into MEMBER(id, name, email, phone, file_id )
+        values (member_SEQ.nextval, #{name}, #{email}, #{phone}, #{profile})
+    </insert> 
+    
+    <select id="selectProfileById" parameterType="_int" resultType="int">
+        select    file_id   from MEMBER
+        where id = #{memberId}
+    </select>
 
 </mapper>
