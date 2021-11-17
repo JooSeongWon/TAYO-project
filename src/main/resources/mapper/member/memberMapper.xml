@@ -36,8 +36,8 @@
         values (member_SEQ.nextval, #{name}, #{email}, #{phone}, #{profile})
     </insert> 
     
-    <select id="selectProfileById" parameterType="_int" resultType="int">
-        select    file_id   from MEMBER
+    <select id="selectProfileById" parameterType="_Integer" resultType="_Integer">
+        select file_id from MEMBER
         where id = #{memberId}
     </select>
 

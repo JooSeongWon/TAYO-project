@@ -119,7 +119,7 @@ public class MemberServiceImpl implements MemberService{
 		return false;
 	}
 	
-	public int getProfile(int memberId){
+	public Integer getProfile(Integer memberId){
 		return memberDao.selectProfileById(memberId);
 		}
 	

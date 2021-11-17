@@ -18,6 +18,6 @@ public interface MemberService {
 
 	boolean kakaojoin(Member member);
 	
-	int getProfile(int memberId);
+	Integer getProfile(Integer memberId);
 
 }
