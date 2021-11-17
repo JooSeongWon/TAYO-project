@@ -47,7 +47,6 @@ $(document).ready(function() {
 		
 		let data = {
 			"questionChatId": questionId,
-			"name" : memberName,
 			"content" : inputMessage.value,
 			"memberId": memberId,
 			"sendDate": now
@@ -68,13 +67,17 @@ $(document).ready(function() {
 		const Message = JSON.parse(event.data);
 		
 		console.log(Message)
+		console.log(Message.admin)
+		console.log(Message.msg)
+		console.log(Message.msg.content)
 		
 		
 		let data = {
-			"name" : Message.name,
-			"content" : Message.content,
-			"sendDate" : Message.sendDate,
-			"memberId" : Message.memberId
+			"NAME" : Message.msg.name,
+			"CONTENT" : Message.msg.content,
+			"sendDate" : Message.msg.sendDate,
+			"memberId" : Message.msg.memberId,
+			"GRADE" : Message.admin.GRADE
 		}
 		
 		CheckLR(data);
@@ -91,9 +94,6 @@ $(document).ready(function() {
 		success : function(data) {
 			for(var i = 0; i < data.object.length; i++){
 				CheckLR(data.object[i]);
-				console.log(data.object[i].sendDate);
-				console.log(now.getTime());
-				console.log(now - data.object[i].sendDate )
 			}
 		},
 		error : function() {
@@ -104,23 +104,25 @@ $(document).ready(function() {
 	
 	
 	function CheckLR(data) {
-		
-		const LR = (data.memberId != "${sessionScope.loginMember.id}") ? "left" : "right";
- 		appendMessageTag(LR, data.name, data.content, data.sendDate);
+		const LR = (data.GRADE != "N") ? "left" : "right";
+ 		appendMessageTag(LR, data);
 	}
 	
 
-	function appendMessageTag(R, name, content, sendDate) {
+	function appendMessageTag(R, data) {
 		let createMessageDiv = document.createElement('div');
 		let createNameSpan = document.createElement('span');
 		let createContentDiv = document.createElement('div');
 		let createDateSpan = document.createElement('span');
 		
-        let sendDay = moment(sendDate).format('LT')
+        const today = moment(now).format('YYYY-MM-DD')
+        const before = moment(data.SEND_DATE).format('YYYY-MM-DD')
 
-		if(now.getTime() - sendDate > 86400000 ){
-			sendDay = moment(sendDate).format('LL')
+        let sendDay = moment(data.SEND_DATE).format('LL')
+		if(moment(before).isSame(today)){
+			sendDay = moment(data.SEND_DATE).format('LT')
 		}
+		
         
 		createMessageDiv.classList.add("message");
 		createContentDiv.setAttribute("class", "content");
@@ -131,8 +133,8 @@ $(document).ready(function() {
         }
         
         
-        createNameSpan.innerText = name;
-        createContentDiv.innerText = content;
+        createNameSpan.innerText = data.NAME;
+        createContentDiv.innerText = data.CONTENT;
         createDateSpan.innerText = sendDay;
         
         

@@ -18,6 +18,7 @@ import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.QuestionMessage;
 import fun.tayo.app.dto.QusetionChat;
+import fun.tayo.app.service.face.MemberService;
 import fun.tayo.app.service.face.QuestionChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class QuestionChatHandler extends TextWebSocketHandler {
   
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	private final QuestionChatService questionChatService;
+	private final MemberService memberservice;
 	
 	// 클라이언트가 서버로 연결 처리
 	@Override
@@ -62,12 +64,36 @@ public class QuestionChatHandler extends TextWebSocketHandler {
 		//Json -> Java
 		QuestionMessage questionMessage = objectMapper.readValue(msg, QuestionMessage.class);
 		
+		MemberSession memberSession = (MemberSession) session.getAttributes().get(SessionConst.LOGIN_MEMBER);
+		boolean admin = memberSession.isAdmin();
+		String username = memberSession.toString();
+		
+    	//관리자 확인
+		String GRADE = "N";
+		if(admin) {
+			GRADE = "A";
+			questionMessage.setName("상담사");
+		} else {
+    		questionMessage.setName(username);
+    	}
+		
+//		int FILE_ID = memberservice.selectProfile(questionMessage.getMemberId());
+		
+				
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("GRADE", GRADE);
+//		map.put("FILE", FILE_ID);
+		
+		Map<Object, Object> map2 = new HashMap<Object, Object>();
+		
+		map2.put("msg", questionMessage);
+		map2.put("admin", map);
+		
 		//Java -> Json 
-		String jsonMsg = objectMapper.writeValueAsString(questionMessage);
+		String jsonMsg = objectMapper.writeValueAsString(map2);
 		
 		log.debug("jsonMsg {}", jsonMsg);
 		
-		log.debug("{}", questionMessage);
 		
 		// 받은 메세지에 담긴 채팅방번호로 해당 채팅방 찾기
 		QusetionChat questionChat = questionChatService.selectChatRoom(questionMessage.getQuestionChatId());
@@ -104,26 +130,15 @@ public class QuestionChatHandler extends TextWebSocketHandler {
         // 채팅 메세지 입력 시
         else if(RoomList.get(questionChat.getId()) != null && !questionMessage.getContent().equals("") && questionChat != null) {
         	
-    		MemberSession memberSession = (MemberSession) session.getAttributes().get(SessionConst.LOGIN_MEMBER);
-    		
-    		String username = memberSession.toString();
     		int userId = memberSession.getId();
     		
-    		boolean admin = memberSession.isAdmin();
-        	
     		if(questionMessage.getContent().equals("CHAT-OPEN")) {
     			return;
     		}
     		
-    		//관리자 확인
-        	if(admin) {
-        		questionMessage.setName("상담사");
-        	} else {
-        		questionMessage.setName(username);
-        	}
         	questionMessage.setId(userId);
         	
-            // 메세지에 이름, 내용, 시간을 담는다.
+            // 메세지에 보낼 내용 담기
             TextMessage textMessage = new TextMessage(jsonMsg);
             
             // 현재 session 수
@@ -135,6 +150,8 @@ public class QuestionChatHandler extends TextWebSocketHandler {
                 sessionCount++;
                 System.out.println("뿌렷어요");
             }
+            
+            System.out.println(sessionCount);
             
             // 읽음확인
             if(sessionCount > 2) {

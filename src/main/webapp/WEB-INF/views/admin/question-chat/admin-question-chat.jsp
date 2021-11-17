@@ -15,7 +15,7 @@ $(document).ready(function() {
 	
 	const memberId = ${sessionScope.loginMember.id};
 	var now = new Date();
-	
+		
 	getList();
 	
 	function getList() {
@@ -48,10 +48,14 @@ $(document).ready(function() {
 		let createNameSpan = document.createElement('span');
 		let createListDateSpan = document.createElement('span');
 		
-        let sendDay = moment(list.SEND_DATE).format('LT')
-		if(now.getTime() - list.SEND_DATE > 86400000){
-			sendDay = moment(list.SEND_DATE).format('LL')
+        const today = moment(now).format('YYYY-MM-DD')
+        const before = moment(list.SEND_DATE).format('YYYY-MM-DD')
+
+        let sendDay = moment(list.SEND_DATE).format('LL')
+		if(moment(before).isSame(today)){
+			sendDay = moment(list.SEND_DATE).format('LT')
 		}
+        
         
         createListDiv.setAttribute("class", "list");
         createListDiv.setAttribute("id", questionChatId);
@@ -76,23 +80,93 @@ $(document).ready(function() {
         createListItemDiv.appendChild(createNameSpan);
         createListItemDiv.appendChild(createListDateSpan);
         createListDiv.onclick = function() {
-			let chatId = $(this).attr('id');
+        	questionId = $(this).attr('id');
 			
-			getMessage(chatId);
+			getMessage(questionId);
 		}
 	}
 	
 	
+	const box = document.querySelector('.chat-box');
+	const divChatData = document.querySelector('#divChatData');
+	
+	function getMessage(questionId) {
+		//현재 채팅창 비우기
+		
+		while (divChatData.hasChildNodes()){ 
+			divChatData.removeChild( divChatData.firstChild );
+			sock.close()
+		}
+		
+		//지난 메세지 불러오기
+		$.ajax({
+			url : "${contextPath}" + questionId,
+			data : {},
+			type : "POST",
+			dataType : "JSON",
+			success : function(data) {
+				for(var i = 0; i < data.object.length; i++){
+					CheckLR(data.object[i]);
+				}
+			},
+			error : function() {
+				showModal('서버오류' , '페이지 새로 고침 또는 새 브라우저 창을 열어주세요.')
+				console.log("joinChatRoomProc 메소드 실패");
+			}
+		});
+		connect()
+	}
+	
+	let sock;
+	
+	//소켓연결
+	function connect() {
+		sock = new SockJS("/question/chat");
+		
+		sock.onopen = onOpen;
+		sock.onmessage = onMessage;	
+	}
+	
+	//소켓 연결시 사용자+방번호 보내기
+	function onOpen() {
+		let data = {
+			"questionChatId": questionId,
+			"memberId": memberId,
+			"content" : "CHAT-OPEN"
+		}
+		let jsonData = JSON.stringify(data);
+		sock.send(jsonData);
+	}
+	
+	//메세지 수신
+	function onMessage(event) {
+		const Message = JSON.parse(event.data);
+		
+		console.log(Message.admin)
+		console.log(Message.admin.FILE)
+		
+		let data = {
+			"NAME" : Message.msg.name,
+			"CONTENT" : Message.msg.content,
+			"sendDate" : Message.msg.sendDate,
+			"memberId" : Message.msg.memberId,
+			"GRADE" : Message.admin.GRADE,
+			"FILE_ID" : Message.admin.FILE
+		}
+		
+		CheckLR(data);
+	}	
+	
+		
 	//채팅방 버튼 이벤트 걸기
 	const inputButton = document.querySelector('.chat-button');
 	const inputMessage = document.querySelector('.chat-message');	
 	
 	//메세지 보내기
 	inputButton.addEventListener('click', function() {
-		
+				
 		let data = {
 			"questionChatId": questionId,
-			"name" : memberName,
 			"content" : inputMessage.value,
 			"memberId": memberId,
 			"sendDate": now
@@ -108,47 +182,9 @@ $(document).ready(function() {
 		}
 	});
 
-	//메세지 수신
-	function onMessage(event) {
-		const Message = JSON.parse(event.data);
-		
-		console.log(Message)
-		
-		
-		let data = {
-			"name" : Message.name,
-			"content" : Message.content,
-			"sendDate" : Message.sendDate,
-			"memberId" : Message.memberId
-		}
-		
-		CheckLR(data);
-	}
 	
-	const box = document.querySelector('.chat-box');
-	
-	function getMessage(questionId) {
-	//지난 메세지 불러오기
-		$.ajax({
-			url : "${contextPath}admin/question/service/" + questionId,
-			data : {},
-			type : "POST",
-			dataType : "JSON",
-			success : function(data) {
-				for(var i = 0; i < data.object.length; i++){
-					CheckLR(data.object[i]);
-				}
-			},
-			error : function() {
-				showModal('서버오류' , '페이지 새로 고침 또는 새 브라우저 창을 열어주세요.')
-				console.log("joinChatRoomProc 메소드 실패");
-			}
-		});
-	}
-
 	function CheckLR(data) {
-		
-		const LR = (memberId != "${sessionScope.loginMember.id}") ? "left" : "right";
+		const LR = (data.GRADE != "A") ? "left" : "right";
  		appendMessageTag(LR, data);
 	}
 	
@@ -162,9 +198,12 @@ $(document).ready(function() {
 		let createContentDiv = document.createElement('div');
 		let createDaySpan = document.createElement('span');
 		
-        let sendDay = moment(data.SEND_DATE).format('LT')
-		if(now.getTime() - list.SEND_DATE > 86400000){
-			sendDay = moment(data.SEND_DATE).format('LL')
+        const today = moment(now).format('YYYY-MM-DD')
+        const before = moment(data.SEND_DATE).format('YYYY-MM-DD')
+
+        let sendDay = moment(data.SEND_DATE).format('LL')
+		if(moment(before).isSame(today)){
+			sendDay = moment(data.SEND_DATE).format('LT')
 		}
         
         
@@ -184,7 +223,7 @@ $(document).ready(function() {
 		createDaySpan.setAttribute("class", "day");
 		
 		createContentDiv.setAttribute("class", "content");
-		createDateSpan.setAttribute("class", "day");
+		createDaySpan.setAttribute("class", "day");
 		
         if( R == "right"){
         	createImg.src = '${pageContext.request.contextPath}' +'/resources/img/admin-profile.png';
@@ -195,14 +234,14 @@ $(document).ready(function() {
         
         createNameSpan.innerText = data.NAME;
         createContentDiv.innerText = data.CONTENT;
-        createDateSpan.innerText = sendDay;
+        createDaySpan.innerText = sendDay;
         
         
         document.getElementById("divChatData").appendChild(createMessageDiv);
         createMessageDiv.appendChild(createProfileDiv);
         createProfileDiv.appendChild(createImgDiv);
         createImgDiv.appendChild(createImg);
-        createImgDiv.appendChild(createNameSpan);
+        createProfileDiv.appendChild(createNameSpan);
         createMessageDiv.appendChild(createContentDiv);
         createMessageDiv.appendChild(createDaySpan);
         
@@ -222,26 +261,10 @@ $(document).ready(function() {
 		<div class="chat-list">
 			<div id="divchatList"></div>
 			
-			<div class="list">
-				<div class="list-div"><div class="img"><img src="http://blog.jinbo.net/attach/615/200937431.jpg" class="thumb"></div><span class="name">name</span><span class="list-date">2021.04</span></div>
-			</div>
-			
 		</div>
 		<div class="chat-room">
 			<div class="chat-box">
 				<div id="divChatData"></div>
-				
-            	<div class="message">
-					<div class="profile"><div class="img"><img src="" class="thumb"></div><span class="name">name</span></div>
-					<div class="content">message
-					</div>
-					<span class="day">time</span>
-            	</div>
-            	<div class="message messageR">
-					<div class="profile right"><div class="img"><img src="" class="thumb"></div><span class="name">name</span></div>
-					<div class="content">ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ  ㅇㅇㅁㄴㅇㅁㄴㅇ ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</div>
-					<span class="day">time</span>
-            	</div>
             
 			</div>
 			<div class="chat-input">

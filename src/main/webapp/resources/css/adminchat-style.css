@@ -19,7 +19,7 @@ section {
 	user-select: none;
 	
 	flex-basis: 70%;
-	min-height: 80%;
+	height: 800px;
 	
 	padding: 1.7%;
 	background-color: var(--color-light-grey);

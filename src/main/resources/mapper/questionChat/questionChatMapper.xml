@@ -20,15 +20,8 @@
 		SELECT id FROM Question_Chat
 		WHERE member_id = #{id }
 	</select>
-	
-	<select id="selectMessage" parameterType="int" resultType="QuestionMessage">
-		SELECT id, content, send_date, read, member_id, question_chat_id, name
-		FROM QUESTION_MESSAGE
-		WHERE question_chat_id = #{questionChatId }
-		ORDER BY send_date
-	</select>
 
-	<select id="selectChatRoomByQuestionId" parameterType="int" resultType="QusetionChat">
+	<select id="selectChatRoomByQuestionId" parameterType="_int" resultType="QusetionChat">
 		SELECT id FROM Question_Chat
 		WHERE id = #{questionChatId }
 	</select>
@@ -54,9 +47,9 @@
 		ORDER BY send_date DESC
 	</select>
 
-	<select id="selectAdminMessage" parameterType="_int" resultType="hashmap">
+	<select id="selectMessageByQId" parameterType="_int" resultType="hashmap">
 		SELECT 
-    		QM.send_date, QM.read, QM.member_id, QM.question_chat_id, QM.name, QM.content, QC.id, m.file_id
+    		QM.send_date, QM.read, QM.member_id, QM.question_chat_id, QM.name, QM.content, QC.id, m.file_id, m.grade
     		FROM (
     		SELECT
         		id, send_date, read, member_id, question_chat_id, name, content
@@ -66,7 +59,7 @@
 		JOIN QUESTION_CHAT QC ON QM.question_chat_id = QC.id
 		JOIN member m ON QM.member_id = m.id
 		where question_chat_id = #{questionChatId}
-		ORDER BY send_date DESC
+		ORDER BY send_date ASC
 	</select>
 
 	<select id="cntChatRoom" resultType="_int">

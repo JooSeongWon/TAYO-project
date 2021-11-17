@@ -39,8 +39,8 @@ public class AdminQuestionChatController {
 	}
 
 	@ResponseBody
-	@PostMapping("/question/service/{questionChatId}")
+	@PostMapping("/service/{questionChatId}")
 	public ResponseObject joinChatRoom(@PathVariable("questionChatId") int questionChatId) {
-		return questionChatService.adminMessageList(questionChatId);
+		return questionChatService.getMessageList(questionChatId);
 	}
 }

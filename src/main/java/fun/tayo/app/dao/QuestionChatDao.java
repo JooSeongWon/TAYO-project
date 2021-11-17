@@ -9,13 +9,22 @@ import fun.tayo.app.dto.QusetionChat;
 
 public interface QuestionChatDao {
 	
+	/**
+	 * 해당유저의 채팅방 수
+	 * 
+	 * @param memberSession
+	 * @return
+	 */
 	int cntByMemberId(MemberSession memberSession);
 	
+	/**
+	 * 채팅방 개설
+	 * 
+	 * @param memberSession
+	 */
 	void insertChatRoom(MemberSession memberSession);
 	
 	int selectChatRoom(MemberSession memberSession);
-	
-	List<QuestionMessage> selectMessage(int questionChatId);
 	
 	QusetionChat selectChatRoomByQuestionId(int questionChatId);
 
@@ -23,7 +32,7 @@ public interface QuestionChatDao {
 
 	List<Map<Integer, Object>> selectChatList();
 
-	List<Map<Integer, Object>> selectAdminMessage(int questionChatId);
+	List<Map<Integer, Object>> selectMessageByQId(int questionChatId);
 
 
 
