@@ -35,6 +35,7 @@
     <script src="${pageContext.request.contextPath}/resources/js/work-space-script.js" defer></script>
 
     <script>
+        const roomId = ${roomId};
         const myId = ${loginMember.id};
         const myName = `${loginMember.name}`;
         <c:if test="${not empty loginMember.profile}">
@@ -53,10 +54,12 @@
     <div class="avatar user">
         <div class="img-wrap">
             <c:if test="${not empty loginMember.profile}">
-                <img class="avatar__img" src="${pageContext.request.contextPath}/img/${loginMember.profile}" alt="내 아바타">
+                <img class="avatar__img" src="${pageContext.request.contextPath}/img/${loginMember.profile}"
+                     alt="내 아바타">
             </c:if>
             <c:if test="${empty loginMember.profile}">
-                <img class="avatar__img" src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="내 아바타">
+                <img class="avatar__img" src="${pageContext.request.contextPath}/resources/img/no-profile.png"
+                     alt="내 아바타">
             </c:if>
             <i class="fas fa-microphone-slash mute active"></i>
             <i class="fas fa-video on-air"></i>
@@ -86,7 +89,6 @@
             <div class="chat-history">
                 <div class="chat-history__title">${name}</div>
                 <div class="chat-history__content tayo-scroll-bar">
-                    대화내용 넣을곳
                 </div>
             </div>
         </div>

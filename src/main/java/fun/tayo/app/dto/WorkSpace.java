@@ -14,6 +14,7 @@ public class WorkSpace {
     private String invitationCode;
     private int headCount;
     private List<WorkSpaceAndMember> members;
+    private int onlineMemberNum;
 
     public boolean isOwner(int memberId) {
         return this.memberId == memberId;

@@ -60,11 +60,13 @@
    <!-- 웹소켓 핸들러설정 -->
    <websocket:handlers>
       <websocket:mapping handler="handlerChat" path="/question/chat" />
+      <websocket:mapping handler="handlerWorkSpace" path="/workspace/relay" />
       <websocket:handshake-interceptors>
          <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
       </websocket:handshake-interceptors>
       <websocket:sockjs websocket-enabled="true" />
    </websocket:handlers>
    <beans:bean id="handlerChat" class="fun.tayo.app.websocket.QuestionChatHandler" />
-	
+   <beans:bean id="handlerWorkSpace" class="fun.tayo.app.websocket.WorkSpaceHandler" />
+
 </beans:beans>

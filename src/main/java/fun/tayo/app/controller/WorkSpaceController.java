@@ -132,7 +132,14 @@ public class WorkSpaceController {
             Model model
     ) {
 
-        model.addAttribute("name", "test");
+        final String myWorkSpaceName = workSpaceService.getMyWorkSpaceName(workSpaceId, memberSession.getId());
+
+        if(myWorkSpaceName == null) { //입장 권한 없음
+            return "redirect:/work-spaces";
+        }
+
+        model.addAttribute("name", myWorkSpaceName);
+        model.addAttribute("roomId", workSpaceId);
         return "user/work-space/work-space";
     }
 }

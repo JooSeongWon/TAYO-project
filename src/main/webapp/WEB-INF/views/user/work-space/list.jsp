@@ -58,7 +58,7 @@
                         <div class="item__head-count">
                             <img src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="인원표시 이미지"
                                  class="item__profile-img">
-                            <div class="item__count">(0/${item.headCount})</div>
+                            <div class="item__count">(${item.onlineMemberNum}/${item.headCount})</div>
                         </div>
 
                         <a href="/work-spaces/${item.id}" class="item__title">

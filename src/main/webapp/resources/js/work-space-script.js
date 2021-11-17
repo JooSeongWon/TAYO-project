@@ -1,4 +1,11 @@
-/* 미디어 설정 */
+/*오디오 테스트용*/
+const myAudio = document.createElement('audio');
+myAudio.controls = true;
+myAudio.autoplay = true;
+/*오디오 테스트용*/
+
+
+//미디어 설정
 const myCam = document.createElement('video');
 myCam.playsInline = true;
 myCam.autoplay = true;
@@ -7,16 +14,37 @@ myCam.height = 90;
 myCam.muted = true;
 myCam.controls = true;
 
-/*오디오 테스트용*/
-const myAudio = document.createElement('audio');
-myAudio.controls = true;
-myAudio.autoplay = true;
-/*오디오 테스트용*/
-
+//노드
 const miceBtn = document.getElementById('mice');
 const camBtn = document.getElementById('cam');
 const screenBtn = document.getElementById('screen');
+const chatInput = document.querySelector('#chat');
+const screen = document.querySelector('.screen');
 
+const navBtn = document.querySelector('.fa-chevron-right');
+const exitBtn = document.querySelector('.exit');
+const bottomMenu = document.querySelector('.bottom-menu');
+const chatHistory = document.querySelector('.chat-history');
+const chatHistoryContent = document.querySelector('.chat-history__content');
+const chatHistoryBtn = document.querySelector('.fa-arrow-up');
+
+//z인덱스
+const INDEX_MY_AVATAR = '50';
+const INDEX_OTHER_AVATAR = '49';
+const INDEX_SPEECH_BUBBLE = '53';
+const INDEX_SYSTEM_UI = '100';
+const INDEX_BOARD = '99';
+
+
+//웹소켓 상수
+const RELAY_CHAT = "chat";
+const RELAY_MOVE = "move";
+const RELAY_ENTER = "enter";
+const SYSTEM_DUPLICATE = "duplicate";
+const RELAY_JOIN = "join";
+const RELAY_LEAVE = "leave";
+
+//스트림
 let myAudioStream;
 let myCamStream;
 let myScreenStream;
@@ -25,29 +53,28 @@ let miceOn = false;
 let camOn = false;
 let screenOn = false;
 
+let preChatText = '';
+
+//유저맵
+const users = [];
+
+
+//시스템UI 인덱스 설정
+navBtn.style.zIndex = INDEX_SYSTEM_UI;
+exitBtn.style.zIndex = INDEX_SYSTEM_UI;
+bottomMenu.style.zIndex = INDEX_SYSTEM_UI;
+
 
 async function onMyCamStream() {
-    try {
-        myCamStream = await navigator.mediaDevices.getUserMedia({video: true});
-    } catch (e) {
-        console.log(e);
-    }
+    myCamStream = await navigator.mediaDevices.getUserMedia({video: true});
 }
 
 async function onMyScreenStream() {
-    try {
-        myScreenStream = await navigator.mediaDevices.getDisplayMedia({video: true});
-    } catch (e) {
-        console.log(e);
-    }
+    myScreenStream = await navigator.mediaDevices.getDisplayMedia({video: true});
 }
 
 async function onMyAudioStream() {
-    try {
-        myAudioStream = await navigator.mediaDevices.getUserMedia({audio: true});
-    } catch (e) {
-        console.log(e);
-    }
+    myAudioStream = await navigator.mediaDevices.getUserMedia({audio: true});
 }
 
 function offMyCamStream() {
@@ -73,7 +100,12 @@ screenBtn.addEventListener('click', handleScreenClick);
 
 async function handleMiceClick() {
     if (!miceOn) { //켬
-        await onMyAudioStream();
+        try {
+            await onMyAudioStream();
+        } catch (e) { //마이크 사용 거부
+            return;
+        }
+
         test(true);
     } else { //끔
         await offMyAudioStream();
@@ -90,7 +122,15 @@ async function handleCamClick() {
         camBtn.classList.toggle('fa-video');
         camBtn.classList.toggle('fa-spinner');
         camBtn.style.cursor = 'none';
-        await onMyCamStream();
+        try {
+            await onMyCamStream();
+        } catch (e) { //화면공유 거절
+            camBtn.classList.toggle('fa-spinner');
+            camBtn.classList.toggle('fa-video');
+            camBtn.style.cursor = 'pointer';
+            return;
+        }
+
 
         if (screenOn) {
             await handleScreenClick();
@@ -112,7 +152,12 @@ async function handleCamClick() {
 
 async function handleScreenClick() {
     if (!screenOn) {//켬
-        await onMyScreenStream();
+        try {
+            await onMyScreenStream();
+        } catch (e) {
+            return;
+        }
+
         if (!myScreenStream) { //화면공유 거부
             return;
         }
@@ -147,25 +192,23 @@ function test(on) {
 /* 미디어 테스트용 */
 
 
-/* 아바타 관련 */
-//인덱스
-const INDEX_MY_AVATAR = '50';
-const INDEX_OTHER_AVATAR = '49';
-const INDEX_SPEECH_BUBBLE = '53';
-
-
-const screen = document.querySelector('.screen');
-
+/* 아바타 */
 class Avatar {
     constructor(user) {
         this.userId = user.id;
         this.userName = user.name;
         this.userProfile = user.profile;
+        this.x = user.x;
+        this.y = user.y;
+
+        this.isMe = (user.id === myId);
+        this.isOther = !this.isMe;
     }
 
     insertMyAvatar() {
         this.avatar = document.querySelector('.avatar.user');
         this.profile = document.querySelector('.avatar.user img');
+        this.profileWrap = document.querySelector('.user .img-wrap')
         this.name = document.querySelector('.avatar.user > .avatar__name');
         this.speechBubble = document.querySelector('.speech-bubble-wrap.user');
         this.speechBubbleText = document.querySelector('.speech-bubble-wrap.user > .speech-bubble');
@@ -181,12 +224,14 @@ class Avatar {
         const avatar = document.createElement('div');
         avatar.classList.add('avatar');
         avatar.style.zIndex = INDEX_OTHER_AVATAR;
+        avatar.style.left = `${this.x}px`;
+        avatar.style.top = `${this.y}px`;
 
         const profileWrap = document.createElement('div');
         profileWrap.classList.add('img-wrap');
 
         const profile = document.createElement('img');
-        if (this.profile) {
+        if (this.userProfile) {
             profile.src = `/img/${this.userProfile}`;
         } else {
             profile.src = '/resources/img/no-profile.png';
@@ -217,6 +262,7 @@ class Avatar {
 
         this.avatar = avatar;
         this.name = name;
+        this.profileWrap = profileWrap;
         this.profile = profile;
         this.onAir = onAir;
         this.mute = mute;
@@ -226,8 +272,8 @@ class Avatar {
         speechBubble.classList.add('speech-bubble-wrap');
         speechBubble.classList.add('active');
         speechBubble.style.zIndex = INDEX_SPEECH_BUBBLE;
-        speechBubble.style.left = '30px';
-        speechBubble.style.top = '15px';
+        speechBubble.style.left = `${this.x}px`;
+        speechBubble.style.top = `${this.y - 15}px`;
 
         const speechBubbleText = document.createElement('div');
         speechBubbleText.classList.add('speech-bubble');
@@ -248,71 +294,158 @@ class Avatar {
 
     talk(text) {
         //다시 넣어서 최신대화를 위로 끌어올리기
+        if (this.speechTimeOut) {
+            clearTimeout(this.speechTimeOut);
+        }
+
         screen.removeChild(this.speechBubble);
-        this.speechBubble.classList.remove('active');
+        if (this.speechBubble.classList.contains('active')) {
+            this.speechBubble.classList.remove('active');
+        }
 
         this.speechBubbleText.innerText = text;
 
         screen.appendChild(this.speechBubble);
-        setTimeout(() => this.speechBubble.classList.add('active'), 3000);
+        this.speechTimeOut = setTimeout(() => this.speechBubble.classList.add('active'), 3000);
+
+        //채팅기록에 추가
+        const history = document.createElement('div');
+        history.classList.add('history');
+        if (this.isMe) {
+            history.classList.add('user');
+        } else {
+
+            const historyTitle = document.createElement('div');
+            historyTitle.classList.add('history__title');
+
+            const historyProfile = document.createElement('img');
+            historyProfile.classList.add('history__profile');
+            if (this.profile) {
+                historyProfile.src = `/img/${this.userProfile}`;
+            } else {
+                historyProfile.src = '/resources/img/no-profile.png';
+            }
+
+            const historyUserName = document.createElement('div');
+            historyUserName.classList.add('history__user-name');
+            historyUserName.innerText = this.userName;
+
+            historyTitle.appendChild(historyProfile);
+            historyTitle.appendChild(historyUserName);
+            history.appendChild(historyTitle);
+        }
+
+        const historyContent = document.createElement('div');
+        historyContent.classList.add('history__content');
+        historyContent.innerText = text;
+
+        history.appendChild(historyContent);
+
+        chatHistoryContent.appendChild(history);
+        chatHistoryContent.scroll(0, chatHistoryContent.scrollHeight);
     }
 
     move(x, y) {
-        const posX = Math.max(-15, Math.min(1855, x - 60));
-        const posY = Math.max(0, Math.min(1030, y - 40));
+        let posX = x;
+        let posY = y;
+
+        if (this.isMe) {
+            posX = Math.max(-15, Math.min(1855, x - 60));
+            posY = Math.max(0, Math.min(1030, y - 40));
+        }
+
         this.avatar.style.left = `${posX}px`;
         this.avatar.style.top = `${posY}px`;
         this.speechBubble.style.left = `${posX}px`;
         this.speechBubble.style.top = `${posY - 15}px`;
+        this.x = posX;
+        this.y = posY;
     }
+
 
     setOnAir(isLive) {
         if (isLive) {
             if (!this.onAir.classList.contains('active')) {
                 this.onAir.classList.add('active');
             }
+            if (!this.profileWrap.classList.contains('cursor') && this.isOther) {
+                this.profileWrap.classList.add('cursor');
+            }
             return;
         }
         if (this.onAir.classList.contains('active')) {
             this.onAir.classList.remove('active');
+        }
+        if (this.profileWrap.classList.contains('cursor') && this.isOther) {
+            this.profileWrap.classList.remove('cursor');
         }
     }
 
     toggleMute() {
         this.mute.classList.toggle('active');
     }
-}
 
+    remove() {
+        screen.removeChild(this.avatar);
+        screen.appendChild(this.speechBubble);
+    }
+}
 
 //내 캐릭터
 const myAvatar = new Avatar({
-    userId: myId,
-    userName: myName,
-    userProfile: myProfile
+    id: myId,
+    name: myName,
+    profile: myProfile,
+    x: 30,
+    y: 30
 });
 myAvatar.insertMyAvatar();
 
-/* 마우스 우클릭 테스트 */
+
+//이동 이벤트
 window.oncontextmenu = function (e) {
-    if (e.target === document.querySelector('.screen') || isAvatar(e.target)) {
+    if (e.target === screen || isAvatar(e.target)) {
         myAvatar.move(e.pageX, e.pageY);
+        sendMessage(RELAY_MOVE, {x: myAvatar.x, y: myAvatar.y});
         return false;
     }
 };
-/* 채팅 포커스 테스트 */
+
+//채팅 이벤트
 window.document.body.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
-        if (document.activeElement !== document.querySelector('#chat')) {
-            document.querySelector('#chat').focus();
+        if (document.activeElement !== chatInput) {
+            chatInput.focus();
         } else {
             //채팅입력 처리
-            if (!document.querySelector('#chat').value) {
-                document.querySelector('#chat').blur();
+            if (!chatInput.value) {
+                chatInput.blur();
                 return;
             }
-            myAvatar.talk(document.querySelector('#chat').value);
-            document.querySelector('#chat').value = '';
+            myAvatar.talk(chatInput.value);
+            preChatText = chatInput.value;
+            sendMessage(RELAY_CHAT, chatInput.value); //서버전송
+
+            chatInput.value = '';
         }
+    }
+});
+
+// 이전채팅 이벤트
+chatInput.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowUp') {
+        chatInput.value = preChatText;
+        let len = chatInput.value.length;
+
+        //포커스 맨뒤로 (크로스 브라우저)
+        if (chatInput.createTextRange) {
+            let range = chatInput.createTextRange();
+            range.move('character', len);
+            range.select();
+        } else if (len.selectionStart) {
+            len.setSelectionRange(len, len);
+        }
+
     }
 });
 
@@ -325,5 +458,85 @@ function isAvatar(target) {
         classList.contains('img-wrap') ||
         classList.contains('mute') ||
         classList.contains('on-air') ||
-        classList.contains('avatar__name');
+        classList.contains('avatar__name') ||
+        classList.contains('arrow-down') ||
+        classList.contains('speech-bubble-wrap')
+}
+
+/* 채팅기록 열기닫기 */
+chatHistoryBtn.addEventListener('click', () => {
+    chatHistoryBtn.classList.toggle('active');
+    chatHistory.classList.toggle('active');
+});
+
+
+/* 웹 소켓 */
+//초기화
+socket = new SockJS('/workspace/relay');
+
+//이벤트 설정
+socket.onopen = callbackOpenSocket;
+socket.onerror = console.error;
+socket.onmessage = receiveMessage;
+
+
+function callbackOpenSocket() {
+    sendMessage(RELAY_ENTER);
+}
+
+function sendMessage(type, object, receiver) {
+    const message = {
+        type,
+        sender: myId,
+        receiver,
+        roomId,
+        message: object
+    };
+
+    socket.send(JSON.stringify(message));
+}
+
+function receiveMessage(event) {
+    const message = JSON.parse(event.data);
+
+    switch (message.type) {
+        //누군가 중복접속
+        case SYSTEM_DUPLICATE:
+            showModal('중복접속', '다른 브라우저로 접속했습니다.', () => {
+                location.href = '/work-spaces'
+            });
+            break;
+        //접속승인
+        case RELAY_ENTER:
+            const userList = message.message;
+            for (const user of userList) {
+                const avatar = new Avatar(user);
+                avatar.render();
+                users[avatar.userId] = avatar;
+            }
+            break;
+        //새 유저 접속
+        case RELAY_JOIN:
+            const avatar = new Avatar(message.message);
+            avatar.render();
+            users[avatar.userId] = avatar;
+            break;
+        //접속종료
+        case RELAY_LEAVE:
+            const leaveUserId = message.sender;
+            users[leaveUserId].remove();
+            users[leaveUserId] = null;
+            break;
+        //채팅
+        case RELAY_CHAT:
+            const chatUserId = message.sender;
+            users[chatUserId].talk(message.message);
+            break;
+        //이동
+        case RELAY_MOVE:
+            const moveUserId = message.sender;
+            const position = message.message;
+            users[moveUserId].move(position.x, position.y);
+            break;
+    }
 }

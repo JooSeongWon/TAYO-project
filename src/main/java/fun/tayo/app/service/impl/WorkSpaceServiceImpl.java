@@ -3,13 +3,16 @@ package fun.tayo.app.service.impl;
 import fun.tayo.app.dao.WorkSpaceDao;
 import fun.tayo.app.dto.*;
 import fun.tayo.app.service.face.WorkSpaceService;
+import fun.tayo.app.websocket.WorkSpaceHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -20,10 +23,14 @@ import java.util.regex.Pattern;
 public class WorkSpaceServiceImpl implements WorkSpaceService {
 
     private final WorkSpaceDao workSpaceDao;
+    private final WorkSpaceHandler workSpaceHandler;
 
     @Override
     public List<WorkSpace> getWorkSpaces(MemberSession memberSession) {
-        return workSpaceDao.selectsByMemberId(memberSession.getId());
+        final List<WorkSpace> workSpaces = workSpaceDao.selectsByMemberId(memberSession.getId());
+        workSpaces.forEach(workspace -> workspace.setOnlineMemberNum(workSpaceHandler.getOnlineMemberNum(workspace.getId())));
+
+        return workSpaces;
     }
 
 
@@ -56,7 +63,7 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
 
     @Override
     public ResponseObject findDetailWorkSpaceOfMember(int workSpaceId, int memberId) {
-        final WorkSpace workSpace = workSpaceDao.selectDetail(new WorkSpaceAndMember(memberId, workSpaceId));
+        final WorkSpace workSpace = workSpaceDao.selectDetailOfMember(new WorkSpaceAndMember(memberId, workSpaceId));
 
         return (workSpace == null) ? new ResponseObject(false, "잘못된 접근입니다.") : new ResponseObject(true, workSpace);
     }
@@ -159,6 +166,15 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
         if (result == 0) return new ResponseData(false, "처리할 수 없는 요청입니다.");
 
         return new ResponseData(true, "ok");
+    }
+
+    @Override
+    public String getMyWorkSpaceName(int workSpaceId, int memberId) {
+        Map<String, Integer> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("workSpaceId", workSpaceId);
+
+        return workSpaceDao.selectWorkSpaceNameOfTeamMember(params);
     }
 
     private int getCurrentHeadCountFrom(int workSpaceId) {
