@@ -77,12 +77,12 @@ public class QuestionChatHandler extends TextWebSocketHandler {
     		questionMessage.setName(username);
     	}
 		
-//		int FILE_ID = memberservice.selectProfile(questionMessage.getMemberId());
+		Integer FILE_ID = memberservice.getProfile(questionMessage.getMemberId());
 		
 				
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("GRADE", GRADE);
-//		map.put("FILE", FILE_ID);
+		map.put("FILE", FILE_ID);
 		
 		Map<Object, Object> map2 = new HashMap<Object, Object>();
 		
