@@ -74,20 +74,21 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
 
     //같은방 모두에게 메세지 릴레이
     private void relayMessageToAllMemberInSameRoom(Message relayMessage) {
-        try {
-            Integer roomId = relayMessage.roomId;
-            Integer memberId = relayMessage.sender;
-            WorkSpaceRoom room = roomMap.get(roomId);
-            final Collection<TeamMember> teamMembers = room.enteredMemberMap.values();
+        Integer roomId = relayMessage.roomId;
+        Integer memberId = relayMessage.sender;
+        WorkSpaceRoom room = roomMap.get(roomId);
+        final Collection<TeamMember> teamMembers = room.enteredMemberMap.values();
 
-            for (TeamMember teamMember : teamMembers) {
-                if (!teamMember.getMemberId().equals(memberId)) {
+        for (TeamMember teamMember : teamMembers) {
+            if (!teamMember.getMemberId().equals(memberId)) {
+                try {
                     teamMember.sendMessage(relayMessage);
+                } catch (Exception e) {
+                    log.error("프레임 릴레이 오류", e);
                 }
             }
-        } catch (Exception e) {
-            log.error("프레임 릴레이 오류");
         }
+
     }
 
     //유저 입장
@@ -144,7 +145,7 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
 
     //연결종료
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws IOException {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Integer roomId = (Integer) session.getAttributes().get("roomId");
         Integer memberId = ((MemberSession) session.getAttributes().get(SessionConst.LOGIN_MEMBER)).getId();
         if (roomId != null) {
@@ -230,12 +231,11 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
 
         public void sendMessage(Message message) {
             try {
-
                 final String jsonText = objectMapper.writeValueAsString(message);
                 TextMessage textMessage = new TextMessage(jsonText);
                 session.sendMessage(textMessage);
             } catch (Exception e) {
-                log.error("프레임 전송오류");
+                log.error("프레임 전송오류", e);
             }
         }
 
