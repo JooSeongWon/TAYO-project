@@ -17,7 +17,7 @@ public interface MemberDao {
 	void kakaoinsert(Member member);
 
 
-	int selectProfileById(int memberId); 
+	Integer selectProfileById(Integer memberId); 
 	
 	
 }
