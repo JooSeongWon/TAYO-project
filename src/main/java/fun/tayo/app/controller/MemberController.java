@@ -21,7 +21,6 @@ import fun.tayo.app.service.face.SocialLoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -32,16 +31,14 @@ public class MemberController {
 
 	@GetMapping("/login")
 	public String login() {
-		
+
 		return "user/member/login";
-		
+
 	}
 
 	@ResponseBody
 	@PostMapping("/login")
-	public ResponseData login (
-			@ModelAttribute MemberLoginParam memberLoginParam, HttpSession session
-			) {
+	public ResponseData login(@ModelAttribute MemberLoginParam memberLoginParam, HttpSession session) {
 		try {
 
 			return memberService.login(memberLoginParam, session);
@@ -52,85 +49,94 @@ public class MemberController {
 
 			return new ResponseData(false, "서버오류");
 		}
-		
+
 	}
-	
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-    	
-        final HttpSession session = request.getSession(false);
-        
-        if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
-        	
-            return "redirect:/";
-            
-        }
 
-        session.invalidate();
-        
-        return "redirect:/";
-    }
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
 
-    
+		final HttpSession session = request.getSession(false);
+
+		if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
+
+			return "redirect:/";
+
+		}
+
+		session.invalidate();
+
+		return "redirect:/";
+	}
+
 	@GetMapping(value = "/join")
 	public String join() {
-		
+
 		return "user/member/join";
-		
+
 	}
-	
-	
+
 	@PostMapping(value = "/join")
 	public String joinProc(Member member) {
-		
+
 		boolean joinResult = memberService.join(member);
-		
-		if(joinResult) {
-			
+
+		if (joinResult) {
+
 			log.info("회원가입 성공");
-			
+
 			return "redirect:/";
-			
+
 		} else {
-			
+
 			log.info("회원가입 실패");
-			
+
 			return "redirect:/user/member/join";
 		}
 	}
 
-	
-	
 	@GetMapping("/login/kakao")
-	public String kakaoLogin(
-			@RequestParam(required = false) String code,
-            HttpServletRequest request			
-			) {
-	       try {
-	            if (socialLoginService.login(code, request)) {
-	                log.info("로그인 성공!");
-	            } else {
-	                log.info("로그인 실패! - 미가입자!");
-	                return "user/member/kakao-join";
-	            }
-	        } catch (Exception e) {
-	        	
-	            log.error("서버오류 소셜로그인 실패!");
-	        }
+	public String kakaoLogin(@RequestParam(required = false) String code, HttpServletRequest request) {
+		try {
+			if (socialLoginService.login(code, request)) {
+				
+				log.info("로그인 성공!");
+				
+			} else {
+				
+				log.debug("request.getParameter(\"email\") {}", request.getParameter("email"));
+				
+				log.info("추가정보를 입력하세요!");
+				
+				return "user/member/kakao-join";
+				
+			}
+		} catch (Exception e) {
 
-	        return "redirect:/";
+			log.error("서버오류 소셜로그인 실패!");
+		}
+
+		return "redirect:/";
 	}
-	
-	/*
-	 * @GetMapping("/kakao-join") public String kakaoJoin( ) {
-	 * 
-	 * }
-	 */
 
-	
-	
-	
+
+	@PostMapping("/kakao-join") public String kakaoJoin(Member member) {
+		log.debug("member {} ", member);
+		
+		boolean joinResult = memberService.kakaojoin(member);
+
+		if (joinResult) {
+
+			log.info("추가정보 입력 성공!");
+
+			return "redirect:/";
+
+		} else {
+
+			log.info("추가정보 입력 실패!");
+
+			return "redirect:/user/member/kakao-join";
+		}
+	}
+
+
 }
-
-
-

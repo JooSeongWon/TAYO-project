@@ -17,7 +17,10 @@
 
 <form action="/kakao-join" method="post">
 
-<label>USER NAME </label><br>
+<label>Email </label><br>
+<input type="email" name="email" class="tayo-input" placeholder="Email" /><br><br>
+
+<label>User Name </label><br>
 <input type="text" name="name" class="tayo-input" placeholder="USER NAME" /><br><br>
 
 <label>Phone</label><br>

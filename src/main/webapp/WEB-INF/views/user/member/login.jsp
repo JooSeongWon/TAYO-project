@@ -29,7 +29,7 @@
 					<label for="password">Password</label>
 					<div>
 						<input type="password" id="password" name="password"
-							class="tayo-input" placeholder="password" onKeyDown="login();">
+							class="tayo-input" placeholder="password" >
 					</div>
 				</div>
 				<br>

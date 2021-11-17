@@ -78,6 +78,10 @@ public class MemberServiceImpl implements MemberService{
 				
 		//중복 ID 확인
 		if( memberDao.selectCntByEmail(member) > 0 ) {
+			log.debug("중복된 이메일 입니다!!");
+			
+			
+			//로그인 실패
 			return false;
 		}
 		
@@ -92,5 +96,31 @@ public class MemberServiceImpl implements MemberService{
 		return false;
 	}
 
+	@Override
+	public boolean kakaojoin(Member member) {
+		
+		//중복 ID 확인
+		if( memberDao.selectCntByEmail(member) > 0 ) {
+			log.debug("중복된 kakao이메일 입니다!!");
+			
+			//로그인 실패
+			return false;
+		}
+		
+		//회원가입(삽입)
+		memberDao.kakaoinsert(member);
+		
+		//회원가입 결과 확인
+		if( memberDao.selectCntByEmail(member) > 0 ) {
+			log.debug("회원가입 결과 확인 성공!");
+		}
+		
+		//회원가입 실패
+		return false;
+	}
+	
+	public Integer getProfile(Integer memberId){
+		return memberDao.selectProfileById(memberId);
+		}
 	
 }

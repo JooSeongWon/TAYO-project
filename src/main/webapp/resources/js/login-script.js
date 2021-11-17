@@ -7,7 +7,6 @@ const loginBtn = document.querySelector('#loginBtn');
 loginBtn.addEventListener('click', login);
 
 function login() {
-	if(event.keyCode == 13) {
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;
 
@@ -19,8 +18,24 @@ function login() {
         success: loginCallBack,
         error: errorCallBack
     });
-    }
 }
+
+//function login() {
+//    if(event.keyCode == 13) {
+//    
+//	const email = document.querySelector('#email').value;
+//	const password = document.querySelector('#password').value;
+//	
+//	$.ajax({
+//		type: 'POST',
+//		url: '/login',
+//		data: {email: email, password: password},
+//		dataType: 'json',
+//		success: loginCallBack,
+//		error: errorCallBack
+//	});
+//    }
+//}
 
 // 로그인에 성공하면 /로 이동
 function loginCallBack(data) {

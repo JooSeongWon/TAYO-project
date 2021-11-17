@@ -16,5 +16,8 @@ public interface MemberService {
 
 	void setLogin(Member member, HttpSession session);
 
+	boolean kakaojoin(Member member);
+	
+	Integer getProfile(Integer memberId);
 
 }

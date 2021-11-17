@@ -22,7 +22,7 @@ $(document).ready(function() {
 	//소켓연결
 	sock = new SockJS("/question/chat");
 	sock.onopen = onOpen;
-// 	sock.onmessage = onMessage;
+	sock.onmessage = onMessage;
 	
 	//소켓 연결시 사용자+방번호 보내기
 	function onOpen() {
@@ -41,19 +41,18 @@ $(document).ready(function() {
 	const inputMessage = document.querySelector('.chat-message');
 	
 	var now = new Date();
+	
 	//메세지 보내기
 	inputButton.addEventListener('click', function() {
 		
 		let data = {
 			"questionChatId": questionId,
-			"name" : memberName,
 			"content" : inputMessage.value,
 			"memberId": memberId,
 			"sendDate": now
 		}
 		let jsonData = JSON.stringify(data);
 		sock.send(jsonData)
-		CheckLR(data)
 		inputMessage.value = '';
 	});
 	
@@ -65,8 +64,23 @@ $(document).ready(function() {
 	
 	//메세지 수신
 	function onMessage(event) {
-		const Message = event.data.split(",");
-		CheckLR(Message);
+		const Message = JSON.parse(event.data);
+		
+		console.log(Message)
+		console.log(Message.admin)
+		console.log(Message.msg)
+		console.log(Message.msg.content)
+		
+		
+		let data = {
+			"NAME" : Message.msg.name,
+			"CONTENT" : Message.msg.content,
+			"sendDate" : Message.msg.sendDate,
+			"memberId" : Message.msg.memberId,
+			"GRADE" : Message.admin.GRADE
+		}
+		
+		CheckLR(data);
 	}
 	
 	const box = document.querySelector('.chat-box');
@@ -90,23 +104,25 @@ $(document).ready(function() {
 	
 	
 	function CheckLR(data) {
-		
-		const LR = (data.memberId != "${sessionScope.loginMember.id}") ? "left" : "right";
- 		appendMessageTag(LR, data.name, data.content, data.sendDate);
+		const LR = (data.GRADE != "N") ? "left" : "right";
+ 		appendMessageTag(LR, data);
 	}
 	
 
-	function appendMessageTag(R, name, content, sendDate) {
+	function appendMessageTag(R, data) {
 		let createMessageDiv = document.createElement('div');
 		let createNameSpan = document.createElement('span');
 		let createContentDiv = document.createElement('div');
 		let createDateSpan = document.createElement('span');
 		
-        let sendDay = moment(sendDate).format('LT')
+        const today = moment(now).format('YYYY-MM-DD')
+        const before = moment(data.SEND_DATE).format('YYYY-MM-DD')
 
-		if(now - sendDate > 86399){
-			sendDay = moment(sendDate).format('LL')
+        let sendDay = moment(data.SEND_DATE).format('LL')
+		if(moment(before).isSame(today)){
+			sendDay = moment(data.SEND_DATE).format('LT')
 		}
+		
         
 		createMessageDiv.classList.add("message");
 		createContentDiv.setAttribute("class", "content");
@@ -117,8 +133,8 @@ $(document).ready(function() {
         }
         
         
-        createNameSpan.innerText = name;
-        createContentDiv.innerText = content;
+        createNameSpan.innerText = data.NAME;
+        createContentDiv.innerText = data.CONTENT;
         createDateSpan.innerText = sendDay;
         
         

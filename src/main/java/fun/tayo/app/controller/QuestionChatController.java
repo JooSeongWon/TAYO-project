@@ -31,12 +31,6 @@ public class QuestionChatController {
 	
 	private final QuestionChatService questionChatService;
 	
-	@GetMapping(value = "/sample")
-	public String sample() {
-		
-		return "user/question-chat/sample-script";
-	}
-	
 	@ResponseBody
 	@PostMapping(value = "/service/open")
 	public int openChat(
@@ -56,20 +50,16 @@ public class QuestionChatController {
 	@GetMapping(value = "/service/{questionId}")
 	public String joinChatRoom(
 			@PathVariable("questionId") int questionId,
-			@SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
 			Model model			
 			) {
-		String memberName = memberSession.toString();
-		model.addAttribute("memberName", memberName);
 		model.addAttribute("questionId", questionId);
-		
 		return "user/question-chat/question-chat";
 	}
 	
 	@ResponseBody
-	@PostMapping(value = "/service/{questionId}")
-	public ResponseObject joinChatRoomProc(@PathVariable int questionId) {
-		return questionChatService.messageList(questionId);
+	@PostMapping(value = "/service/{questionChatId}")
+	public ResponseObject joinChatRoomProc(@PathVariable int questionChatId) {
+		return questionChatService.getMessageList(questionChatId);
 	}
 	
 }

@@ -13,23 +13,42 @@ public interface QuestionChatService {
 	/**
 	 * 채팅방 개설
 	 * 
-	 * @param memberSession
+	 * @param memberSession - 개설유저
 	 * @return
 	 */
 	int openChat(MemberSession memberSession);
 	
 	/**
-	 * 메세지 불러오기
-	 * @param questionId
+	 * 채팅 메세지 부르기
+	 * 
+	 * @param questionId - 문의번호
 	 * @return
 	 */
-	ResponseObject messageList(int questionId);
+	ResponseObject getMessageList(int questionChatId);
 	
+	/**
+	 * 채팅방 찾기
+	 * 
+	 * @param questionChatId - 채팅방 번호
+	 * @return
+	 */
 	QusetionChat selectChatRoom(int questionChatId);
-
+	
+	/**
+	 * 메시지 저장
+	 * 
+	 * @param questionMessage - 전달받은 메세지
+	 * @return
+	 */
 	int insertMessage(QuestionMessage questionMessage);
-
+	
+	/**
+	 * 채팅 리스트 얻기
+	 * 
+	 * @return
+	 */
 	ResponseObject getList();
+
 
 
 
