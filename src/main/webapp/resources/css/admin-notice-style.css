@@ -1,0 +1,76 @@
+section{
+	margin:0 auto;
+    margin-top: 20px;
+	
+}
+
+h1{
+    margin-top: 30px;
+    padding: 40px;
+    margin:0 auto;
+    text-align: center;
+}
+
+#wirteBtn{
+	float: right;
+	width: 45px;
+    margin-top: 80px;
+	
+}
+
+.wrap{
+	padding: 55px;
+	width:780px; 
+    margin:0 auto;
+    height: 680px;
+    border: 1px solid #ccc;
+/* 	background: #eaebe9; */
+	background: #eeeeee;
+    overflow-y: scroll;
+    padding: 40px;
+}
+
+.noticeBox{
+	padding: 5px;
+	border: 1px solid #ccc;
+	background: #ffffff;
+	height: 70px;
+	width: 650px;
+}
+
+.noticeText{
+	width: 720px;
+}
+
+.noticeDate{
+	text-align: right;
+	font-size: 10px;
+	font-weight: bold;
+	vertical-align: bottom;
+	padding-top: 20px;
+}
+
+.Box{
+	display: flex;
+	
+}
+
+.btnBox{
+	flex-direction: column;
+	padding: 10px;
+}	
+
+.btnUpdate {
+	width: 45px;
+	height: 25px;
+}
+
+.btnDelete {
+	width: 45px;
+	height: 25px;
+}
+
+
+.interval {
+	padding-bottom: 50px;
+}

@@ -22,7 +22,7 @@ section {
 .wrap {
     width: 985px;
     height: 800px;
-    margin: 50ps auto;
+    margin: 50px auto;
     overflow-y: scroll;
 }
 

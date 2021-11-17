@@ -4,11 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="fun.tayo.app.dao.NoticeDao">
 	
-	<resultMap type="fun.tayo.app.dto.Notice" id="Notice">
-		<result column="write_date" property="writeDate" />
-	</resultMap>
 
-    <select id="selectNotice" resultMap="Notice" parameterType="fun.tayo.app.common.util.Paging">
+
+    <select id="selectNotice" resultType="Notice" parameterType="fun.tayo.app.common.util.Paging">
         SELECT * FROM(SELECT rownum rnum, N.* FROM(
         	SELECT
         		id, write_date, content
@@ -18,7 +16,37 @@
         WHERE rnum BETWEEN #{startNo} AND #{endNo}
     </select>
 
-	  	<select id="selectCntAll" resultType="int">
-	  		SELECT count(*) FROM notice
-	  	</select>
+	<select id="selectCntAll" resultType="int">
+	  	SELECT count(*) FROM notice
+	</select>
+	
+	<select id="selectNoticeList" resultType="Notice">
+		SELECT
+			id, write_date, content
+		FROM NOTICE
+		ORDER BY id DESC
+	</select>
+	
+	<insert id="insertNotice" parameterType="Notice">
+		INSERT INTO NOTICE (id, write_date, content)
+		VALUES (NOTICE_SEQ.nextval, sysdate, #{content})
+	</insert>
+	
+	<select id="selectNoticeById" resultType="Notice" parameterType="_int">
+		SELECT id, write_date, content
+		FROM NOTICE
+		WHERE id = #{noticeId}
+	</select>
+	
+	<update id="updateNotice" parameterType="Notice">
+		UPDATE NOTICE
+		SET content = #{content}
+		WHERE id = ${id}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="Notice">
+		DELETE NOTICE
+		WHERE id = ${id}
+	</delete>
+	
 </mapper>

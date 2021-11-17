@@ -16,7 +16,7 @@
 	<h1>자주묻는 질문 </h1>
 	<button id="wirteBtn">작성</button>
 	
-	<div class="wrap">
+	<div class="wrap tayo-scroll-bar">
 	  <c:forEach items="${list }" var="question">
 		
 		<a class="updateBtn" href="${pageContext.request.contextPath }/admin/question/update/${question.id}"><i id="updateBtn" class="fas fa-edit fa-2x"></i></a>

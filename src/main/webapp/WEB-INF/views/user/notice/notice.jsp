@@ -83,7 +83,7 @@ text-align: left;
 		const options = {
 			root: wrap,
 			rootMargin : '0px',
-			threshold: 1
+			threshold: 0.5
 		}; //wrap 옵션
 
 		const observer = new IntersectionObserver(callback, options);
@@ -153,11 +153,11 @@ text-align: left;
   		  <c:forEach items="${list }" var="notice">
 
 			<div class="child">
-			<span class="date">${notice.writeDate }</span>
-			<span class="no" data-no="${notice.id }">${notice.id }</span><br>
-			<div class="noticeBox">
-			<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
-			</div> <!-- noticeBox -->
+				<span class="date">${notice.writeDate }</span>
+				<span class="no" data-no="${notice.id }">${notice.id }</span><br>
+				<div class="noticeBox">
+					<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
+				</div> <!-- noticeBox -->
 			</div> <!-- child -->
 
   		  </c:forEach>

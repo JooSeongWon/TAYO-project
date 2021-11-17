@@ -50,9 +50,7 @@ public class QuestionController {
 	}
 	
 	@RequestMapping(value="/admin/question/write", method = RequestMethod.GET)
-	public void questionWrite() {
-		
-	}
+	public void questionWrite() {}
 	
 //	@ResponseBody
 	@RequestMapping(value="/admin/question/write", method = RequestMethod.POST)
