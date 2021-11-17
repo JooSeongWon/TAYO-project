@@ -73,16 +73,20 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
     }
 
     //같은방 모두에게 메세지 릴레이
-    private void relayMessageToAllMemberInSameRoom(Message relayMessage) throws IOException {
-        Integer roomId = relayMessage.roomId;
-        Integer memberId = relayMessage.sender;
-        WorkSpaceRoom room = roomMap.get(roomId);
-        final Collection<TeamMember> teamMembers = room.enteredMemberMap.values();
+    private void relayMessageToAllMemberInSameRoom(Message relayMessage) {
+        try {
+            Integer roomId = relayMessage.roomId;
+            Integer memberId = relayMessage.sender;
+            WorkSpaceRoom room = roomMap.get(roomId);
+            final Collection<TeamMember> teamMembers = room.enteredMemberMap.values();
 
-        for (TeamMember teamMember : teamMembers) {
-            if (!teamMember.getMemberId().equals(memberId)) {
-                teamMember.sendMessage(relayMessage);
+            for (TeamMember teamMember : teamMembers) {
+                if (!teamMember.getMemberId().equals(memberId)) {
+                    teamMember.sendMessage(relayMessage);
+                }
             }
+        } catch (Exception e) {
+            log.error("프레임 릴레이 오류");
         }
     }
 
@@ -143,13 +147,13 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws IOException {
         Integer roomId = (Integer) session.getAttributes().get("roomId");
         Integer memberId = ((MemberSession) session.getAttributes().get(SessionConst.LOGIN_MEMBER)).getId();
-        if(roomId != null) {
+        if (roomId != null) {
             //나가기
             final WorkSpaceRoom room = roomMap.get(roomId);
             room.leave(memberId, session);
 
             //방이 비었다면 방삭제
-            if(room.isEmpty()) {
+            if (room.isEmpty()) {
                 roomMap.remove(roomId);
             } else { //접속 종료 메세지
                 Message message = new Message();
@@ -224,10 +228,15 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
         final WebSocketSession session;
         final User user;
 
-        public void sendMessage(Message message) throws IOException {
-            final String jsonText = objectMapper.writeValueAsString(message);
-            TextMessage textMessage = new TextMessage(jsonText);
-            session.sendMessage(textMessage);
+        public void sendMessage(Message message) {
+            try {
+
+                final String jsonText = objectMapper.writeValueAsString(message);
+                TextMessage textMessage = new TextMessage(jsonText);
+                session.sendMessage(textMessage);
+            } catch (Exception e) {
+                log.error("프레임 전송오류");
+            }
         }
 
         public Integer getMemberId() {

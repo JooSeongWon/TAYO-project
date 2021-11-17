@@ -44,6 +44,8 @@ const SYSTEM_DUPLICATE = "duplicate";
 const RELAY_JOIN = "join";
 const RELAY_LEAVE = "leave";
 
+let isMouseOverOnHistory;
+
 //스트림
 let myAudioStream;
 let myCamStream;
@@ -309,6 +311,8 @@ class Avatar {
         this.speechTimeOut = setTimeout(() => this.speechBubble.classList.add('active'), 3000);
 
         //채팅기록에 추가
+        const doScroll = !(isMouseOverOnHistory && chatHistoryContent.offsetHeight + chatHistoryContent.scrollTop < chatHistoryContent.scrollHeight);
+
         const history = document.createElement('div');
         history.classList.add('history');
         if (this.isMe) {
@@ -320,7 +324,7 @@ class Avatar {
 
             const historyProfile = document.createElement('img');
             historyProfile.classList.add('history__profile');
-            if (this.profile) {
+            if (this.userProfile) {
                 historyProfile.src = `/img/${this.userProfile}`;
             } else {
                 historyProfile.src = '/resources/img/no-profile.png';
@@ -342,7 +346,7 @@ class Avatar {
         history.appendChild(historyContent);
 
         chatHistoryContent.appendChild(history);
-        chatHistoryContent.scroll(0, chatHistoryContent.scrollHeight);
+        if (doScroll) chatHistoryContent.scroll(0, chatHistoryContent.scrollHeight);
     }
 
     move(x, y) {
@@ -469,6 +473,14 @@ chatHistoryBtn.addEventListener('click', () => {
     chatHistory.classList.toggle('active');
 });
 
+//채팅기록 조작 체크
+chatHistoryContent.addEventListener('mouseenter', () => {
+    isMouseOverOnHistory = true
+});
+chatHistoryContent.addEventListener('mouseleave', () => {
+    isMouseOverOnHistory = false
+});
+
 
 /* 웹 소켓 */
 //초기화
@@ -476,8 +488,13 @@ socket = new SockJS('/workspace/relay');
 
 //이벤트 설정
 socket.onopen = callbackOpenSocket;
-socket.onerror = console.error;
+socket.onerror = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
+    location.href = `/work-spaces/${roomId}`
+});
 socket.onmessage = receiveMessage;
+socket.onclose = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
+    location.href = `/work-spaces/${roomId}`
+});
 
 
 function callbackOpenSocket() {
