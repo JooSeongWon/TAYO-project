@@ -265,7 +265,6 @@ section {
     position: relative;
 }
 
-/* 다른캐릭 onair시 클릭 모양 활성화 */
 .img-wrap.cursor {
     cursor: pointer;
 }
@@ -280,6 +279,7 @@ section {
     width: 45px;
     border-radius: 50%;
     border: 3px solid var(--color-light-grey);
+    transition: all 500ms ease-in-out;
 }
 
 .avatar.user img {
@@ -324,6 +324,28 @@ section {
     padding: 2px 6px;
 }
 
+.range {
+    position: absolute;
+    z-index: 40;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    display: none;
+
+    left: 52px;
+    top: 52px;
+
+    transform: translate(-50%, -50%);
+    transition: all 500ms ease-in-out;
+
+    background: rgb(174,246,109);
+    background: radial-gradient(circle, rgba(174,246,109,0.4) 0%, rgba(169,227,209,0.4) 78%);
+}
+
+.range.active {
+    display: block;
+}
+
 /* 말풍선 */
 .speech-bubble-wrap {
     display: flex;
@@ -363,4 +385,47 @@ section {
 .speech-bubble-wrap.active {
     transition: all 500ms ease-in-out, opacity 3000ms linear;
     opacity: 0;
+}
+
+/* 비디오 */
+.my-cam-wrap {
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+    width: 352px;
+    background-color: rgba(68, 118, 192, 0.7);
+    border-radius: 16px;
+
+    position: fixed;
+    left: 50vw;
+    top: 20px;
+
+    transform: translate(-50%);
+    z-index: 80;
+}
+.my-cam-title {
+    font-size: var(--font-small);
+    font-weight: bold;
+    margin-bottom: 8px;
+    width: 320px;
+    color: var(--color-dark-grey);
+}
+.my-cam-title > i {
+    color: var(--color-orange);
+}
+
+.my-cam-wrap.active {
+    display: flex;
+}
+
+.my-cam-title > i.fa-expand-arrows-alt {
+    float: right;
+    color: var(--color-black);
+    font-size: var(--font-regular);
+    cursor: pointer;
+}
+
+/* 범위내 유저 프로필 */
+.avatar__img.active {
+    border-color: var(--color-blue);
 }

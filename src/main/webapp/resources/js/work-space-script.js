@@ -4,15 +4,12 @@ myAudio.controls = true;
 myAudio.autoplay = true;
 /*오디오 테스트용*/
 
-
-//미디어 설정
-const myCam = document.createElement('video');
-myCam.playsInline = true;
-myCam.autoplay = true;
-myCam.width = 160;
-myCam.height = 90;
-myCam.muted = true;
-myCam.controls = true;
+//모달 배경 설정
+modalBackGroundDomObj.style.position = 'fixed';
+modalBackGroundDomObj.style.left = '0';
+modalBackGroundDomObj.style.top = '0';
+modalBackGroundDomObj.style.width = '100vw';
+modalBackGroundDomObj.style.height = '100vh';
 
 //노드
 const miceBtn = document.getElementById('mice');
@@ -27,6 +24,10 @@ const bottomMenu = document.querySelector('.bottom-menu');
 const chatHistory = document.querySelector('.chat-history');
 const chatHistoryContent = document.querySelector('.chat-history__content');
 const chatHistoryBtn = document.querySelector('.fa-arrow-up');
+
+const myCam = document.querySelector('.my-cam');
+const myCamWrap = document.querySelector('.my-cam-wrap');
+const myCamFullScreenBtn = document.querySelector('.my-cam-full');
 
 //z인덱스
 const INDEX_MY_AVATAR = '50';
@@ -43,6 +44,8 @@ const RELAY_ENTER = "enter";
 const SYSTEM_DUPLICATE = "duplicate";
 const RELAY_JOIN = "join";
 const RELAY_LEAVE = "leave";
+const RELAY_SET_MUTE = "setMute";
+const RELAY_SET_LIVE = "setLive";
 
 let isMouseOverOnHistory;
 
@@ -58,7 +61,7 @@ let screenOn = false;
 let preChatText = '';
 
 //유저맵
-const users = [];
+const userMap = {};
 
 
 //시스템UI 인덱스 설정
@@ -69,14 +72,17 @@ bottomMenu.style.zIndex = INDEX_SYSTEM_UI;
 
 async function onMyCamStream() {
     myCamStream = await navigator.mediaDevices.getUserMedia({video: true});
+    myCamStream.getVideoTracks()[0].onended = handleCamClick;
 }
 
 async function onMyScreenStream() {
     myScreenStream = await navigator.mediaDevices.getDisplayMedia({video: true});
+    myScreenStream.getVideoTracks()[0].onended = handleScreenClick;
 }
 
 async function onMyAudioStream() {
     myAudioStream = await navigator.mediaDevices.getUserMedia({audio: true});
+    myAudioStream.getAudioTracks()[0].onended = handleMiceClick;
 }
 
 function offMyCamStream() {
@@ -94,10 +100,23 @@ function offMyAudioStream() {
     myAudioStream = null;
 }
 
+function openFullscreen(video) {
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    } else if (video.webkitRequestFullscreen) { /* Safari */
+        video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) { /* IE11 */
+        video.msRequestFullscreen();
+    }
+}
+
 
 miceBtn.addEventListener('click', handleMiceClick);
 camBtn.addEventListener('click', handleCamClick);
 screenBtn.addEventListener('click', handleScreenClick);
+myCamFullScreenBtn.addEventListener('click', () => {
+    openFullscreen(myCam)
+});
 
 
 async function handleMiceClick() {
@@ -107,7 +126,6 @@ async function handleMiceClick() {
         } catch (e) { //마이크 사용 거부
             return;
         }
-
         test(true);
     } else { //끔
         await offMyAudioStream();
@@ -116,10 +134,12 @@ async function handleMiceClick() {
 
     miceBtn.classList.toggle('active');
     miceOn = !miceOn;
-    myAvatar.toggleMute();
+    myAvatar.setMute(!miceOn);
+    sendMessage(RELAY_SET_MUTE, !miceOn);
 }
 
 async function handleCamClick() {
+    let sendServer = true;
     if (!camOn) {//켬
         camBtn.classList.toggle('fa-video');
         camBtn.classList.toggle('fa-spinner');
@@ -136,6 +156,7 @@ async function handleCamClick() {
 
         if (screenOn) {
             await handleScreenClick();
+            sendServer = false;
         }
         myCam.srcObject = myCamStream;
         camBtn.classList.toggle('fa-spinner');
@@ -150,9 +171,18 @@ async function handleCamClick() {
 
     camBtn.classList.toggle('active');
     camOn = !camOn;
+    if (sendServer) sendMessage(RELAY_SET_LIVE, camOn);
+
+    if (camOn && !myCamWrap.classList.contains('active')) {
+        myCamWrap.classList.add('active');
+    }
+    if (!camOn && myCamWrap.classList.contains('active')) {
+        myCamWrap.classList.remove('active');
+    }
 }
 
 async function handleScreenClick() {
+    let sendServer = true;
     if (!screenOn) {//켬
         try {
             await onMyScreenStream();
@@ -166,6 +196,7 @@ async function handleScreenClick() {
 
         if (camOn) {
             await handleCamClick();
+            sendServer = false;
         }
         myCam.srcObject = myScreenStream;
         myAvatar.setOnAir(true);
@@ -177,12 +208,18 @@ async function handleScreenClick() {
 
     screenBtn.classList.toggle('active');
     screenOn = !screenOn;
+    if (sendServer) sendMessage(RELAY_SET_LIVE, screenOn);
+
+    if (screenOn && !myCamWrap.classList.contains('active')) {
+        myCamWrap.classList.add('active');
+    }
+    if (!screenOn && myCamWrap.classList.contains('active')) {
+        myCamWrap.classList.remove('active');
+    }
 }
 
 
 /* 미디어 테스트용 */
-document.body.appendChild(myCam);
-
 function test(on) {
     if (on) {
         myAudio.srcObject = myAudioStream;
@@ -205,6 +242,9 @@ class Avatar {
 
         this.isMe = (user.id === myId);
         this.isOther = !this.isMe;
+        this.isLive = user.live;
+        this.isMute = user.mute;
+        this.mediaRange = 350;
     }
 
     insertMyAvatar() {
@@ -216,6 +256,11 @@ class Avatar {
         this.speechBubbleText = document.querySelector('.speech-bubble-wrap.user > .speech-bubble');
         this.onAir = document.querySelector('.user .on-air');
         this.mute = document.querySelector('.user .mute');
+        this.range = document.querySelector('.range');
+
+        this.profileWrap.addEventListener('click', () => {
+            this.range.classList.toggle('active');
+        })
 
         this.avatar.style.zIndex = INDEX_MY_AVATAR;
         this.speechBubble.style.zIndex = INDEX_SPEECH_BUBBLE;
@@ -240,17 +285,21 @@ class Avatar {
         }
         profile.classList.add('avatar__img');
 
-        const onAir = document.createElement('i');
-        onAir.classList.add('fas');
-        onAir.classList.add('fa-microphone-slash');
-        onAir.classList.add('mute');
-        onAir.classList.add('active');
-
         const mute = document.createElement('i');
         mute.classList.add('fas');
-        mute.classList.add('fa-video');
-        mute.classList.add('on-air');
+        mute.classList.add('fa-microphone-slash');
+        mute.classList.add('mute');
+        if (this.isMute) {
+            mute.classList.add('active');
+        }
 
+        const onAir = document.createElement('i');
+        onAir.classList.add('fas');
+        onAir.classList.add('fa-video');
+        onAir.classList.add('on-air');
+        if (this.isLive) {
+            onAir.classList.add('active');
+        }
 
         const name = document.createElement('div');
         name.classList.add('avatar__name');
@@ -292,6 +341,9 @@ class Avatar {
         //화면에 캐릭터 추가
         screen.appendChild(avatar);
         screen.appendChild(speechBubble);
+
+        if (this.isLive) this.profileWrap.classList.add('cursor');
+        this.checkMediaRange();
     }
 
     talk(text) {
@@ -356,6 +408,9 @@ class Avatar {
         if (this.isMe) {
             posX = Math.max(-15, Math.min(1855, x - 60));
             posY = Math.max(0, Math.min(1030, y - 40));
+
+            this.range.style.left = `${posX + 40}px`;
+            this.range.style.top = `${posY + 22}px`;
         }
 
         this.avatar.style.left = `${posX}px`;
@@ -364,6 +419,14 @@ class Avatar {
         this.speechBubble.style.top = `${posY - 15}px`;
         this.x = posX;
         this.y = posY;
+
+        if (this.isMe) {
+            for (let userId in userMap) {
+                userMap[userId.toString()].checkMediaRange();
+            }
+        } else {
+            this.checkMediaRange();
+        }
     }
 
 
@@ -375,23 +438,64 @@ class Avatar {
             if (!this.profileWrap.classList.contains('cursor') && this.isOther) {
                 this.profileWrap.classList.add('cursor');
             }
+
+            this.isLive = true;
             return;
         }
+
         if (this.onAir.classList.contains('active')) {
             this.onAir.classList.remove('active');
         }
         if (this.profileWrap.classList.contains('cursor') && this.isOther) {
             this.profileWrap.classList.remove('cursor');
         }
+        this.isLive = false;
     }
 
-    toggleMute() {
-        this.mute.classList.toggle('active');
+    setMute(isMute) {
+        if (isMute) {
+            if (!this.mute.classList.contains('active')) {
+                this.mute.classList.add('active');
+            }
+        } else {
+            if (this.mute.classList.contains('active')) {
+                this.mute.classList.remove('active');
+            }
+        }
+        this.isMute = isMute;
+    }
+
+    checkMediaRange() {
+        //기준좌표
+        const myAvatarX = myAvatar.x + 40;
+        const myAvatarY = myAvatar.y + 22;
+        const thisX = this.x + 40;
+        const thisY = this.y + 22;
+
+        const disX = myAvatarX - thisX;
+        const dixY = myAvatarY - thisY;
+
+        const distance = Math.sqrt(Math.abs(disX * disX) + Math.abs(dixY * dixY));
+
+        if (distance <= (350/2)+3) {
+            if (this.profile.classList.contains('active')) {
+                return;
+            }
+
+            //새로 진입한 범위내 사용자
+            this.profile.classList.add('active');
+            this.inMediaRange = true;
+        } else {
+            if (this.profile.classList.contains('active')) { //떠난 사용자
+                this.profile.classList.remove('active');
+                this.inMediaRange = false;
+            }
+        }
     }
 
     remove() {
         screen.removeChild(this.avatar);
-        screen.appendChild(this.speechBubble);
+        screen.removeChild(this.speechBubble);
     }
 }
 
@@ -401,7 +505,9 @@ const myAvatar = new Avatar({
     name: myName,
     profile: myProfile,
     x: 30,
-    y: 30
+    y: 30,
+    live: false,
+    mute: true
 });
 myAvatar.insertMyAvatar();
 
@@ -464,7 +570,10 @@ function isAvatar(target) {
         classList.contains('on-air') ||
         classList.contains('avatar__name') ||
         classList.contains('arrow-down') ||
-        classList.contains('speech-bubble-wrap')
+        classList.contains('speech-bubble-wrap') ||
+        classList.contains('my-cam-wrap') ||
+        classList.contains('my-cam-title') ||
+        classList.contains('range')
 }
 
 /* 채팅기록 열기닫기 */
@@ -529,31 +638,86 @@ function receiveMessage(event) {
             for (const user of userList) {
                 const avatar = new Avatar(user);
                 avatar.render();
-                users[avatar.userId] = avatar;
+                userMap[avatar.userId.toString()] = avatar;
             }
             break;
         //새 유저 접속
         case RELAY_JOIN:
             const avatar = new Avatar(message.message);
             avatar.render();
-            users[avatar.userId] = avatar;
+            userMap[avatar.userId.toString()] = avatar;
             break;
         //접속종료
         case RELAY_LEAVE:
             const leaveUserId = message.sender;
-            users[leaveUserId].remove();
-            users[leaveUserId] = null;
+            userMap[leaveUserId.toString()].remove();
+            userMap[leaveUserId.toString()] = null;
             break;
         //채팅
         case RELAY_CHAT:
             const chatUserId = message.sender;
-            users[chatUserId].talk(message.message);
+            userMap[chatUserId.toString()].talk(message.message);
             break;
         //이동
         case RELAY_MOVE:
             const moveUserId = message.sender;
             const position = message.message;
-            users[moveUserId].move(position.x, position.y);
+            userMap[moveUserId.toString()].move(position.x, position.y);
+            break;
+        //뮤트
+        case RELAY_SET_MUTE:
+            const muteUserId = message.sender;
+            userMap[muteUserId.toString()].setMute(message.message);
+            break;
+        //라이브
+        case RELAY_SET_LIVE:
+            const liveUserId = message.sender;
+            userMap[liveUserId.toString()].setOnAir(message.message);
             break;
     }
 }
+
+
+//turn 서버 테스트
+/*
+const iceServers = [
+    // Test some TURN server
+    {
+        urls: 'turn:turn.tayo.fun:3478?transport=udp',
+        username: 'tayo',
+        credential: 'a263203'
+    }
+];
+
+const pc = new RTCPeerConnection({
+    iceServers
+});
+
+pc.onicecandidate = (e) => {
+    if (!e.candidate) return;
+
+    // Display candidate string e.g
+    // candidate:842163049 1 udp 1677729535 XXX.XXX.XX.XXXX 58481 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag sXP5 network-cost 999
+    console.log(e.candidate.candidate);
+
+    // If a srflx candidate was found, notify that the STUN server works!
+    if (e.candidate.type == "srflx") {
+        console.log("The STUN server is reachable!");
+        console.log(`   Your Public IP Address is: ${e.candidate.address}`);
+    }
+
+    // If a relay candidate was found, notify that the TURN server works!
+    if (e.candidate.type == "relay") {
+        console.log("The TURN server is reachable !");
+    }
+};
+
+// Log errors:
+// Remember that in most of the cases, even if its working, you will find a STUN host lookup received error
+// Chrome tried to look up the IPv6 DNS record for server and got an error in that process. However, it may still be accessible through the IPv4 address
+pc.onicecandidateerror = (e) => {
+    console.error(e);
+};
+
+pc.createDataChannel('ourcodeworld-rocks');
+pc.createOffer().then(offer => pc.setLocalDescription(offer));*/

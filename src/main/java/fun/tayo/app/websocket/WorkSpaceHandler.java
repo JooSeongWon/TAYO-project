@@ -30,6 +30,8 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
     private final String RELAY_JOIN = "join";
     private final String RELAY_LEAVE = "leave";
     private final String SYSTEM_DUPLICATE = "duplicate";
+    private final String RELAY_SET_MUTE = "setMute";
+    private final String RELAY_SET_LIVE = "setLive";
 
     private final Map<Integer, WorkSpaceRoom> roomMap = new ConcurrentHashMap<>();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -51,6 +53,12 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
 
         log.debug("프레임 [{}]", message.getPayload());
 
+
+        Integer roomId;
+        TeamMember member;
+
+        Map<String, Object> messageMap;
+
         switch (relayMessage.type) {
             //입장
             case RELAY_ENTER:
@@ -58,15 +66,33 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
                 break;
             //채팅, 이동 릴레이
             case RELAY_MOVE:
-                final Integer roomId = relayMessage.getRoomId();
-                final TeamMember member = roomMap.get(roomId).getMember(sender);
+                roomId = relayMessage.getRoomId();
+                member = roomMap.get(roomId).getMember(sender);
 
-                @SuppressWarnings("unchecked")
-                Map<String, Object> messageMap = (Map<String, Object>) relayMessage.getMessage();
+                //noinspection unchecked
+                messageMap = (Map<String, Object>) relayMessage.getMessage();
 
                 member.user.setX((Integer) messageMap.get("x"));
                 member.user.setY((Integer) messageMap.get("y"));
             case RELAY_CHAT:
+                relayMessageToAllMemberInSameRoom(relayMessage);
+                break;
+            //뮤트 릴레이
+            case RELAY_SET_MUTE:
+                roomId = relayMessage.getRoomId();
+                member = roomMap.get(roomId).getMember(sender);
+
+                boolean mute = (boolean) relayMessage.getMessage();
+                member.user.setMute(mute);
+                relayMessageToAllMemberInSameRoom(relayMessage);
+                break;
+            //라이브 릴레이
+            case RELAY_SET_LIVE:
+                roomId = relayMessage.getRoomId();
+                member = roomMap.get(roomId).getMember(sender);
+
+                boolean live = (boolean) relayMessage.getMessage();
+                member.user.setLive(live);
                 relayMessageToAllMemberInSameRoom(relayMessage);
                 break;
         }
@@ -252,6 +278,8 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
         private Integer profile;
         private int x = 30;
         private int y = 30;
+        private boolean live = false;
+        private boolean mute = true;
 
         public User(Integer id, String name, Integer profile) {
             this.id = id;

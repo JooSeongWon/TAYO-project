@@ -70,6 +70,7 @@
         <div class="speech-bubble"></div>
         <div class="arrow-down"></div>
     </div>
+    <div class="range"></div>
 
     <%-- 게시판 네비게이션 바 버튼 --%>
     <i class="fas fa-chevron-right"></i>
@@ -98,5 +99,10 @@
         <i class="fas fa-microphone" id="mice"></i>
     </div>
 </section>
+<%-- 내 비디오 화면 --%>
+<div class="my-cam-wrap">
+    <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i class="fas fa-expand-arrows-alt my-cam-full"></i></div>
+    <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted></video>
+</div>
 </body>
 </html>
