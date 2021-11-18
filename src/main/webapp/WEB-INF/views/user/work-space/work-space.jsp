@@ -98,11 +98,13 @@
         <i class="fas fa-desktop" id="screen"></i>
         <i class="fas fa-microphone" id="mice"></i>
     </div>
+    <%-- 내 비디오 화면 --%>
+    <div class="my-cam-wrap" draggable="true">
+        <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i
+                class="fas fa-expand-arrows-alt my-cam-full"></i></div>
+        <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted></video>
+    </div>
 </section>
-<%-- 내 비디오 화면 --%>
-<div class="my-cam-wrap" draggable="true">
-    <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i class="fas fa-expand-arrows-alt my-cam-full"></i></div>
-    <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted></video>
-</div>
+
 </body>
 </html>

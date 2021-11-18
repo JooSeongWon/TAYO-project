@@ -433,7 +433,7 @@ section {
     background-color: rgba(99, 132, 255, 0.5);
     left: -10px;
     top: -90px;
-    z-index: 70;
+    z-index: 51;
     display: none;
 
     transition: all 500ms ease-in-out;
