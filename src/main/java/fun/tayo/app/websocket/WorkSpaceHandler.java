@@ -111,7 +111,7 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
     }
 
     //같은방 모두에게 메세지 릴레이
-    synchronized private void relayMessageToAllMemberInSameRoom(Message relayMessage) {
+    private void relayMessageToAllMemberInSameRoom(Message relayMessage) {
         Integer roomId = relayMessage.roomId;
         Integer memberId = relayMessage.sender;
         WorkSpaceRoom room = roomMap.get(roomId);
