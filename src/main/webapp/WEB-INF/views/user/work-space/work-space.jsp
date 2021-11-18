@@ -49,7 +49,7 @@
     <title>[${name}] - 타요 가상공간</title>
 </head>
 <body>
-<section class="screen all-shadow">
+<section class="screen all-shadow" draggable="true">
     <%-- 내 캐릭터 --%>
     <div class="avatar user">
         <div class="img-wrap">
@@ -100,7 +100,7 @@
     </div>
 </section>
 <%-- 내 비디오 화면 --%>
-<div class="my-cam-wrap">
+<div class="my-cam-wrap" draggable="true">
     <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i class="fas fa-expand-arrows-alt my-cam-full"></i></div>
     <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted></video>
 </div>

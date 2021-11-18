@@ -76,15 +76,15 @@ init();
 
 
 async function onMyCamStream() {
-        offMyVideoStream();
+    offMyVideoStream();
 
-        //스트림 새로 생성 및 새 오퍼
-        myVideoStream = await navigator.mediaDevices.getUserMedia({video: true});
-        for (let user in userMap) {
-            if (userMap[user] && userMap[user].inMediaRange) {
-                userMap[user].newPeerConnection();
-            }
+    //스트림 새로 생성 및 새 오퍼
+    myVideoStream = await navigator.mediaDevices.getUserMedia({video: true});
+    for (let user in userMap) {
+        if (userMap[user] && userMap[user].inMediaRange) {
+            userMap[user].newPeerConnection();
         }
+    }
 
     //스트림 종료 이벤트
     myVideoStream.getVideoTracks()[0].onended = handleCamClick;
@@ -97,8 +97,10 @@ async function onMyScreenStream() {
     //스트림 새로 생성 및 새 오퍼
     try {
         myVideoStream = await navigator.mediaDevices.getDisplayMedia({video: true});
-    } catch (e) {throw e;}
-    if(!myVideoStream) {
+    } catch (e) {
+        throw e;
+    }
+    if (!myVideoStream) {
         throw new Error('화면선택 거부');
     }
 
@@ -156,7 +158,7 @@ myCamFullScreenBtn.addEventListener('click', () => {
 
 
 async function handleMiceClick() {
-    if(!useAudio) return;
+    if (!useAudio) return;
 
     if (!miceOn) { //켬
         try {
@@ -176,13 +178,11 @@ async function handleMiceClick() {
 }
 
 async function handleCamClick() {
-    if(!useCamera) return;
+    if (!useCamera) return;
 
-    let sendServer = true;
     if (!camOn) {//켬
         if (screenOn) {
             await handleScreenClick();
-            sendServer = false;
         }
 
         camBtn.classList.toggle('fa-video');
@@ -210,7 +210,7 @@ async function handleCamClick() {
 
     camBtn.classList.toggle('active');
     camOn = !camOn;
-    if (sendServer) sendMessage(RELAY_SET_LIVE, camOn);
+    sendMessage(RELAY_SET_LIVE, camOn);
 
     if (camOn && !myCamWrap.classList.contains('active')) {
         myCamWrap.classList.add('active');
@@ -221,11 +221,9 @@ async function handleCamClick() {
 }
 
 async function handleScreenClick() {
-    let sendServer = true;
     if (!screenOn) {//켬
         if (camOn) {
             await handleCamClick();
-            sendServer = false;
         }
 
         try {
@@ -244,7 +242,7 @@ async function handleScreenClick() {
 
     screenBtn.classList.toggle('active');
     screenOn = !screenOn;
-    if (sendServer) sendMessage(RELAY_SET_LIVE, screenOn);
+    sendMessage(RELAY_SET_LIVE, screenOn);
 
     if (screenOn && !myCamWrap.classList.contains('active')) {
         myCamWrap.classList.add('active');
@@ -320,9 +318,6 @@ class Avatar {
         onAir.classList.add('fas');
         onAir.classList.add('fa-video');
         onAir.classList.add('on-air');
-        if (this.isLive) {
-            onAir.classList.add('active');
-        }
 
         const name = document.createElement('div');
         name.classList.add('avatar__name');
@@ -340,6 +335,8 @@ class Avatar {
         this.profile = profile;
         this.onAir = onAir;
         this.mute = mute;
+
+        this.setOnAir(this.isLive);
 
         //말풍선
         const speechBubble = document.createElement('div');
@@ -377,12 +374,60 @@ class Avatar {
         document.body.appendChild(audio);
         this.audio = audio;
 
+        //비디오 추가
+        const camWrap = document.createElement('div');
+        camWrap.classList.add('cam-wrap');
+        camWrap.style.left = `${this.x - 40}px`;
+        camWrap.style.top = `${this.y - 120}px`;
+        const camFullBtn = document.createElement('i');
+        camFullBtn.classList.add('fas');
+        camFullBtn.classList.add('fa-expand-arrows-alt');
+        camFullBtn.classList.add('cam-full');
+        const video = document.createElement('video');
+        video.playsInline = true;
+        video.autoplay = true;
+        video.width = 160;
+        video.height = 90;
+        video.muted = true;
+        video.classList.add('cam');
+
+        camWrap.appendChild(camFullBtn);
+        camWrap.appendChild(video);
+        screen.appendChild(camWrap);
+        this.video = video;
+        this.videoWrap = camWrap;
+
         if (this.isLive) this.profileWrap.classList.add('cursor');
         this.checkMediaRange();
 
         if (this.inMediaRange && isJoin) { //새 접속자가 범위내에 있음
             this.createConnection();
         }
+
+        //비디오 표시 이벤트
+        this.isShowVideo = false;
+        let user = this;
+        this.profileWrap.addEventListener('click', () => {
+            if (user.isLive && user.inMediaRange && !user.isShowVideo) {
+                if (!user.videoWrap.classList.contains('active')) {
+                    user.videoWrap.classList.add('active');
+                    user.isShowVideo = true;
+                }
+
+                return;
+            }
+            if (user.isLive && user.inMediaRange && user.isShowVideo) {
+                user.videoWrap.classList.remove('active');
+                user.isShowVideo = false;
+            }
+        });
+
+        //비디오 확대 이벤트
+        camFullBtn.addEventListener('click', () => {
+            if (user.isShowVideo) {
+                openFullscreen(user.video);
+            }
+        });
     }
 
     talk(text) {
@@ -456,6 +501,10 @@ class Avatar {
         this.avatar.style.top = `${posY}px`;
         this.speechBubble.style.left = `${posX}px`;
         this.speechBubble.style.top = `${posY - 15}px`;
+        if (this.isOther) {
+            this.videoWrap.style.left = `${posX - 40}px`;
+            this.videoWrap.style.top = `${posY - 120}px`;
+        }
         this.x = posX;
         this.y = posY;
 
@@ -476,16 +525,13 @@ class Avatar {
     }
 
     createConnection() {
-        console.log(`새로운 피어 연결! 대상[${this.userName}]`);//test
-
         this.peerConnection = createPeerConnection(this.userId);
         this.peerConnection.onicecandidate = data => iceHandle(data, this.userId);
-        this.peerConnection.addEventListener('addstream', data => this.setAudio(data, this.userId));
+        this.peerConnection.addEventListener('addstream', data => this.setMedia(data, this.userId));
 
         //오퍼 생성, 전송
         let rtcSessionDescriptionInitPromise = createOffer(this.peerConnection);
         rtcSessionDescriptionInitPromise.then(offer => {
-            console.log('새로 생성한 오퍼', offer); //test
             sendMessage(RELAY_OFFER, offer, this.userId);
         });
     }
@@ -502,6 +548,11 @@ class Avatar {
 
             this.isLive = true;
             return;
+        }
+
+        if (this.isShowVideo) {
+            this.videoWrap.classList.remove('active');
+            this.isShowVideo = false;
         }
 
         if (this.onAir.classList.contains('active')) {
@@ -552,9 +603,13 @@ class Avatar {
                 if (this.peerConnection) {
                     this.peerConnection.close();
                     this.peerConnection = null;
-                    console.log("유저이동 피어삭제!"); //test
 
-                    if(this.audio) this.audio.srcObject = null;
+                    if (this.audio) this.audio.srcObject = null;
+                    if (this.video) this.video.srcObject = null;
+                    if (this.isShowVideo) {
+                        this.videoWrap.classList.remove('active');
+                        this.isShowVideo = false;
+                    }
                 }
                 this.profile.classList.remove('active');
                 this.inMediaRange = false;
@@ -574,7 +629,7 @@ class Avatar {
 
         this.peerConnection = createPeerConnection(this.userId);
         this.peerConnection.onicecandidate = data => iceHandle(data, this.userId);
-        this.peerConnection.addEventListener('addstream', data => this.setAudio(data, this.userId));
+        this.peerConnection.addEventListener('addstream', data => this.setMedia(data, this.userId));
 
         //answer 생성, 전송
         let rtcSessionDescriptionInitPromise = createAnswer(this.peerConnection, offer);
@@ -591,7 +646,6 @@ class Avatar {
     //ice 수신
     receiveIce(ice) {
         if (this.peerConnection) {
-            console.log('실제로 바듬!');
             this.peerConnection.addIceCandidate(ice);
         }
     }
@@ -605,17 +659,20 @@ class Avatar {
         this.createConnection();
     }
 
-    setAudio(data, userId) {
-        const user = userMap[userId];
-        console.log('user', user); //test
-        if(data.stream) {
+    setAudio(data, user) {
+        const audioStream = new MediaStream();
+        data.stream.getAudioTracks().forEach(track => audioStream.addTrack(track));
+        user.audio.srcObject = audioStream;
+    }
 
-            console.log('비디오트랙들', data.stream.getVideoTracks());
-            console.log('오디오트랙들', data.stream.getAudioTracks());
-            
-            const audioStream = new MediaStream();
-            data.stream.getAudioTracks().forEach(track => audioStream.addTrack(track));
-            user.audio.srcObject = audioStream;
+    setMedia(data, userId) {
+        const user = userMap[userId];
+        if (data.stream) {
+            const videoStream = new MediaStream();
+            data.stream.getVideoTracks().forEach(track => videoStream.addTrack(track));
+            user.video.srcObject = videoStream;
+
+            this.setAudio(data, user);
         }
     }
 
@@ -628,14 +685,14 @@ class Avatar {
                 console.log(e);
             } finally {
                 this.peerConnection = null;
-                console.log("유저떠남 피어삭제!"); //test
             }
         }
-        if(this.audio){
+        if (this.audio) {
             document.body.removeChild(this.audio);
         }
         screen.removeChild(this.avatar);
         screen.removeChild(this.speechBubble);
+        screen.removeChild(this.videoWrap);
     }
 }
 
@@ -855,19 +912,16 @@ function receiveMessage(event) {
         case RELAY_OFFER:
             const offerId = message.sender;
             userMap[offerId].receiveOffer(message.message);
-            console.log('받은오퍼', message.message);//test
             break;
         //answer
         case RELAY_ANSWER:
             const answerId = message.sender;
             userMap[answerId].receiveAnswer(message.message);
-            console.log('받은엔서', message.message);//test
             break;
         //ice
         case RELAY_ICE:
             const iceId = message.sender;
             userMap[iceId].receiveIce(message.message);
-            console.log('받은ice', message.message);//test
             break;
     }
 }
@@ -918,7 +972,6 @@ async function createAnswer(peerConnection, offer) {
     await peerConnection.setRemoteDescription(offer);
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
-    console.log("answer 생성", answer);//test
 
     return answer;
 }
@@ -926,5 +979,38 @@ async function createAnswer(peerConnection, offer) {
 //ice candidate 릴레이
 function iceHandle(data, userId) {
     sendMessage(RELAY_ICE, data.candidate, userId);
-    console.log('ice 전송', data.candidate);//test
 }
+
+
+//내 캠화면 드래그 앤 드롭
+
+let distX;
+let distY;
+let posX;
+let posY;
+
+function dragstart(event) {
+    posX = event.pageX;
+    posY = event.pageY;
+    distX = myCamWrap.offsetLeft - posX;
+    distY = myCamWrap.offsetTop - posY;
+}
+
+function dragover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+}
+
+function drop(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    posX = event.pageX;
+    posY = event.pageY;
+
+    myCamWrap.style.left = `${posX + distX}px`;
+    myCamWrap.style.top = `${posY + distY}px`;
+}
+
+myCamWrap.addEventListener('dragstart', dragstart);
+screen.addEventListener('dragover', dragover);
+screen.addEventListener('drop', drop);
