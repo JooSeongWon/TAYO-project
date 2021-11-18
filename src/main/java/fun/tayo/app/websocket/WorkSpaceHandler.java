@@ -32,6 +32,9 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
     private final String SYSTEM_DUPLICATE = "duplicate";
     private final String RELAY_SET_MUTE = "setMute";
     private final String RELAY_SET_LIVE = "setLive";
+    private final String RELAY_OFFER = "offer";
+    private final String RELAY_ANSWER = "answer";
+    private final String RELAY_ICE = "ice";
 
     private final Map<Integer, WorkSpaceRoom> roomMap = new ConcurrentHashMap<>();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -95,11 +98,20 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
                 member.user.setLive(live);
                 relayMessageToAllMemberInSameRoom(relayMessage);
                 break;
+            //offer, answer, ice 릴레이
+            case RELAY_ANSWER:
+            case RELAY_OFFER:
+            case RELAY_ICE:
+                roomId = relayMessage.getRoomId();
+                member = roomMap.get(roomId).getMember(relayMessage.receiver);
+
+                member.sendMessage(relayMessage);
+                break;
         }
     }
 
     //같은방 모두에게 메세지 릴레이
-    private void relayMessageToAllMemberInSameRoom(Message relayMessage) {
+    synchronized private void relayMessageToAllMemberInSameRoom(Message relayMessage) {
         Integer roomId = relayMessage.roomId;
         Integer memberId = relayMessage.sender;
         WorkSpaceRoom room = roomMap.get(roomId);
@@ -255,7 +267,7 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
         final WebSocketSession session;
         final User user;
 
-        public void sendMessage(Message message) {
+        synchronized public void sendMessage(Message message) {
             try {
                 final String jsonText = objectMapper.writeValueAsString(message);
                 TextMessage textMessage = new TextMessage(jsonText);

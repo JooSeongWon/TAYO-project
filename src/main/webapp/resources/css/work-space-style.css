@@ -16,6 +16,7 @@ section {
     width: 1940px;
     height: 1100px;
     position: relative;
+    z-index: 1;
 }
 
 /* 좌측 네비 여닫이 버튼 */

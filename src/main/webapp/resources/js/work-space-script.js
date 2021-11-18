@@ -1,9 +1,3 @@
-/*오디오 테스트용*/
-const myAudio = document.createElement('audio');
-myAudio.controls = true;
-myAudio.autoplay = true;
-/*오디오 테스트용*/
-
 //모달 배경 설정
 modalBackGroundDomObj.style.position = 'fixed';
 modalBackGroundDomObj.style.left = '0';
@@ -29,6 +23,8 @@ const myCam = document.querySelector('.my-cam');
 const myCamWrap = document.querySelector('.my-cam-wrap');
 const myCamFullScreenBtn = document.querySelector('.my-cam-full');
 
+const shutter = document.createElement('div');
+
 //z인덱스
 const INDEX_MY_AVATAR = '50';
 const INDEX_OTHER_AVATAR = '49';
@@ -46,17 +42,22 @@ const RELAY_JOIN = "join";
 const RELAY_LEAVE = "leave";
 const RELAY_SET_MUTE = "setMute";
 const RELAY_SET_LIVE = "setLive";
+const RELAY_OFFER = "offer";
+const RELAY_ANSWER = "answer";
+const RELAY_ICE = "ice";
 
 let isMouseOverOnHistory;
+let socket;
 
-//스트림
 let myAudioStream;
-let myCamStream;
-let myScreenStream;
+let myVideoStream;
 
 let miceOn = false;
 let camOn = false;
 let screenOn = false;
+
+let useCamera = false;
+let useAudio = false;
 
 let preChatText = '';
 
@@ -70,34 +71,69 @@ exitBtn.style.zIndex = INDEX_SYSTEM_UI;
 bottomMenu.style.zIndex = INDEX_SYSTEM_UI;
 
 
+//초기화
+init();
+
+
 async function onMyCamStream() {
-    myCamStream = await navigator.mediaDevices.getUserMedia({video: true});
-    myCamStream.getVideoTracks()[0].onended = handleCamClick;
+        offMyVideoStream();
+
+        //스트림 새로 생성 및 새 오퍼
+        myVideoStream = await navigator.mediaDevices.getUserMedia({video: true});
+        for (let user in userMap) {
+            if (userMap[user] && userMap[user].inMediaRange) {
+                userMap[user].newPeerConnection();
+            }
+        }
+
+    //스트림 종료 이벤트
+    myVideoStream.getVideoTracks()[0].onended = handleCamClick;
 }
 
 async function onMyScreenStream() {
-    myScreenStream = await navigator.mediaDevices.getDisplayMedia({video: true});
-    myScreenStream.getVideoTracks()[0].onended = handleScreenClick;
+    //새오퍼 생성
+    offMyVideoStream();
+
+    //스트림 새로 생성 및 새 오퍼
+    try {
+        myVideoStream = await navigator.mediaDevices.getDisplayMedia({video: true});
+    } catch (e) {throw e;}
+    if(!myVideoStream) {
+        throw new Error('화면선택 거부');
+    }
+
+    for (let user in userMap) {
+        if (userMap[user] && userMap[user].inMediaRange) {
+            userMap[user].newPeerConnection();
+        }
+    }
+
+    //스트림 종료 이벤트
+    myVideoStream.getVideoTracks()[0].onended = handleScreenClick;
 }
 
 async function onMyAudioStream() {
-    myAudioStream = await navigator.mediaDevices.getUserMedia({audio: true});
+    //트랙만 오픈
+    myAudioStream.getTracks().forEach(track => {
+        track.enabled = true;
+    });
+
     myAudioStream.getAudioTracks()[0].onended = handleMiceClick;
 }
 
-function offMyCamStream() {
-    myCamStream.getTracks().forEach(track => track.stop());
-    myCamStream = null;
-}
-
-function offMyScreenStream() {
-    myScreenStream.getTracks().forEach(track => track.stop());
-    myScreenStream = null;
+function offMyVideoStream() {
+    if (myVideoStream) {
+        if (myVideoStream.getTracks()) {
+            myVideoStream.getTracks().forEach(track => track.stop());
+        }
+        myVideoStream = null;
+    }
 }
 
 function offMyAudioStream() {
-    myAudioStream.getTracks().forEach(track => track.stop());
-    myAudioStream = null;
+    myAudioStream.getAudioTracks().forEach(track => {
+        track.enabled = false;
+    });
 }
 
 function openFullscreen(video) {
@@ -120,16 +156,17 @@ myCamFullScreenBtn.addEventListener('click', () => {
 
 
 async function handleMiceClick() {
+    if(!useAudio) return;
+
     if (!miceOn) { //켬
         try {
             await onMyAudioStream();
         } catch (e) { //마이크 사용 거부
             return;
         }
-        test(true);
+
     } else { //끔
         await offMyAudioStream();
-        test(false);
     }
 
     miceBtn.classList.toggle('active');
@@ -139,8 +176,15 @@ async function handleMiceClick() {
 }
 
 async function handleCamClick() {
+    if(!useCamera) return;
+
     let sendServer = true;
     if (!camOn) {//켬
+        if (screenOn) {
+            await handleScreenClick();
+            sendServer = false;
+        }
+
         camBtn.classList.toggle('fa-video');
         camBtn.classList.toggle('fa-spinner');
         camBtn.style.cursor = 'none';
@@ -153,18 +197,13 @@ async function handleCamClick() {
             return;
         }
 
-
-        if (screenOn) {
-            await handleScreenClick();
-            sendServer = false;
-        }
-        myCam.srcObject = myCamStream;
+        myCam.srcObject = myVideoStream;
         camBtn.classList.toggle('fa-spinner');
         camBtn.classList.toggle('fa-video');
         camBtn.style.cursor = 'pointer';
         myAvatar.setOnAir(true);
     } else { //끔
-        await offMyCamStream();
+        await offMyVideoStream(true);
         myCam.srcObject = null;
         myAvatar.setOnAir(false);
     }
@@ -184,24 +223,21 @@ async function handleCamClick() {
 async function handleScreenClick() {
     let sendServer = true;
     if (!screenOn) {//켬
+        if (camOn) {
+            await handleCamClick();
+            sendServer = false;
+        }
+
         try {
             await onMyScreenStream();
         } catch (e) {
             return;
         }
 
-        if (!myScreenStream) { //화면공유 거부
-            return;
-        }
-
-        if (camOn) {
-            await handleCamClick();
-            sendServer = false;
-        }
-        myCam.srcObject = myScreenStream;
+        myCam.srcObject = myVideoStream;
         myAvatar.setOnAir(true);
     } else {//끔
-        await offMyScreenStream();
+        await offMyVideoStream();
         myCam.srcObject = null;
         myAvatar.setOnAir(false);
     }
@@ -219,18 +255,6 @@ async function handleScreenClick() {
 }
 
 
-/* 미디어 테스트용 */
-function test(on) {
-    if (on) {
-        myAudio.srcObject = myAudioStream;
-    } else {
-        myAudio.srcObject = null;
-    }
-}
-
-/* 미디어 테스트용 */
-
-
 /* 아바타 */
 class Avatar {
     constructor(user) {
@@ -244,7 +268,6 @@ class Avatar {
         this.isOther = !this.isMe;
         this.isLive = user.live;
         this.isMute = user.mute;
-        this.mediaRange = 350;
     }
 
     insertMyAvatar() {
@@ -266,7 +289,7 @@ class Avatar {
         this.speechBubble.style.zIndex = INDEX_SPEECH_BUBBLE;
     }
 
-    render() {
+    render(isJoin) {
         //아바타
         const avatar = document.createElement('div');
         avatar.classList.add('avatar');
@@ -342,8 +365,24 @@ class Avatar {
         screen.appendChild(avatar);
         screen.appendChild(speechBubble);
 
+        //오디오 추가
+        const audio = document.createElement('audio');
+        audio.controls = false;
+        audio.autoplay = true;
+        audio.style.position = 'fixed';
+        audio.style.left = '100';
+        audio.style.top = '100';
+        audio.style.opacity = '0';
+
+        document.body.appendChild(audio);
+        this.audio = audio;
+
         if (this.isLive) this.profileWrap.classList.add('cursor');
         this.checkMediaRange();
+
+        if (this.inMediaRange && isJoin) { //새 접속자가 범위내에 있음
+            this.createConnection();
+        }
     }
 
     talk(text) {
@@ -422,11 +461,33 @@ class Avatar {
 
         if (this.isMe) {
             for (let userId in userMap) {
-                userMap[userId.toString()].checkMediaRange();
+                if (userMap[userId]) {
+                    userMap[userId].checkMediaRange();
+                }
             }
         } else {
             this.checkMediaRange();
+
+            //다른사람이 진입했을때 기존 연결이 없다면
+            if (this.inMediaRange && !this.peerConnection) {
+                this.createConnection();
+            }
         }
+    }
+
+    createConnection() {
+        console.log(`새로운 피어 연결! 대상[${this.userName}]`);//test
+
+        this.peerConnection = createPeerConnection(this.userId);
+        this.peerConnection.onicecandidate = data => iceHandle(data, this.userId);
+        this.peerConnection.addEventListener('addstream', data => this.setAudio(data, this.userId));
+
+        //오퍼 생성, 전송
+        let rtcSessionDescriptionInitPromise = createOffer(this.peerConnection);
+        rtcSessionDescriptionInitPromise.then(offer => {
+            console.log('새로 생성한 오퍼', offer); //test
+            sendMessage(RELAY_OFFER, offer, this.userId);
+        });
     }
 
 
@@ -477,7 +538,7 @@ class Avatar {
 
         const distance = Math.sqrt(Math.abs(disX * disX) + Math.abs(dixY * dixY));
 
-        if (distance <= (350/2)+3) {
+        if (distance <= (350 / 2) + 3) {
             if (this.profile.classList.contains('active')) {
                 return;
             }
@@ -487,13 +548,92 @@ class Avatar {
             this.inMediaRange = true;
         } else {
             if (this.profile.classList.contains('active')) { //떠난 사용자
+                //커넥션이 존재하면 삭제
+                if (this.peerConnection) {
+                    this.peerConnection.close();
+                    this.peerConnection = null;
+                    console.log("유저이동 피어삭제!"); //test
+
+                    if(this.audio) this.audio.srcObject = null;
+                }
                 this.profile.classList.remove('active');
                 this.inMediaRange = false;
             }
         }
     }
 
+    //오퍼수신
+    receiveOffer(offer) {
+        if (this.peerConnection) {
+            try {
+                this.peerConnection.close();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        this.peerConnection = createPeerConnection(this.userId);
+        this.peerConnection.onicecandidate = data => iceHandle(data, this.userId);
+        this.peerConnection.addEventListener('addstream', data => this.setAudio(data, this.userId));
+
+        //answer 생성, 전송
+        let rtcSessionDescriptionInitPromise = createAnswer(this.peerConnection, offer);
+        rtcSessionDescriptionInitPromise.then(answer => {
+            sendMessage(RELAY_ANSWER, answer, this.userId);
+        });
+    }
+
+    //answer 수신
+    receiveAnswer(answer) {
+        this.peerConnection.setRemoteDescription(answer);
+    }
+
+    //ice 수신
+    receiveIce(ice) {
+        if (this.peerConnection) {
+            console.log('실제로 바듬!');
+            this.peerConnection.addIceCandidate(ice);
+        }
+    }
+
+    newPeerConnection() {
+        if (this.peerConnection) {
+            this.peerConnection.close;
+            this.peerConnection = null;
+        }
+
+        this.createConnection();
+    }
+
+    setAudio(data, userId) {
+        const user = userMap[userId];
+        console.log('user', user); //test
+        if(data.stream) {
+
+            console.log('비디오트랙들', data.stream.getVideoTracks());
+            console.log('오디오트랙들', data.stream.getAudioTracks());
+            
+            const audioStream = new MediaStream();
+            data.stream.getAudioTracks().forEach(track => audioStream.addTrack(track));
+            user.audio.srcObject = audioStream;
+        }
+    }
+
     remove() {
+        userMap[this.userId] = undefined;
+        if (this.peerConnection) {
+            try {
+                this.peerConnection.close();
+            } catch (e) {
+                console.log(e);
+            } finally {
+                this.peerConnection = null;
+                console.log("유저떠남 피어삭제!"); //test
+            }
+        }
+        if(this.audio){
+            document.body.removeChild(this.audio);
+        }
         screen.removeChild(this.avatar);
         screen.removeChild(this.speechBubble);
     }
@@ -592,18 +732,54 @@ chatHistoryContent.addEventListener('mouseleave', () => {
 
 
 /* 웹 소켓 */
-//초기화
-socket = new SockJS('/workspace/relay');
 
-//이벤트 설정
-socket.onopen = callbackOpenSocket;
-socket.onerror = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
-    location.href = `/work-spaces/${roomId}`
-});
-socket.onmessage = receiveMessage;
-socket.onclose = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
-    location.href = `/work-spaces/${roomId}`
-});
+//초기화
+async function init() {
+    //까만창으로 막기
+    shutter.style.position = 'fixed';
+    shutter.style.left = '0';
+    shutter.style.top = '0';
+    shutter.style.width = '100%';
+    shutter.style.height = '100%';
+    shutter.style.zIndex = '9997';
+    shutter.style.backgroundColor = 'rgba(0,0,0,0.3)';
+
+    screen.appendChild(shutter);
+
+
+    //미디어 초기화
+    try {
+        myAudioStream = await navigator.mediaDevices.getUserMedia({audio: true});
+    } catch (e) {
+        console.log(e);
+    }
+    try {
+        myVideoStream = await navigator.mediaDevices.getUserMedia({video: true});
+    } catch (e) {
+        console.log(e);
+    }
+    if (myVideoStream) {
+        useCamera = true;
+        offMyVideoStream(true);
+    }
+    if (myAudioStream) {
+        useAudio = true;
+        offMyAudioStream();
+    }
+
+    //웹소켓 오픈
+    socket = new SockJS('/workspace/relay');
+
+    //이벤트 설정
+    socket.onopen = () => callbackOpenSocket(shutter);
+    socket.onerror = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
+        location.href = `/work-spaces/${roomId}`
+    });
+    socket.onmessage = receiveMessage;
+    socket.onclose = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
+        location.href = `/work-spaces/${roomId}`
+    });
+}
 
 
 function callbackOpenSocket() {
@@ -638,86 +814,117 @@ function receiveMessage(event) {
             for (const user of userList) {
                 const avatar = new Avatar(user);
                 avatar.render();
-                userMap[avatar.userId.toString()] = avatar;
+                userMap[avatar.userId] = avatar;
             }
+            screen.removeChild(shutter);
             break;
         //새 유저 접속
         case RELAY_JOIN:
             const avatar = new Avatar(message.message);
-            avatar.render();
-            userMap[avatar.userId.toString()] = avatar;
+            avatar.render(true);
+            userMap[avatar.userId] = avatar;
             break;
         //접속종료
         case RELAY_LEAVE:
             const leaveUserId = message.sender;
-            userMap[leaveUserId.toString()].remove();
-            userMap[leaveUserId.toString()] = null;
+            userMap[leaveUserId].remove();
+            userMap[leaveUserId] = null;
             break;
         //채팅
         case RELAY_CHAT:
             const chatUserId = message.sender;
-            userMap[chatUserId.toString()].talk(message.message);
+            userMap[chatUserId].talk(message.message);
             break;
         //이동
         case RELAY_MOVE:
             const moveUserId = message.sender;
             const position = message.message;
-            userMap[moveUserId.toString()].move(position.x, position.y);
+            userMap[moveUserId].move(position.x, position.y);
             break;
         //뮤트
         case RELAY_SET_MUTE:
             const muteUserId = message.sender;
-            userMap[muteUserId.toString()].setMute(message.message);
+            userMap[muteUserId].setMute(message.message);
             break;
         //라이브
         case RELAY_SET_LIVE:
             const liveUserId = message.sender;
-            userMap[liveUserId.toString()].setOnAir(message.message);
+            userMap[liveUserId].setOnAir(message.message);
+            break;
+        //오퍼
+        case RELAY_OFFER:
+            const offerId = message.sender;
+            userMap[offerId].receiveOffer(message.message);
+            console.log('받은오퍼', message.message);//test
+            break;
+        //answer
+        case RELAY_ANSWER:
+            const answerId = message.sender;
+            userMap[answerId].receiveAnswer(message.message);
+            console.log('받은엔서', message.message);//test
+            break;
+        //ice
+        case RELAY_ICE:
+            const iceId = message.sender;
+            userMap[iceId].receiveIce(message.message);
+            console.log('받은ice', message.message);//test
             break;
     }
 }
 
 
-//turn 서버 테스트
-/*
-const iceServers = [
-    // Test some TURN server
+/* webRTC code */
+const turnServer =
     {
         urls: 'turn:turn.tayo.fun:3478?transport=udp',
         username: 'tayo',
         credential: 'a263203'
+    };
+
+//피어커넥션 생성
+function createPeerConnection() {
+    const peerConnection = new RTCPeerConnection({
+        iceServers: [turnServer]
+    });
+
+    const mediaStream = new MediaStream();
+
+    if (myVideoStream) {
+        myVideoStream.getVideoTracks().forEach(track => {
+            mediaStream.addTrack(track);
+        });
     }
-];
-
-const pc = new RTCPeerConnection({
-    iceServers
-});
-
-pc.onicecandidate = (e) => {
-    if (!e.candidate) return;
-
-    // Display candidate string e.g
-    // candidate:842163049 1 udp 1677729535 XXX.XXX.XX.XXXX 58481 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag sXP5 network-cost 999
-    console.log(e.candidate.candidate);
-
-    // If a srflx candidate was found, notify that the STUN server works!
-    if (e.candidate.type == "srflx") {
-        console.log("The STUN server is reachable!");
-        console.log(`   Your Public IP Address is: ${e.candidate.address}`);
+    if (myAudioStream) {
+        myAudioStream.getAudioTracks().forEach(track => {
+            mediaStream.addTrack(track);
+        });
     }
+    mediaStream.getTracks().forEach(track => {
+        peerConnection.addTrack(track, mediaStream);
+    });
 
-    // If a relay candidate was found, notify that the TURN server works!
-    if (e.candidate.type == "relay") {
-        console.log("The TURN server is reachable !");
-    }
-};
+    return peerConnection;
+}
 
-// Log errors:
-// Remember that in most of the cases, even if its working, you will find a STUN host lookup received error
-// Chrome tried to look up the IPv6 DNS record for server and got an error in that process. However, it may still be accessible through the IPv4 address
-pc.onicecandidateerror = (e) => {
-    console.error(e);
-};
+//오퍼생성
+async function createOffer(peerConnection) {
+    const offer = await peerConnection.createOffer();
+    peerConnection.setLocalDescription(offer);
+    return offer;
+}
 
-pc.createDataChannel('ourcodeworld-rocks');
-pc.createOffer().then(offer => pc.setLocalDescription(offer));*/
+//answer 생성
+async function createAnswer(peerConnection, offer) {
+    await peerConnection.setRemoteDescription(offer);
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    console.log("answer 생성", answer);//test
+
+    return answer;
+}
+
+//ice candidate 릴레이
+function iceHandle(data, userId) {
+    sendMessage(RELAY_ICE, data.candidate, userId);
+    console.log('ice 전송', data.candidate);//test
+}
