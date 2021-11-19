@@ -6,7 +6,11 @@ h1{
 }
 #wirteBtn{
 	float: right;
-	width: 70px;
+	width: 45px;
+    margin-top: 140px;
+    background: #c5c4c4;
+	color: var(--color-white);
+	border-radius: 4px;
 }
 	
 section {
@@ -14,15 +18,14 @@ section {
     margin-top: 20px;
 /*     padding: 30px; */
 /*     padding-right:100px; */
-    width:57%;
     margin:0 auto;
-    height: 900px;
+    height: 680px;
 }
 
 .wrap {
-    width: 985px;
-    height: 800px;
-    margin: 50ps auto;
+    width: 900px;
+    height: 680px;
+    margin: 50px auto;
     overflow-y: scroll;
 }
 
@@ -42,27 +45,44 @@ section {
 .interval {
 	padding-bottom: 50px;
 }
+
 .question {
 	padding-left: 10px;
 	padding-bottom: 10px;
 	border :1px solid #ccc;
-	height: 40px;
+	width: 855px;
 }
 
 .answer {
 	padding-left: 10px;
+	width: 855px;
 	background: #c5c4c4;  
 	border :1px solid #ccc;
-	height: 40px;
 }
 
 #q {
-	padding-right: 30px;
+	padding-right: 10px;
 	color: blue;
 }
 
 #a {
-	padding-right: 30px;
+	padding-right: 10px;
 	color: red;
+}
+
+#btnWrite{
+	background-color: var(--color-light-grey);
+	color: var(--color-white);
+	border-radius: 4px;
+}
+
+#cancel{
+	background-color: var(--color-red);
+	color: var(--color-white);
+	border-radius: 4px;
+}
+
+.text-center{
+	text-align: center;
 }
 

@@ -4,6 +4,7 @@ import fun.tayo.app.dto.WorkSpaceAndMember;
 import fun.tayo.app.dto.WorkSpace;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WorkSpaceDao {
 
@@ -23,9 +24,14 @@ public interface WorkSpaceDao {
     void insertTeamMember(WorkSpaceAndMember workSpaceAndMember);
 
     /**
+     * 가상공간의 자세한 정보
+     */
+    WorkSpace selectDetail(int workSpaceId);
+
+    /**
      * 해당 멤버가 만든 가상공간의 자세한 정보
      */
-    WorkSpace selectDetail(WorkSpaceAndMember workSpaceAndMember);
+    WorkSpace selectDetailOfMember(WorkSpaceAndMember workSpaceAndMember);
 
     /**
      * 초대코드로 가상공간 조회
@@ -56,4 +62,9 @@ public interface WorkSpaceDao {
      * 팀멤버 삭제
      */
     int deleteTeamMember(WorkSpaceAndMember workSpaceAndMember);
+
+    /**
+     * 가입자의 가상공간 이름조회
+     */
+    String selectWorkSpaceNameOfTeamMember(Map<String, Integer> params);
 }

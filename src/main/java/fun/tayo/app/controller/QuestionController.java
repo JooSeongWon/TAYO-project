@@ -50,9 +50,7 @@ public class QuestionController {
 	}
 	
 	@RequestMapping(value="/admin/question/write", method = RequestMethod.GET)
-	public void questionWrite() {
-		
-	}
+	public void questionWrite() {}
 	
 //	@ResponseBody
 	@RequestMapping(value="/admin/question/write", method = RequestMethod.POST)
@@ -80,6 +78,19 @@ public class QuestionController {
 		
 		return "redirect:/admin/question";
 	}
+	
+	@RequestMapping(value="/admin/question/delete/{questionId}", method = RequestMethod.GET)
+	public String questionDelete(@PathVariable int questionId, Question question) {
+		
+		question.setId(questionId);
+		questionService.delete(question);
+		
+		return "redirect:/admin/question";
+	}
+	
+	
+	
+	
 }
 
 

@@ -21,11 +21,41 @@ public class NoticeServiceImpl implements NoticeService{
 		return noticeDao.selectNotice(paging);
 	}
 
-	
+
 	@Override
 	public Paging getPaging(int currentPage) {
 		return new Paging(noticeDao.selectCntAll(), currentPage);
 	}
 
+
+	@Override
+	public List<Notice> noticeList() {
+		return noticeDao.selectNoticeList();
+	}
+
+
+	@Override
+	public void write(Notice notice) {
+		noticeDao.insertNotice(notice);
+	}
+
+	@Override
+	public Notice getNotice(int noticeId) {
+		
+		return noticeDao.selectNoticeById(noticeId);
+	}
+
+
+	@Override
+	public void update(Notice notice) {
+		 noticeDao.updateNotice(notice);
+	}
+
+
+	@Override
+	public void delete(Notice notice) {
+		noticeDao.deleteNotice(notice);
+	}
+	
 
 }

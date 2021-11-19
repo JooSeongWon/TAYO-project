@@ -27,4 +27,9 @@
 		FROM QUESTION
 		WHERE id = #{questionId}
 	</select>
+	
+	<delete id="deleteQuestion" parameterType="Question">
+		DELETE QUESTION
+		WHERE id = ${id}
+	</delete>
 </mapper>

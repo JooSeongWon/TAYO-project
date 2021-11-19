@@ -53,4 +53,9 @@ public interface WorkSpaceService {
      * 가상공간 탈퇴
      */
     ResponseData exitTeam(int workSpaceId, int memberId);
+
+    /**
+     * 가상공간 가입조회
+     */
+    String getMyWorkSpaceName(int workSpaceId, int memberId);
 }

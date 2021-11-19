@@ -16,6 +16,7 @@ section {
     width: 1940px;
     height: 1100px;
     position: relative;
+    z-index: 1;
 }
 
 /* 좌측 네비 여닫이 버튼 */
@@ -147,6 +148,14 @@ section {
     cursor: pointer;
 }
 
+.fa-arrow-up {
+    transition: all 400ms ease-out;
+}
+
+.fa-arrow-up.active {
+    transform: rotate(0.5turn);
+}
+
 
 .chat-history {
     width: 450px;
@@ -178,10 +187,63 @@ section {
     overflow-y: scroll;
     width: 100%;
     height: 400px;
-    padding-left: 16px;
+    padding: 0 16px;
     font-size: var(--font-small);
     color: var(--color-white);
 }
+
+.history {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.history.user {
+    align-items: flex-end;
+}
+
+.history:not(.history:first-child) {
+    margin-top: 8px;
+}
+
+.history__title {
+    display: flex;
+    align-items: flex-end;
+}
+
+.history__content {
+    word-wrap: break-word;
+    margin-left: 16px;
+    margin-top: 8px;
+    max-width: 250px;
+    padding: 8px;
+
+    border-radius: 0 16px 16px 16px;
+    background-color: #656565;
+}
+
+.history.user > .history__content {
+    border-radius: 16px 0 16px 16px;
+    background-color: var(--color-yellow);
+    color: var(--color-dark-grey);
+}
+
+.history__profile {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid var(--color-white);
+    margin-right: 8px;
+}
+
+.history.user > .history__title {
+    display: none;
+}
+
+.history__user-name {
+    font-weight: bold;
+}
+
 
 /* 아바타 */
 .avatar {
@@ -204,13 +266,21 @@ section {
     position: relative;
 }
 
+.img-wrap.cursor {
+    cursor: pointer;
+}
+
+/* 내 캐릭 클릭시 범위 */
+.user .img-wrap {
+    cursor: pointer;
+}
+
 .avatar img {
     height: 45px;
     width: 45px;
     border-radius: 50%;
     border: 3px solid var(--color-light-grey);
-
-    cursor: pointer;
+    transition: all 500ms ease-in-out;
 }
 
 .avatar.user img {
@@ -219,14 +289,15 @@ section {
 
 .img-wrap > i {
     font-size: var(--font-micro);
-    width: 17px;
-    height: 17px;
+    width: 20px;
+    height: 20px;
     text-align: center;
-    line-height: 15px;
+    line-height: 18px;
     background-color: var(--color-dark-grey);
     border: 1px solid var(--color-light-grey);
     color: var(--color-white);
     position: absolute;
+    border-radius: 50%;
     display: none;
 }
 
@@ -254,6 +325,28 @@ section {
     padding: 2px 6px;
 }
 
+.range {
+    position: absolute;
+    z-index: 40;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    display: none;
+
+    left: 52px;
+    top: 52px;
+
+    transform: translate(-50%, -50%);
+    transition: all 500ms ease-in-out;
+
+    background: rgb(174,246,109);
+    background: radial-gradient(circle, rgba(174,246,109,0.4) 0%, rgba(169,227,209,0.4) 78%);
+}
+
+.range.active {
+    display: block;
+}
+
 /* 말풍선 */
 .speech-bubble-wrap {
     display: flex;
@@ -268,13 +361,14 @@ section {
     left: 30px;
     top: 15px;
 }
+
 .speech-bubble {
     word-wrap: break-word;
     min-width: 49px;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--color-white);
     border-radius: 16px;
     padding: 8px;
-    border: solid 1px rgba(100,100,100,0.6);
 }
 
 .speech-bubble-wrap .arrow-down {
@@ -283,14 +377,91 @@ section {
 
     position: absolute;
     left: 64px;
-    bottom: -9px;
-    border-top: 10px solid rgba(255,255,255,0.9);
+    bottom: -10px;
+    border-top: 10px solid rgba(0, 0, 0, 0.8);
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
 }
 
-.speech-bubble-wrap.active
-{
+.speech-bubble-wrap.active {
     transition: all 500ms ease-in-out, opacity 3000ms linear;
     opacity: 0;
+}
+
+/* 비디오 */
+.my-cam-wrap {
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+    width: 352px;
+    background-color: rgba(68, 192, 74, 0.7);
+    border-radius: 16px;
+
+    position: fixed;
+    left: 50vw;
+    top: 20px;
+
+    transform: translate(-50%);
+    z-index: 80;
+}
+.my-cam-title {
+    font-size: var(--font-small);
+    font-weight: bold;
+    margin-bottom: 8px;
+    width: 320px;
+    color: var(--color-dark-grey);
+}
+.my-cam-title > i {
+    color: var(--color-orange);
+}
+
+.my-cam-wrap.active {
+    display: flex;
+}
+
+.my-cam-title > i.fa-expand-arrows-alt {
+    float: right;
+    color: var(--color-black);
+    font-size: var(--font-regular);
+    cursor: pointer;
+}
+
+.cam-wrap {
+    width: 170px;
+    padding: 5px;
+    position: absolute;
+    background-color: rgba(99, 132, 255, 0.5);
+    left: -10px;
+    top: -90px;
+    z-index: 51;
+    display: none;
+
+    transition: all 500ms ease-in-out;
+}
+
+.cam-wrap.active {
+    display: block;
+}
+
+.cam-wrap > i.cam-full {
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 50%;
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    text-align: center;
+    background-color: #a29bfe;
+    cursor: pointer;
+    z-index: 1;
+}
+.cam-wrap > i.cam-full:hover {
+    color: var(--color-white);
+}
+
+
+/* 범위내 유저 프로필 */
+.avatar__img.active {
+    border-color: var(--color-blue);
 }

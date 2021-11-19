@@ -35,6 +35,7 @@
     <script src="${pageContext.request.contextPath}/resources/js/work-space-script.js" defer></script>
 
     <script>
+        const roomId = ${roomId};
         const myId = ${loginMember.id};
         const myName = `${loginMember.name}`;
         <c:if test="${not empty loginMember.profile}">
@@ -48,15 +49,17 @@
     <title>[${name}] - 타요 가상공간</title>
 </head>
 <body>
-<section class="screen all-shadow">
+<section class="screen all-shadow" draggable="true">
     <%-- 내 캐릭터 --%>
     <div class="avatar user">
         <div class="img-wrap">
             <c:if test="${not empty loginMember.profile}">
-                <img class="avatar__img" src="${pageContext.request.contextPath}/img/${loginMember.profile}" alt="내 아바타">
+                <img class="avatar__img" src="${pageContext.request.contextPath}/img/${loginMember.profile}"
+                     alt="내 아바타">
             </c:if>
             <c:if test="${empty loginMember.profile}">
-                <img class="avatar__img" src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="내 아바타">
+                <img class="avatar__img" src="${pageContext.request.contextPath}/resources/img/no-profile.png"
+                     alt="내 아바타">
             </c:if>
             <i class="fas fa-microphone-slash mute active"></i>
             <i class="fas fa-video on-air"></i>
@@ -67,6 +70,7 @@
         <div class="speech-bubble"></div>
         <div class="arrow-down"></div>
     </div>
+    <div class="range"></div>
 
     <%-- 게시판 네비게이션 바 버튼 --%>
     <i class="fas fa-chevron-right"></i>
@@ -86,7 +90,6 @@
             <div class="chat-history">
                 <div class="chat-history__title">${name}</div>
                 <div class="chat-history__content tayo-scroll-bar">
-                    대화내용 넣을곳
                 </div>
             </div>
         </div>
@@ -95,6 +98,13 @@
         <i class="fas fa-desktop" id="screen"></i>
         <i class="fas fa-microphone" id="mice"></i>
     </div>
+    <%-- 내 비디오 화면 --%>
+    <div class="my-cam-wrap" draggable="true">
+        <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i
+                class="fas fa-expand-arrows-alt my-cam-full"></i></div>
+        <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted></video>
+    </div>
 </section>
+
 </body>
 </html>
