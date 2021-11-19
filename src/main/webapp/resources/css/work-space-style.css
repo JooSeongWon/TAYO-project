@@ -328,8 +328,10 @@ section {
 .range {
     position: absolute;
     z-index: 40;
-    width: 350px;
-    height: 350px;
+    width: 500px;
+    height: 500px;
+    height: 500px;
+    height: 500px;
     border-radius: 50%;
     display: none;
 
@@ -433,7 +435,7 @@ section {
     background-color: rgba(99, 132, 255, 0.5);
     left: -10px;
     top: -90px;
-    z-index: 51;
+    z-index: 53;
     display: none;
 
     transition: all 500ms ease-in-out;
@@ -464,4 +466,21 @@ section {
 /* 범위내 유저 프로필 */
 .avatar__img.active {
     border-color: var(--color-blue);
+}
+
+/* 아바타 박스 */
+.avatar-box {
+    height: 45px;
+    width: 45px;
+    left: 48px;
+    top: 30px;
+
+    position: absolute;
+    border-radius: 50%;
+    transition: all 500ms ease-in-out;
+}
+
+.avatar-box.cursor,
+.avatar-box.user {
+    cursor: pointer;
 }

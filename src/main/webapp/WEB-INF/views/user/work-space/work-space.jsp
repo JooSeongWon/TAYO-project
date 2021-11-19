@@ -66,6 +66,7 @@
         </div>
         <div class="avatar__name">${loginMember.name}</div>
     </div>
+    <div class="avatar-box user"></div>
     <div class="speech-bubble-wrap active user">
         <div class="speech-bubble"></div>
         <div class="arrow-down"></div>
@@ -102,7 +103,7 @@
     <div class="my-cam-wrap" draggable="true">
         <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i
                 class="fas fa-expand-arrows-alt my-cam-full"></i></div>
-        <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted></video>
+        <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted ></video>
     </div>
 </section>
 

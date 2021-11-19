@@ -26,9 +26,11 @@ const myCamFullScreenBtn = document.querySelector('.my-cam-full');
 //z인덱스
 const INDEX_MY_AVATAR = '50';
 const INDEX_OTHER_AVATAR = '49';
-const INDEX_SPEECH_BUBBLE = '53';
+const INDEX_SPEECH_BUBBLE = '54';
+const INDEX_AVATAR_BOX = '51';
+const INDEX_MY_AVATAR_BOX = '52';
 const INDEX_SYSTEM_UI = '100';
-const INDEX_BOARD = '99';
+//const INDEX_BOARD = '99';
 
 
 //웹소켓 상수
@@ -274,20 +276,23 @@ class Avatar {
     insertMyAvatar() {
         this.avatar = document.querySelector('.avatar.user');
         this.profile = document.querySelector('.avatar.user img');
-        this.profileWrap = document.querySelector('.user .img-wrap')
         this.name = document.querySelector('.avatar.user > .avatar__name');
         this.speechBubble = document.querySelector('.speech-bubble-wrap.user');
         this.speechBubbleText = document.querySelector('.speech-bubble-wrap.user > .speech-bubble');
         this.onAir = document.querySelector('.user .on-air');
         this.mute = document.querySelector('.user .mute');
         this.range = document.querySelector('.range');
+        this.avatarBox = document.querySelector('.avatar-box.user');
 
-        this.profileWrap.addEventListener('click', () => {
+        this.avatarBox.addEventListener('click', () => {
             this.range.classList.toggle('active');
         })
 
         this.avatar.style.zIndex = INDEX_MY_AVATAR;
         this.speechBubble.style.zIndex = INDEX_SPEECH_BUBBLE;
+        this.avatarBox.style.zIndex = INDEX_MY_AVATAR_BOX;
+
+        screen.removeChild(this.speechBubble);
     }
 
     render(isJoin) {
@@ -297,6 +302,12 @@ class Avatar {
         avatar.style.zIndex = INDEX_OTHER_AVATAR;
         avatar.style.left = `${this.x}px`;
         avatar.style.top = `${this.y}px`;
+
+        const avatarBox = document.createElement('div');
+        avatarBox.classList.add('avatar-box');
+        avatarBox.style.left = `${this.x + 18}px`;
+        avatarBox.style.top = `${this.y}px`;
+        avatarBox.style.zIndex = INDEX_AVATAR_BOX;
 
         const profileWrap = document.createElement('div');
         profileWrap.classList.add('img-wrap');
@@ -334,10 +345,10 @@ class Avatar {
 
         this.avatar = avatar;
         this.name = name;
-        this.profileWrap = profileWrap;
         this.profile = profile;
         this.onAir = onAir;
         this.mute = mute;
+        this.avatarBox = avatarBox;
 
         this.setOnAir(this.isLive);
 
@@ -363,7 +374,7 @@ class Avatar {
 
         //화면에 캐릭터 추가
         screen.appendChild(avatar);
-        screen.appendChild(speechBubble);
+        screen.appendChild(avatarBox);
 
         //오디오 추가
         const audio = document.createElement('audio');
@@ -400,7 +411,7 @@ class Avatar {
         this.video = video;
         this.videoWrap = camWrap;
 
-        if (this.isLive) this.profileWrap.classList.add('cursor');
+        if (this.isLive) this.avatarBox.classList.add('cursor');
         this.checkMediaRange();
 
         if (this.inMediaRange && isJoin) { //새 접속자가 범위내에 있음
@@ -410,7 +421,7 @@ class Avatar {
         //비디오 표시 이벤트
         this.isShowVideo = false;
         let user = this;
-        this.profileWrap.addEventListener('click', () => {
+        this.avatarBox.addEventListener('click', () => {
             if (user.isLive && user.inMediaRange && !user.isShowVideo) {
                 if (!user.videoWrap.classList.contains('active')) {
                     user.videoWrap.classList.add('active');
@@ -438,8 +449,13 @@ class Avatar {
         if (this.speechTimeOut) {
             clearTimeout(this.speechTimeOut);
         }
+        if (this.disableSpeechTimeOut) {
+            clearTimeout(this.disableSpeechTimeOut);
+        }
 
-        screen.removeChild(this.speechBubble);
+        if (screen.contains(this.speechBubble)) {
+            screen.removeChild(this.speechBubble);
+        }
         if (this.speechBubble.classList.contains('active')) {
             this.speechBubble.classList.remove('active');
         }
@@ -447,7 +463,14 @@ class Avatar {
         this.speechBubbleText.innerText = text;
 
         screen.appendChild(this.speechBubble);
-        this.speechTimeOut = setTimeout(() => this.speechBubble.classList.add('active'), 3000);
+        this.speechTimeOut = setTimeout(() => {
+            this.speechBubble.classList.add('active');
+            this.disableSpeechTimeOut = setTimeout(() => {
+                if (screen.contains(this.speechBubble)) {
+                    screen.removeChild(this.speechBubble);
+                }
+            }, 3000);
+        }, 3000);
 
         //채팅기록에 추가
         const doScroll = !(isMouseOverOnHistory && chatHistoryContent.offsetHeight + chatHistoryContent.scrollTop < chatHistoryContent.scrollHeight);
@@ -504,6 +527,8 @@ class Avatar {
         this.avatar.style.top = `${posY}px`;
         this.speechBubble.style.left = `${posX}px`;
         this.speechBubble.style.top = `${posY - 15}px`;
+        this.avatarBox.style.left = `${posX + 18}px`;
+        this.avatarBox.style.top = `${posY}px`;
         if (this.isOther) {
             this.videoWrap.style.left = `${posX - 40}px`;
             this.videoWrap.style.top = `${posY - 120}px`;
@@ -514,7 +539,16 @@ class Avatar {
         if (this.isMe) {
             for (let userId in userMap) {
                 if (userMap[userId]) {
+                    const oldState = userMap[userId].inMediaRange;
                     userMap[userId].checkMediaRange();
+                    if (!userMap[userId].inMediaRange || (oldState === userMap[userId].inMediaRange)) { //변함없음
+                        continue;
+                    }
+
+                    //새로 만난 상대인데 나는 방송중이고 상대는 방송중이 아니면 내가 오퍼를 생성함
+                    if (myAvatar.isLive && !userMap[userId].isLive) {
+                        userMap[userId].createConnection();
+                    }
                 }
             }
         } else {
@@ -522,13 +556,15 @@ class Avatar {
 
             //다른사람이 진입했을때 기존 연결이 없다면
             if (this.inMediaRange && !this.peerConnection) {
-                this.createConnection();
+                if (myAvatar.isLive || !this.isLive) {
+                    this.createConnection();
+                }
             }
         }
     }
 
     createConnection() {
-        this.peerConnection = createPeerConnection(this.userId);
+        this.peerConnection = createPeerConnection();
         this.peerConnection.onicecandidate = data => iceHandle(data, this.userId);
         this.peerConnection.addEventListener('addstream', data => this.setMedia(data, this.userId));
 
@@ -545,8 +581,8 @@ class Avatar {
             if (!this.onAir.classList.contains('active')) {
                 this.onAir.classList.add('active');
             }
-            if (!this.profileWrap.classList.contains('cursor') && this.isOther) {
-                this.profileWrap.classList.add('cursor');
+            if (!this.avatarBox.classList.contains('cursor') && this.isOther) {
+                this.avatarBox.classList.add('cursor');
             }
 
             this.isLive = true;
@@ -561,8 +597,8 @@ class Avatar {
         if (this.onAir.classList.contains('active')) {
             this.onAir.classList.remove('active');
         }
-        if (this.profileWrap.classList.contains('cursor') && this.isOther) {
-            this.profileWrap.classList.remove('cursor');
+        if (this.avatarBox.classList.contains('cursor') && this.isOther) {
+            this.avatarBox.classList.remove('cursor');
         }
         this.isLive = false;
     }
@@ -592,7 +628,7 @@ class Avatar {
 
         const distance = Math.sqrt(Math.abs(disX * disX) + Math.abs(dixY * dixY));
 
-        if (distance <= (350 / 2) + 3) {
+        if (distance <= (500 / 2) + 3) {
             if (this.profile.classList.contains('active')) {
                 return;
             }
@@ -630,7 +666,7 @@ class Avatar {
             }
         }
 
-        this.peerConnection = createPeerConnection(this.userId);
+        this.peerConnection = createPeerConnection();
         this.peerConnection.onicecandidate = data => iceHandle(data, this.userId);
         this.peerConnection.addEventListener('addstream', data => this.setMedia(data, this.userId));
 
@@ -694,8 +730,11 @@ class Avatar {
             document.body.removeChild(this.audio);
         }
         screen.removeChild(this.avatar);
-        screen.removeChild(this.speechBubble);
+        if (screen.contains(this.speechBubble)) {
+            screen.removeChild(this.speechBubble);
+        }
         screen.removeChild(this.videoWrap);
+        screen.removeChild(this.avatarBox);
     }
 }
 
@@ -773,6 +812,7 @@ function isAvatar(target) {
         classList.contains('speech-bubble-wrap') ||
         classList.contains('my-cam-wrap') ||
         classList.contains('my-cam-title') ||
+        classList.contains('avatar-box') ||
         classList.contains('range')
 }
 
@@ -815,8 +855,9 @@ async function init() {
 
     //30초간 응답 못받으면 뒤로가기
     loadingTimeOut = setTimeout(() => {
-        if(socket) {
-            socket.onclose = () => {};
+        if (socket) {
+            socket.onclose = () => {
+            };
             socket.close();
         }
         showModal('오류', '연결에 실패했습니다.', () => {
