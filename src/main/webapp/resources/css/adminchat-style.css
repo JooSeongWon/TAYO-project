@@ -161,9 +161,9 @@ section {
 
 .list-div{
 	display: flex;
+	flex-direction: column;
 	justify-content: space-between; 
-	flex-wrap: wrap;
-	align-items: center;
+/* 	align-items: center; */
 	
 	border: 1px solid ;
 	border-color:var(--color-light-grey);
@@ -171,4 +171,24 @@ section {
 	margin: 10px 0px 10px 10px;
 }
 
+.alarm {
+	text-align: center;
+	color: var(--color-white);
+	width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
 
+.new {
+	background-color: var(--color-puple);
+}
+
+.list-profile {
+	display: flex;
+	justify-content: space-between; 
+	align-items: center;
+}
+
+.list-date {
+	text-align: right;
+}

@@ -33,6 +33,12 @@ public interface QuestionChatDao {
 	List<Map<Integer, Object>> selectChatList();
 
 	List<Map<Integer, Object>> selectMessageByQId(int questionChatId);
+	
+	
+	
+	List<QuestionMessage> selectUnreadMessage(int questionChatId);
+
+	void updateRead(int id);
 
 
 

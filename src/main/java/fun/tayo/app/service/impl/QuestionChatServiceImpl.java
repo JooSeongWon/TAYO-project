@@ -39,6 +39,15 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	
 	@Override
 	public ResponseObject getMessageList(int questionChatId) {
+		List<QuestionMessage> unreadList = questionChatDao.selectUnreadMessage(questionChatId);
+		
+		if(!unreadList.isEmpty()) {
+			for(QuestionMessage questionMessage : unreadList ) {
+				int id = questionMessage.getId();
+				questionChatDao.updateRead(id);
+			}
+		}
+		
 		List<Map<Integer, Object>> mList = questionChatDao.selectMessageByQId(questionChatId);
 		ResponseObject responseObject = new ResponseObject(true, mList);
 		return responseObject;

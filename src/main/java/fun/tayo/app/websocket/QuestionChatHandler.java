@@ -66,15 +66,17 @@ public class QuestionChatHandler extends TextWebSocketHandler {
 		
 		MemberSession memberSession = (MemberSession) session.getAttributes().get(SessionConst.LOGIN_MEMBER);
 		boolean admin = memberSession.isAdmin();
-		String username = memberSession.toString();
+		String name = memberSession.getName();
 		
     	//관리자 확인
 		String GRADE = "N";
 		if(admin) {
 			GRADE = "A";
 			questionMessage.setName("상담사");
+			questionMessage.setRead("Y");
 		} else {
-    		questionMessage.setName(username);
+    		questionMessage.setName(name);
+    		questionMessage.setRead("N");
     	}
 		
 		Integer FILE_ID = memberservice.getProfile(questionMessage.getMemberId());
@@ -95,12 +97,16 @@ public class QuestionChatHandler extends TextWebSocketHandler {
 		log.debug("jsonMsg {}", jsonMsg);
 		
 		
-		// 받은 메세지에 담긴 채팅방번호로 해당 채팅방 찾기
-		QusetionChat questionChat = questionChatService.selectChatRoom(questionMessage.getQuestionChatId());
+		// 받은 메세지에 담긴 채팅방번호로 해당 채팅방 찾기 --필요없게됐다
+//		QusetionChat chatRoomId = questionChatService.selectChatRoom(questionMessage.getQuestionChatId());
+		int chatRoomId = 0;
 		
-
+		if(questionMessage.getQuestionChatId()!= 0) {
+			chatRoomId = questionMessage.getQuestionChatId();
+		}
+		
 		//채팅방 오픈
-		if(RoomList.get(questionChat.getId())==null && questionMessage.getContent().equals("CHAT-OPEN") && questionChat !=null ) {
+		if(RoomList.get(chatRoomId)==null && questionMessage.getContent().equals("CHAT-OPEN")) {
             
 			// 채팅방에 들어갈 sessionMember
             ArrayList<WebSocketSession> sessionMember = new ArrayList<>();
@@ -108,27 +114,27 @@ public class QuestionChatHandler extends TextWebSocketHandler {
             sessionMember.add(session);
             
             // sessionList에 추가
-            sessionList.put(session, questionChat.getId());
+            sessionList.put(session, chatRoomId);
             
             // RoomList에 추가
-            RoomList.put(questionChat.getId(), sessionMember);
+            RoomList.put(chatRoomId, sessionMember);
             
             System.out.println("채팅방추가");
 		}
         // 채팅방이 존재 할 때
-        else if(RoomList.get(questionChat.getId()) != null && questionMessage.getContent().equals("CHAT-OPEN") && questionChat != null) {
+        else if(RoomList.get(chatRoomId) != null && questionMessage.getContent().equals("CHAT-OPEN")) {
             
             // RoomList에서 해당 방번호를 가진 방이 있는지 확인.
-        	RoomList.get(questionChat.getId()).add(session);
+        	RoomList.get(chatRoomId).add(session);
         	
             // sessionList에 추가
-        	sessionList.put(session, questionChat.getId());
+        	sessionList.put(session, chatRoomId);
             
             System.out.println("생성된 채팅방으로 입장");
         }
 		
         // 채팅 메세지 입력 시
-        else if(RoomList.get(questionChat.getId()) != null && !questionMessage.getContent().equals("") && questionChat != null) {
+        else if(RoomList.get(chatRoomId) != null && !questionMessage.getContent().equals("")) {
         	
     		int userId = memberSession.getId();
     		
@@ -145,20 +151,26 @@ public class QuestionChatHandler extends TextWebSocketHandler {
             int sessionCount = 0;
  
             // 해당 채팅방의 session에 뿌려준다.
-            for(WebSocketSession sess : RoomList.get(questionChat.getId()) ) {
+            for(WebSocketSession sess : RoomList.get(chatRoomId) ) {
                 sess.sendMessage(textMessage);
                 sessionCount++;
                 System.out.println("뿌렷어요");
             }
             
-            System.out.println(sessionCount);
-            
             // 읽음확인
-            if(sessionCount > 2) {
+            if(sessionCount > 1) {
             	questionMessage.setRead("Y");
-            } else {
-            	questionMessage.setRead("N");
             }
+            
+            // 리스트에도 메세지를 뿌려준다
+            if(RoomList.get(0)!=null) {
+            	for(WebSocketSession sess : RoomList.get(0)) {
+            		sess.sendMessage(textMessage);
+            		System.out.println("리스트에뿌렷어요");
+            	}
+            }
+            
+
             // DB에 저장한다.
             int result = questionChatService.insertMessage(questionMessage);
             

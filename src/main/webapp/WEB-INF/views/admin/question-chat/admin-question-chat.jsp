@@ -15,8 +15,43 @@ $(document).ready(function() {
 	
 	const memberId = ${sessionScope.loginMember.id};
 	var now = new Date();
-		
+	
 	getList();
+
+		listSock = new SockJS("/question/chat");
+		
+		listSock.onopen = onListOpen;
+		listSock.onmessage = onListMessage;	
+		
+		//소켓 연결시 리스트번호 보내기
+		function onListOpen() {
+			let data = {
+				"questionChatId": 0,
+			    "memberId": memberId,
+		        "content" : "CHAT-OPEN"
+		        }
+		    let jsonData = JSON.stringify(data);
+			listSock.send(jsonData);
+		}
+		
+		//메세지 수신 리스트 반영
+		function onListMessage(event) {
+		      const Message = JSON.parse(event.data);
+		      console.log(event.data)
+		      let data = {
+		         "NAME" : Message.msg.name,
+		         "SEND_Date" : Message.msg.sendDate,
+		         "READ" : Message.msg.read,
+		         "QUESTION_CHAT_ID" : Message.msg.questionChatId,
+		         "GRADE" : Message.admin.GRADE,
+		         "FILE_ID" : Message.admin.FILE
+		      }
+		      if(data.GRAND == "A"){
+		    	reset(data);  
+		      } else {
+		      	appendList(data);
+		      }
+		   }   	
 	
 	function getList() {
 		//채팅방 리스트 불러오기
@@ -28,7 +63,6 @@ $(document).ready(function() {
 			success : function(data) {
 				for(var i = 0; i < data.object.length; i++){
 					appendList(data.object[i]);
-					console.log(data.object[i].MEMBER_ID)
 				}
 			},
 			error : function(e) {
@@ -38,14 +72,38 @@ $(document).ready(function() {
 		});
 	}
 	
+	function reset(list) {
+		let questionChatId = list.QUESTION_CHAT_ID;
+		let IdDiv = document.getElementById(questionChatId);
+		let listDiv = IdDiv.firstChild;
+		let dateSpan = listDiv.lastChild;
+       
+		const today = moment(now).format('YYYY-MM-DD')
+        const before = moment(list.SEND_DATE).format('YYYY-MM-DD')
+
+        let sendDay = moment(list.SEND_DATE).format('LT')
+		
+		dateSpan.innerText = sendDay;
+		document.getElementById("divchatList").appendChild(IdDiv);
+	}
+	
 	function appendList(list) {
 		let questionChatId = list.QUESTION_CHAT_ID;
+		const IdDiv = document.getElementById(questionChatId);
+		
+		if(IdDiv != null){
+			IdDiv.remove();
+		}
 		
 		let createListDiv = document.createElement('div');
 		let createListItemDiv = document.createElement('div');
+		
+		let createProfileDiv = document.createElement('div');
+		
 		let createImgDiv = document.createElement('div');
 		let createImg = document.createElement('img');
 		let createNameSpan = document.createElement('span');
+		let createAlarmDiv = document.createElement('div');
 		let createListDateSpan = document.createElement('span');
 		
         const today = moment(now).format('YYYY-MM-DD')
@@ -56,10 +114,15 @@ $(document).ready(function() {
 			sendDay = moment(list.SEND_DATE).format('LT')
 		}
         
-        
+
+        createAlarmDiv.classList.add("alarm");
+		if(list.READ == "N"){
+        	createAlarmDiv.classList.add("new");
+		}
         createListDiv.setAttribute("class", "list");
         createListDiv.setAttribute("id", questionChatId);
         createListItemDiv.setAttribute("class", "list-div");
+        createProfileDiv.setAttribute("class", "list-profile");
         createImgDiv.setAttribute("class", "img");
         createImg.setAttribute("class", "thumb");
         createNameSpan.setAttribute("class", "name");
@@ -70,18 +133,25 @@ $(document).ready(function() {
         } else {
         	createImg.src = '${pageContext.request.contextPath}' +'/img/' + list.FILE_ID ;
 		}
+        
+        createAlarmDiv.innerText = "N";
         createNameSpan.innerText = list.NAME;
         createListDateSpan.innerText = sendDay;
         
-        document.getElementById("divchatList").appendChild(createListDiv);
+        let divChatList = document.getElementById("divchatList");
+        divChatList.prepend(createListDiv);
         createListDiv.appendChild(createListItemDiv);
-        createListItemDiv.appendChild(createImgDiv);
+        createListItemDiv.appendChild(createProfileDiv);
+        
+        createProfileDiv.appendChild(createImgDiv);
         createImgDiv.appendChild(createImg);
-        createListItemDiv.appendChild(createNameSpan);
+        createProfileDiv.appendChild(createNameSpan);
+        createProfileDiv.appendChild(createAlarmDiv);
+        
         createListItemDiv.appendChild(createListDateSpan);
         createListDiv.onclick = function() {
         	questionId = $(this).attr('id');
-			
+        	$(createAlarmDiv).removeClass("new");	
 			getMessage(questionId);
 		}
 	}
@@ -92,7 +162,6 @@ $(document).ready(function() {
 	
 	function getMessage(questionId) {
 		//현재 채팅창 비우기
-		
 		while (divChatData.hasChildNodes()){ 
 			divChatData.removeChild( divChatData.firstChild );
 			sock.close()
@@ -248,8 +317,7 @@ $(document).ready(function() {
         // 스크롤바 아래 고정
         box.scroll(0, box.scrollHeight);
     }
-	
-});
+});	
 </script>
     
 </head>

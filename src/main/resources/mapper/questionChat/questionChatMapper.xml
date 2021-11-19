@@ -33,18 +33,16 @@
 	</insert>
 	
 	<select id="selectChatList" resultType="hashmap">
-		SELECT 
-    		QM.send_date, QM.read, QC.member_id, QM.question_chat_id, m.name, QC.id, m.file_id
-    		FROM (
-    		SELECT
-        		id, send_date, read, member_id, question_chat_id, name
-        		, row_number() over ( partition by question_chat_id order by id desc ) rm
-    		FROM question_message QMSG
-		) QM
-		JOIN QUESTION_CHAT QC ON QM.question_chat_id = QC.id
-		JOIN member m ON QC.member_id = m.id
-		WHERE rm = 1
-		ORDER BY send_date DESC
+           SELECT name, question_chat_id, send_date, read, file_id  FROM(
+           SELECT qmsg.name, qmsg.question_chat_id, qmsg.send_date, qmsg.read, qmsg.file_id ,row_number() over ( partition by question_chat_id order by id desc ) rm 
+                FROM (
+                    select m.name, qm.question_chat_id, qm.id, qm.send_date, qm.read, m.file_id
+                    FROM question_message QM
+                    JOIN QUESTION_CHAT QC on QM.question_chat_id = qc.id
+                    JOIN MEMBER M on qc.member_id = m.id ) QMSG
+                    )
+            WHERE rm = 1
+            ORDER BY send_date DESC
 	</select>
 
 	<select id="selectMessageByQId" parameterType="_int" resultType="hashmap">
@@ -65,5 +63,17 @@
 	<select id="cntChatRoom" resultType="_int">
 		SELECT count(*) FROM Question_Chat
 	</select>
+
+	<select id="selectUnreadMessage" parameterType="_int" resultType="QuestionMessage">
+		SELECT id FROM question_message
+		WHERE question_chat_id = #{questionChatId}
+        AND READ IN ('N')
+	</select>
+	
+	<update id="updateRead" parameterType="_int">
+		UPDATE question_message
+		SET read = 'Y'
+		WHERE id = #{id}
+	</update>
 
 </mapper>
