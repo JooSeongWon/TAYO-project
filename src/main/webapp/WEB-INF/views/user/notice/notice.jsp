@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html lang="ko">
 <head>
@@ -12,45 +13,49 @@ section {
     background-color: var(--color-white);
     margin-top: 20px;
     padding: 30px;
-    width: 900px;
+    width: 850px;
     height: 680px;
 }
 
 .noticeBox {
 	width: 700px;
-	hieght: 100px;
-	margin-left: 40px;
-	padding: 0px;
+	height: 100px;
+ 	margin-left: 40px;
+	margin-bottom: 30px;
 	background: #ffffff;
 	border: 2px solid #ccc;
 	text-align: center;
 }
 
 .date {
-margin: 0px;
 padding-left: 45px;
+font-weight: bold;
 }
 
-.text {
-margin: 0px;
-padding: 0px;
-text-align: left;
-
-}
 
 .wrap {
     width: 800px;
     height: 540px;
     margin: 50px auto;
-
-    background: aqua;
+    background: #ffffff;
     overflow-y: scroll;
+	-ms-overflow-style: none;
+}
+
+.wrap::-webkit-scrollbar {
+	display: none;
+	width: 0 !important;
 }
 
 .no {
 	float: right;
 }
-.child {
+
+.tayo-under-line {
+    border-bottom: 2px solid var(-color-light-grey);
+    padding-bottom: 6px;
+    margin: 0 auto;
+    width: 350px;
 }
 </style>
 <script type="text/javascript">
@@ -59,24 +64,6 @@ text-align: left;
 	let totalPage = ${paging.totalPage};
 
 	$(document).ready(function(){
-
-// 		$("#test").click(function() {
-// 			console.log("clicked")
-// 			$.ajax({
-// 						type:"post",
-// 						url:"/notice/notice",
-// 						data: {},
-// 						dataType: 'json',
-// 						success: function(data){
-// 							$('.data').text(data)
-// 						},
-// 						error: function(){
-// 							alert("error")
-// 						}
-// 					}
-// 			)
-// 		});
-
 
 		const wrap = document.querySelector('.wrap'); //.wrap
 
@@ -89,11 +76,13 @@ text-align: left;
 		const observer = new IntersectionObserver(callback, options);
 
 		function getNextNotices(){
+			//현재 페이지가 전체페이지랑 같거나 클때 스탑
 			if(currPage >= totalPage) {
 				return;
 			}
 
 			//페이징 받아오기 ajax
+			//다음페이지 불러오기
 			$.ajax({
 						type:"post",
 						url:"/notice",
@@ -106,17 +95,22 @@ text-align: left;
 
 		}
 
+		//다음 페이지로 부를 공지사항 정보들
 		function appendChildren(noticeList) {
 			for(let notice of noticeList){
-
+				
+				//div태그인 child 생성
 				const child = document.createElement('div');
+
+				//child에 class="child" 추가
 				child.classList.add('child');
 
+				//child에 HTML(공지사항)정보 추가
 				child.innerHTML = `<span class="date">\${notice.writeDate }</span>
-									<span class="no" data-no="\${notice.id }">\${notice.id }</span><br>
 									<div class="noticeBox">
-									<p class="text"><textarea cols="95" rows="4" style="border: none">\${notice.content }</textarea></p>
+									<p class="text">\${notice.content }</p>
 									</div>`;
+				//wrap에 .child 추가
 				wrap.appendChild(child);
 			}
 
@@ -124,7 +118,7 @@ text-align: left;
 		}
 
 
-		function callback(entries){ //마지막공지가 사라지면 0.5초후
+		function callback(entries){ 
 			if(entries[0].isIntersecting){
 				observer.unobserve(entries[0].target);
 				getNextNotices();
@@ -153,11 +147,12 @@ text-align: left;
   		  <c:forEach items="${list }" var="notice">
 
 			<div class="child">
-				<span class="date">${notice.writeDate }</span>
-				<span class="no" data-no="${notice.id }">${notice.id }</span><br>
+				
+				<span class="date"><fmt:formatDate value="${notice.writeDate}" pattern="yyyy-MM-dd"/></span>
 				<div class="noticeBox">
-					<p class="text"><textarea cols="95" rows="4" style="border: none">${notice.content }</textarea></p>
+					<p class="text">${notice.content }</p>
 				</div> <!-- noticeBox -->
+				
 			</div> <!-- child -->
 
   		  </c:forEach>

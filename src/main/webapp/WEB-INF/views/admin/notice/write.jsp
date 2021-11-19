@@ -16,14 +16,13 @@
 
 <form action="/admin/notice/write" method="post">
 	<div>
-		<label for="content">내용</label>
-		<textarea rows="5" id="content" name="content"></textarea>
+		<textarea cols="80" rows="20" id="content" name="content"></textarea>
 	</div>
 </form>
 	
-	<div>
-	<button id="btnWrite">작성</button>
-	<button id="cancel">취소</button>
+	<div class="text-center">
+	<button id="btnWrite" class="btn">작성</button>
+	<button id="cancel" class="btn">취소</button>
 	</div>
 
 </section>

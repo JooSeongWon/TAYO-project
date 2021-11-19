@@ -23,26 +23,35 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeController {
 	
 	private final NoticeService noticeService;
-	private static final Logger logger = LoggerFactory.getLogger(NoticeController.class);
 
-	
+	//공지사항 조회
 	@RequestMapping(value ="/notice", method=RequestMethod.GET)
 	public String noticeList(Model model) {
-	
+
+		//1 페이지	
 		Paging paging = noticeService.getPaging(1);
+		
+		//공지사항 리스트(1페이지)
 		List<Notice> list = noticeService.noticeList(paging);
+		
 		model.addAttribute("list", list);
+		
 		model.addAttribute("paging", paging);
-		log.debug("paging{}",paging);
+		
+		//log.debug("paging{}",paging);
+		
 		return "user/notice/notice";	
 	}
 	
-//	공지사항 리스트
+//	공지사항 불러오기
 	@ResponseBody
 	@RequestMapping(value ="/notice", method=RequestMethod.POST)
 	public List<Notice> getNoticeList(int curPage){
 		
+		//현재 페이지
 		Paging paging = noticeService.getPaging(curPage);
+		
+		//공지사항 리스트(현재 페이지)
 		List<Notice> list = noticeService.noticeList(paging);
 //		for(Notice n : list) {
 //			logger.debug("{}", n);

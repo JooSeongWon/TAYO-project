@@ -15,16 +15,16 @@
 <hr>
 
 <form action="/admin/notice/update/${notice.id}" method="post">
+
 	<div>
-		<label for="content">내용</label>
-		<textarea rows="5" id="content" name="content">${notice.content }</textarea>
+		<textarea cols="80" rows="20" id="content" name="content">${notice.content }</textarea>
 	</div>
 </form>
 	
-	<div>
-	<button id="btnUpdate">작성</button>
-	<button id="cancel">취소</button>
-	</div>
+	<div class="text-center">
+	<button id="btnWrite" class="btn">작성</button>
+	<button id="cancel" class="btn">취소</button>
+	</div>	
 
 </section>
 </body>

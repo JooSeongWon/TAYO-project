@@ -12,19 +12,20 @@ section {
     background-color: var(--color-white);
     margin-top: 20px;
     padding: 30px;
-    width: 900px;
+    width: 850px;
     height: 680px;
 }
 
 .wrap {
-    width: 750px;
+    width: 650px;
     height: 540px;
-    margin: 50px auto;
+    margin: 0px auto;
     overflow-y: scroll;
 }
 
 .child {
-	padding-left: 100px;
+/* 	margin: 0 auto; */
+	padding: 30px;
 }
 .fa-arrow-down {
 	float: right;
@@ -39,6 +40,7 @@ section {
 .answer {
 	display: block;
 	transition: all 400ms ease;
+	background-color: var(--color-light-grey);
 }
 
 .answer.disabled {
@@ -46,6 +48,29 @@ section {
 	font-size: 0;
 	line-height: 0;
 }
+
+.tayo-under-line {
+    border-bottom: 2px solid var(-color-light-grey);
+    padding-bottom: 6px;
+    margin: 0 auto;
+    width: 350px;
+}
+
+#chatBtn {
+	float: right;
+	border-radius: 4px;
+    color: var(--color-white);
+    background: var(--color-dark-grey);
+}
+
+#q{
+    color: var(--color-blue);
+}
+
+#a{
+    color: var(--color-red);
+}
+
 </style>
     
 </head>
@@ -53,15 +78,22 @@ section {
 <c:import url="../template/header.jsp"/>
 
 <section class="all-shadow">
-<button id="chatBtn">이양</button>
+	<button id="chatBtn">1:1 문의</button>
 	<h1 class="tayo-under-line" style="text-align: center">Popular articles</h1>
-	<div class="wrap">
+	<div class="wrap tayo-scroll-bar">
 	<c:forEach items="${list }" var="question">
 		<div class="child">
-			<span class="question">${question.questionContent}</span>
-			<i class="fas fa-arrow-down"></i><br>
-			<span class="answer disabled">&nbsp;&nbsp;<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;${question.answerContent }</span>
-			<hr>	
+			<i id="q" class="fab fa-quora"></i>
+				<span class="question">${question.questionContent}</span>
+
+			<i class="fas fa-arrow-down"></i> <br> <hr>
+				<span class="answer disabled">
+
+<!-- 					<i class="fas fa-arrow-right"></i> -->
+			<i id="a" class="fas fa-font"></i>
+					${question.answerContent }
+				</span>
+				
 		</div> <!-- child -->
 	</c:forEach>
 	</div> <!-- wrap -->

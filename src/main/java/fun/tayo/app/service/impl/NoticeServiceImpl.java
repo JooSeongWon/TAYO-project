@@ -21,7 +21,7 @@ public class NoticeServiceImpl implements NoticeService{
 		return noticeDao.selectNotice(paging);
 	}
 
-	
+
 	@Override
 	public Paging getPaging(int currentPage) {
 		return new Paging(noticeDao.selectCntAll(), currentPage);

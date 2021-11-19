@@ -13,8 +13,8 @@
 <c:import url="../template/nav.jsp"/>
 <%-- 각자의 내용 작성 --%>
 <section>
-	<h1>자주묻는 질문 </h1>
 	<button id="wirteBtn">작성</button>
+	<h1>자주묻는 질문 </h1>
 	
 	<div class="wrap tayo-scroll-bar">
 	  <c:forEach items="${list }" var="question">

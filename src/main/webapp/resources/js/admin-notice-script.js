@@ -14,3 +14,7 @@ $("#btnUpdate").click(function() {
 $("#cancel").click(function() {
 	history.go(-1);
 });
+
+$(".btnDelete").click(function() {
+
+});

@@ -15,22 +15,21 @@
 <hr>
 
 <form action="/admin/question/write" method="post">
-<!-- <div class="container"> -->
 	<div>
 		<label for="question">질문</label>
-		<input type="text" id="questuon" name="questionContent">
+		<textarea cols="80" rows="5" id="question" name="questionContent"></textarea>
 	</div>
+	
 	<div>
 		<label for="answer">답변</label>
-		<textarea rows="5" id="answer" name="answerContent"></textarea>
+		<textarea cols="80" rows="5" id="answer" name="answerContent"></textarea>
 	</div>
 </form>
 	
-	<div>
-	<button id="btnWrite">작성</button>
-	<button id="cancel">취소</button>
+	<div class="text-center">
+		<button id="btnWrite">작성</button>
+		<button id="cancel">취소</button>
 	</div>
-<!-- </div> .container -->
 
 </section>
 </body>
