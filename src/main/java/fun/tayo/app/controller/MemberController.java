@@ -68,6 +68,14 @@ public class MemberController {
 		return "redirect:/";
 	}
 
+	
+	@GetMapping(value = "/consent")
+	public String consent() {
+		
+		return "user/member/consent";
+		
+	}
+	
 	@GetMapping(value = "/join")
 	public String join() {
 
