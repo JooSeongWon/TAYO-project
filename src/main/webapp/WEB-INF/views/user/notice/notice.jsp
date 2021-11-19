@@ -19,7 +19,6 @@ section {
 
 .noticeBox {
 	width: 700px;
-	height: 100px;
  	margin-left: 40px;
 	margin-bottom: 30px;
 	background: #ffffff;
