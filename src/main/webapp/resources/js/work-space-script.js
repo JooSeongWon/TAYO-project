@@ -23,8 +23,6 @@ const myCam = document.querySelector('.my-cam');
 const myCamWrap = document.querySelector('.my-cam-wrap');
 const myCamFullScreenBtn = document.querySelector('.my-cam-full');
 
-const shutter = document.createElement('div');
-
 //z인덱스
 const INDEX_MY_AVATAR = '50';
 const INDEX_OTHER_AVATAR = '49';
@@ -46,6 +44,9 @@ const RELAY_OFFER = "offer";
 const RELAY_ANSWER = "answer";
 const RELAY_ICE = "ice";
 
+//유저맵
+const userMap = {};
+
 let isMouseOverOnHistory;
 let socket;
 
@@ -61,8 +62,10 @@ let useAudio = false;
 
 let preChatText = '';
 
-//유저맵
-const userMap = {};
+//로딩 객체
+let shutter = document.createElement('div');
+let shutterLoading = document.createElement('img');
+let loadingTimeOut;
 
 
 //시스템UI 인덱스 설정
@@ -792,7 +795,7 @@ chatHistoryContent.addEventListener('mouseleave', () => {
 
 //초기화
 async function init() {
-    //까만창으로 막기
+    //로딩창으로 막기
     shutter.style.position = 'fixed';
     shutter.style.left = '0';
     shutter.style.top = '0';
@@ -801,7 +804,25 @@ async function init() {
     shutter.style.zIndex = '9997';
     shutter.style.backgroundColor = 'rgba(0,0,0,0.3)';
 
+    shutterLoading.src = '/resources/img/loading.gif';
+    shutterLoading.style.position = 'fixed';
+    shutterLoading.style.left = '50vw';
+    shutterLoading.style.top = '50vh';
+    shutterLoading.style.transform = 'translate(-50%,-50%)';
+
+    shutter.appendChild(shutterLoading);
     screen.appendChild(shutter);
+
+    //30초간 응답 못받으면 뒤로가기
+    loadingTimeOut = setTimeout(() => {
+        if(socket) {
+            socket.onclose = () => {};
+            socket.close();
+        }
+        showModal('오류', '연결에 실패했습니다.', () => {
+            location.href = '/work-spaces';
+        });
+    }, 30000);
 
 
     //미디어 초기화
@@ -828,7 +849,7 @@ async function init() {
     socket = new SockJS('/workspace/relay');
 
     //이벤트 설정
-    socket.onopen = () => callbackOpenSocket(shutter);
+    socket.onopen = () => callbackOpenSocket();
     socket.onerror = () => showModal('에러', '서버와 연결이 끊어졌습니다. 재연결을 시도합니다.', () => {
         location.href = `/work-spaces/${roomId}`
     });
@@ -873,7 +894,13 @@ function receiveMessage(event) {
                 avatar.render();
                 userMap[avatar.userId] = avatar;
             }
+
+            clearTimeout(loadingTimeOut);
+
+            shutter.removeChild(shutterLoading);
             screen.removeChild(shutter);
+            shutterLoading = null;
+            shutter = null;
             break;
         //새 유저 접속
         case RELAY_JOIN:
