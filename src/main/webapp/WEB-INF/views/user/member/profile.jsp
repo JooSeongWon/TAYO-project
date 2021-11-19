@@ -6,6 +6,7 @@
     <c:import url="../template/head-meta.jsp"/>
     <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
     <title>타요 - 메타버스 코딩공간</title>
+    <script src="${pageContext.request.contextPath}/resources/js/profile.js" defer></script>
 </head>
 <body>
 <c:import url="../template/header.jsp"/>
@@ -16,11 +17,19 @@
 <h1>My profile</h1>
 <hr>
 
-${info.profile }
-${info.email }
+${info.savedName}<br><br>
+
+${info.email }<br><br>
+
+<div id="nameUpdate">
 ${info.name }
-${info.phone }
-${info.password }
+<input type="text" value="${info.name }" />&nbsp;<i class="far fa-edit"></i>
+<br><br>
+</div>
+
+${info.phone }&nbsp;<i class="far fa-edit"></i><br><br>
+
+${info.password }&nbsp;<i class="far fa-edit"></i>
 
 </section>
 

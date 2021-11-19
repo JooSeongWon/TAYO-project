@@ -7,10 +7,18 @@
 <mapper namespace="fun.tayo.app.dao.ProfileDao">
 
 	<select id="selectMemberById" resultType="Member" parameterType="_int">
-		SELECT
-			id, name, email, file_id as profile, phone
-		FROM Member
-		WHERE id = #{memberId }
+			SELECT M.ID
+			     , M.NAME
+			     , M.EMAIL
+			     , M.FILE_ID AS PROFILE
+			     , M.PHONE
+			     , M.PASSWORD
+			     , UF.SAVED_NAME
+			FROM MEMBER M
+			LEFT OUTER JOIN UPLOAD_FILE UF
+			ON M.FILE_ID = UF.ID
+			WHERE M.ID = #{memberId }
+
 	</select>
 
-</mapper>
+</mapper> 

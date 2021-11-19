@@ -17,5 +17,6 @@ public class Member {
 	private char grade;
 	private char ban;
 	private Integer profile;
+	private String savedName;
 	
 }
