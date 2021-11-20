@@ -4,38 +4,44 @@
 setModalParentNode(document.querySelector('.page-content'));
 
 const loginBtn = document.querySelector('#loginBtn');
-loginBtn.addEventListener('click', login);
+const passwordBtn = document.querySelector('#password');
+const emaildBtn = document.querySelector('#email');
 
-function login() {
-    const email = document.querySelector('#email').value;
-    const password = document.querySelector('#password').value;
+/*클릭 이벤트 부여*/
+loginBtn.addEventListener('click', function() {
+	console.log("qqqqqqqqqqqqqq")
+	
+	const email = document.querySelector('#email').value;
+	const password = document.querySelector('#password').value;
+	
+	$.ajax({
+		type: 'POST',
+		url: '/login',
+		data: {email: email, password: password},
+		dataType: 'json',
+		success: loginCallBack,
+		error: errorCallBack
+	})
+	
+});
 
-    $.ajax({
-        type: 'POST',
-        url: '/login',
-        data: {email: email, password: password},
-        dataType: 'json',
-        success: loginCallBack,
-        error: errorCallBack
-    });
-}
+/*엔터 이벤트 부여*/
+passwordBtn.addEventListener('keydown', function(e) {
+	console.log("qweqwe")
+	if(e.key === 'Enter'){
+		loginBtn.click();
+	}
+	
+});
 
-//function login() {
-//    if(event.keyCode == 13) {
-//    
-//	const email = document.querySelector('#email').value;
-//	const password = document.querySelector('#password').value;
-//	
-//	$.ajax({
-//		type: 'POST',
-//		url: '/login',
-//		data: {email: email, password: password},
-//		dataType: 'json',
-//		success: loginCallBack,
-//		error: errorCallBack
-//	});
-//    }
-//}
+emaildBtn.addEventListener('keydown', function(e) {
+	console.log("qweqwe")
+	if(e.key === 'Enter'){
+		loginBtn.click();
+	}
+	
+});
+
 
 // 로그인에 성공하면 /로 이동
 function loginCallBack(data) {

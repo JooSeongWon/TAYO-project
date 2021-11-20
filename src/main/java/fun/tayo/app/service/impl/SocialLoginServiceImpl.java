@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.service.face.MemberService;
 import fun.tayo.app.service.face.SocialLoginService;
@@ -67,7 +68,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		//미가입자
 		if(member == null) {
 			
-			session.setAttribute("kakaoEmail", email);
+			session.setAttribute(SessionConst.KAKAO_EMAIL, email);
 			//로그인 실패
 			return false;
 		}

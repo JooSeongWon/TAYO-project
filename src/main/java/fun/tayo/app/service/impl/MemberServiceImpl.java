@@ -112,8 +112,10 @@ public class MemberServiceImpl implements MemberService{
 		
 		//회원가입 결과 확인
 		if( memberDao.selectCntByEmail(member) > 0 ) {
+			
 			log.debug("회원가입 결과 확인 성공!");
 			return true;
+			
 		}
 		
 		//회원가입 실패

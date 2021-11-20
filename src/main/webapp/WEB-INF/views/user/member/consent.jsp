@@ -6,6 +6,9 @@
 <c:import url="../template/head-meta.jsp" />
 <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
 <title>타요 - 약관 동의</title>
+
+<%-- 스타일 시트 --%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/consent-style.css">
 </head>
 <body>
 	<c:import url="../template/header.jsp" />
@@ -15,9 +18,6 @@
 
 		<div class="container">
 			<div class="consentbox">
-				<div class="consent">
-					<div class="consentcheck">서비스 이용약관 동의 (필수)</div>
-				</div>
 				<div>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 						Suspendisse tempor rutrum nulla, eu laoreet est consectetur quis.
@@ -30,10 +30,12 @@
 						feugiat est, tincidunt tincidunt urna.</p>
 				</div>
 			</div>
-			<div class="consentbox">
 				<div class="consent">
-					<div class="consentcheck">개인정보 처리방침 동의 (필수)</div>
+					<div class="consentcheck">서비스 이용약관 동의 (필수)</div>
 				</div>
+				
+				
+			<div class="consentbox">
 				<div>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 						Suspendisse pellentesque eleifend pharetra. Nunc in odio diam. Sed
@@ -48,11 +50,13 @@
 						magna enim ultrices purus, sed sodales purus diam a diam. Aenean
 						sed odio quis leo sollicitudin semper.</p>
 				</div>
-			</div>
-			<div class="consentbox">
 				<div class="consent">
-					<div class="consentcheck">개인정보 마케팅 활용 동의 (선택)</div>
+					<div class="consentcheck">개인정보 처리방침 동의 (필수)</div>
 				</div>
+			</div>
+			
+			
+			<div class="consentbox">
 				<div>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 						Nulla suscipit lorem mi, eget finibus nulla sollicitudin nec. Ut
@@ -65,6 +69,11 @@
 						fringilla nulla ut gravida.</p>
 				</div>
 			</div>
+				<div class="consent">
+					<div class="consentcheck">개인정보 마케팅 활용 동의 (필수)</div>
+				</div>
+				
+				
 			<div>
 				<div class="allconsent">전체동의</div>
 			</div>

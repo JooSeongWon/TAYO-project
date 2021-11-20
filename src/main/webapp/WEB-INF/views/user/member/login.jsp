@@ -17,6 +17,7 @@
 	<section class="all-shadow fixed-center">
 
 		<div>
+		
 				<div class="form-group">
 					<label for="email">EMAIL</label>
 					<div>
@@ -35,7 +36,7 @@
 				<br>
 				<div>
 					<div style="margin: auto;">
-						<button id="loginBtn" class="loginbtn" >Login</button>
+						<button id="loginBtn" class="loginBtn" >Login</button>
 						<button type="button" id="kakaoLoginBtn" 
 						onclick="location.href ='https://kauth.kakao.com/oauth/authorize?client_id=d688ecbcd7678fc036df85dfda0efcf3&redirect_uri=https%3a%2f%2flocalhost%3a8443%2flogin%2fkakao&response_type=code'">kakao Login</button>
 						<button id="join" class="joinBtn" onclick="location.href='/join'">회원가입</button>

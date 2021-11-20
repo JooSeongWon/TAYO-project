@@ -111,9 +111,11 @@ public class MemberController {
 				
 			} else {
 				
-				log.debug("request.getParameter(\"email\") {}", request.getParameter("email"));
+				log.debug("request.getSession().getAttribute(\"kakaoemail\") {}", request.getSession().getAttribute(SessionConst.KAKAO_EMAIL));
 				
 				log.info("추가정보를 입력하세요!");
+				
+				request.getSession().getAttribute(SessionConst.KAKAO_EMAIL);
 				
 				return "user/member/kakao-join";
 				
