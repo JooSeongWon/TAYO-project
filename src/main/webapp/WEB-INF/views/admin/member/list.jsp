@@ -12,6 +12,11 @@
 <body>
 <c:import url="../template/nav.jsp"/>
 <%-- 각자의 내용 작성 --%>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 <section>
 
 <div class="container">
@@ -23,19 +28,19 @@
 <thead>
 	<tr>
 		<th style="width: 10%;">No.</th>
-		<th style="width: 45%;">Name</th>
-		<th style="width: 20%;">Email</th>
-		<th style="width: 10%;">Phone</th>
+		<th style="width: 10%;">Name</th>
+		<th style="width: 25%;">Email</th>
+		<th style="width: 20%;">Phone</th>
 		<th style="width: 15%;">가입일</th>
-		<th style="width: 15%;">권한</th>
-		<th style="width: 15%;">회원제재</th>
+		<th style="width: 10%;">권한</th>
+		<th style="width: 10%; text-align: auto;">회원제재</th>
 	</tr>
 </thead>
 <tbody>
 <c:forEach items="${list }" var="member">
 	<tr>
 		<td>${member.id }</td>
-		<td><a href="/admin/view?memberId=${member.id }">${member.name }</a></td>
+		<td>${member.name }</td>
 		<td>${member.email }</td>
 		<td>${member.phone }</td>
 		<td><fmt:formatDate value="${member.createDate }" pattern="yy-MM-dd"/></td>

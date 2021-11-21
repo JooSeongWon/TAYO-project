@@ -17,21 +17,70 @@
 <h1>My profile</h1>
 <hr>
 
+<div id="profile">
+
 ${info.savedName}<br><br>
 
 ${info.email }<br><br>
 
-<div id="nameUpdate">
+<div id="name">
 ${info.name }
-<input type="text" value="${info.name }" />&nbsp;<i class="far fa-edit"></i>
-<br><br>
+&nbsp;<i class="far fa-edit" onclick="fnIconClick('nameupdate')"></i>
+
+<div class="nameupdate" ></div>
+<br>
+
 </div>
 
-${info.phone }&nbsp;<i class="far fa-edit"></i><br><br>
+<div id="phone">
+${info.phone }
+&nbsp;<i class="far fa-edit" onclick="fnIconClick('phoneupdate')"></i>
 
-${info.password }&nbsp;<i class="far fa-edit"></i>
+<div class="phoneupdate" ></div>
+<br>
+
+</div>
+
+<div id="passoword">
+${info.password }&nbsp;<i class="far fa-edit" onclick="fnIconClick('passwordupdate')"></i>
+
+<div class="passwordupdate" ></div>
+
+</div>
+
+</div>
 
 </section>
+
+<script type="text/javascript">
+
+//아이콘 클릭 시 
+var fnIconClick = function(result) {
+	
+	if ($("."+ result).html() == '') {
+		var html = '';
+		html += '<input type="text" >';
+		
+		$("." + result).append(html);
+		
+	}else{
+		// 초기화
+		$("."+ result).html('');
+	}
+	
+}
+
+
+$(document).ready(function() {
+	
+	//const profile = document.querySelectorAll('#profile');
+	//const btn = document.querySelectorAll('.far fa-edit');
+	
+	
+	
+})
+
+</script>
 
 <c:import url="../template/footer.jsp"/>
 </body>

@@ -45,6 +45,7 @@ public class ProfileController {
 		log.debug("프로필수정 : {}");
 		
 		MemberSession member = (MemberSession) session.getAttribute(SessionConst.LOGIN_MEMBER);
+		member.getName();
 		
 //		member.setId((int) session.getAttribute("id"));
 		member.setName((String) session.getAttribute("name"));
