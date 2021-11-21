@@ -31,11 +31,11 @@
 				</div> <!-- noticeBox -->
 
 				<div class="btnBox">
-					<a class="updateBtn" href="${pageContext.request.contextPath }/admin/notice/update/${notice.id }">
+					<a class="aa" href="${pageContext.request.contextPath }/admin/notice/update/${notice.id }">
 						<button class="btnUpdate">수정</button>
 					</a>
-				
-					<a class="deleteBtn" href="${pageContext.request.contextPath }/admin/notice/delete/${notice.id }">
+					
+					<a href="${pageContext.request.contextPath }/admin/notice/delete/${notice.id }">
 						<button class="btnDelete">삭제</button>
 					</a>
 				</div>			

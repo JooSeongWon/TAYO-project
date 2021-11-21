@@ -57,6 +57,7 @@ font-weight: bold;
     width: 350px;
 }
 </style>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript">
 
 	let currPage = 1;
@@ -104,8 +105,9 @@ font-weight: bold;
 				//child에 class="child" 추가
 				child.classList.add('child');
 
+
 				//child에 HTML(공지사항)정보 추가
-				child.innerHTML = `<span class="date">\${notice.writeDate }</span>
+				child.innerHTML = `<span class="date">\${moment(notice.writeDate).format('YYYY-MM-DD') }</span>
 									<div class="noticeBox">
 									<p class="text">\${notice.content }</p>
 									</div>`;

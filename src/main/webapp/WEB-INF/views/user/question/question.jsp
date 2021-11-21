@@ -30,7 +30,8 @@ section {
 .fa-arrow-down {
 	float: right;
 	cursor: pointer;
-	transition: all 400ms ease;
+ 	transition: all 50ms ease; 
+	
 }
 
 .fa-arrow-down.active {
@@ -39,8 +40,12 @@ section {
 
 .answer {
 	display: block;
-	transition: all 400ms ease;
+    transition: all 20ms linear; 
 	background-color: var(--color-light-grey);
+	
+/* 		transition-property: height, opacity; */
+/* 	transition-duration: 200ms, 200ms; */
+/* 	transition-timing-function: ease; */
 }
 
 .answer.disabled {
@@ -115,21 +120,20 @@ $(document).ready(function(){
 	$("#chatBtn").click( function() {
 		console.log("Btn")
 
-$.ajax({
-url : "${contextPath}/question/service/open",
-data : {},
-type : "POST",
-dataType : "JSON",
-success : function(data) {
-	console.log(data)
-	location.href = "${contextPath}/question/service/" + data;
-
-},
-error : function() {
-	console.log("openChat 메소드 실패");
-}
-});
-});
+	$.ajax({
+	url : "${contextPath}/question/service/open",
+	data : {},
+	type : "POST",
+	dataType : "JSON",
+	success : function(data) {
+		console.log(data)
+		location.href = "${contextPath}/question/service/" + data;
+	},
+	error : function() {
+		console.log("openChat 메소드 실패");
+	}
+	});
+	});
 	
 
 })

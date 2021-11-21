@@ -16,5 +16,7 @@ $("#cancel").click(function() {
 });
 
 $(".btnDelete").click(function() {
+	showModal('오류', '해당 요청을 처리할 수 없습니다.')
 
 });
+
