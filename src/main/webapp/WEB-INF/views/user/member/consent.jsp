@@ -16,7 +16,9 @@
 	<%-- 각자의 내용 작성 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
 	<section>
 
-		<div class="container">
+	<h3>약관 동의</h3>
+	
+		<div class="container"> 
 			<div class="consentbox">
 				<div>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -31,7 +33,7 @@
 				</div>
 			</div>
 				<div class="consent">
-					<div class="consentcheck">서비스 이용약관 동의 (필수)</div>
+					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" />서비스 이용약관 동의 (필수)</div>
 				</div>
 				
 				
@@ -50,10 +52,10 @@
 						magna enim ultrices purus, sed sodales purus diam a diam. Aenean
 						sed odio quis leo sollicitudin semper.</p>
 				</div>
-				<div class="consent">
-					<div class="consentcheck">개인정보 처리방침 동의 (필수)</div>
-				</div>
 			</div>
+				<div class="consent">
+					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" />개인정보 처리방침 동의 (필수)</div>
+				</div>
 			
 			
 			<div class="consentbox">
@@ -70,15 +72,15 @@
 				</div>
 			</div>
 				<div class="consent">
-					<div class="consentcheck">개인정보 마케팅 활용 동의 (필수)</div>
+					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" />개인정보 마케팅 활용 동의 (필수)</div>
 				</div>
 				
 				
 			<div>
-				<div class="allconsent">전체동의</div>
+				<div class="allconsent"><input type="checkbox" class="consentcheckbox" />전체동의</div>
 			</div>
 			<div>
-				<a href="/join">NEXT</a>
+				<a href="/join" class="tayo-button purple">NEXT</a>
 			</div>
 		</div>
 

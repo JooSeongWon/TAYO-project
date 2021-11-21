@@ -26,7 +26,7 @@ function join() {
 // 회원가입에 성공하면 /로 이동
 function joinCallBack(data) {
 	
-	showModal('환영합니다!', '회원가입 완료!!', goMain());
+//	showModal('환영합니다!', '회원가입 완료!!');
 	
 	location.href = "/";
 	
