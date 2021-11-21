@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="fun.tayo.app.dao.ProfileDao">
 
-	<select id="selectMemberById" resultType="Member" parameterType="_int">
-			SELECT M.ID
-			     , M.NAME
-			     , M.EMAIL
-			     , M.FILE_ID AS PROFILE
-			     , M.PHONE
-			     , M.PASSWORD
-			     , UF.SAVED_NAME
-			FROM MEMBER M
-			LEFT OUTER JOIN UPLOAD_FILE UF
-			ON M.FILE_ID = UF.ID
-			WHERE M.ID = #{memberId }
+    <select id="selectMemberById" resultType="Member" parameterType="_int">
+        SELECT ID
+             , NAME
+             , EMAIL
+             , FILE_ID AS PROFILE
+             , PHONE
+             , PASSWORD
+        FROM MEMBER
+        WHERE ID = #{memberId }
 
-	</select>
+    </select>
+
+    <update id="update" parameterType="Member">
+        update MEMBER
+        set NAME     = #{name},
+            PHONE    = #{phone},
+            PASSWORD = #{password}
+        where ID = #{id}
+    </update>
 
 </mapper> 

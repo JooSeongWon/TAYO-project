@@ -7,6 +7,6 @@ public interface ProfileDao {
 
 	Member selectMemberById(int memberId);
 
-	void update(MemberSession member);
+	void update(Member member);
 
 }
