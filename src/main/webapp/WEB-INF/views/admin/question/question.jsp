@@ -27,7 +27,9 @@
 			</span>
 		</div> <!-- questionBox -->
 		
-		<a class="deleteBtn" href="${pageContext.request.contextPath }/admin/question/delete/${question.id}"><i id="deleteBtn" class="fas fa-eraser fa-2x"></i></a>
+<%-- 		<a class="deleteBtn" href="${pageContext.request.contextPath }/admin/question/delete/${question.id}"> --%>
+		<i id="deleteBtn" class="fas fa-eraser fa-2x" data-question-id = "${question.id }"></i>
+<!-- 		</a> -->
 		<div class="questionBox">
 			<span class="answer">
 				<i id="a" class="fas fa-font fa-2x"></i>

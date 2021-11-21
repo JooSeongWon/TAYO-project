@@ -17,8 +17,8 @@ $("#btnUpdate").click(function() {
 	$("form").submit();
 });
 
-$(".btnDelete").click(function() {
+$("#deleteBtn").click(function() {
 	 showModal('삭제', '질문을 삭제 하시겠습니까?', () => {
-		 location.href = `/admin/notice/delete/${this.getAttribute('data-notice-id') }`;
+		 location.href = `/admin/question/delete/${this.getAttribute('data-question-id') }`;
     },()=>{});
 });
