@@ -9,6 +9,7 @@
     <script src="${pageContext.request.contextPath}/resources/js/admin-notice-script.js" defer></script>
     <title>관리자 - 공지사항</title>
 </head>
+
 <body>
 <c:import url="../template/nav.jsp"/>
 
@@ -34,10 +35,9 @@
 					<a class="aa" href="${pageContext.request.contextPath }/admin/notice/update/${notice.id }">
 						<button class="btnUpdate">수정</button>
 					</a>
-					
-					<a href="${pageContext.request.contextPath }/admin/notice/delete/${notice.id }">
-						<button class="btnDelete">삭제</button>
-					</a>
+<%-- 					<a href="${pageContext.request.contextPath }/admin/notice/delete/${notice.id }"> --%>
+						<button class="btnDelete" data-notice-id = "${notice.id }">삭제</button>
+<!-- 					</a> -->
 				</div>			
 			
 				<div class="interval"></div>	
