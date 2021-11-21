@@ -1,11 +1,11 @@
 'use strict'
 
-const consentChkAll = document.querySelector('input[name=consentall]');
+const consentChkAll = document.querySelector('.consentall');
 
 	consentChkAll.addEventListener('change', (e) => {
-    let consentChk = document.querySelectorAll('input[name=consent]');
+    let consentChk = document.querySelectorAll('.consentcheckbox');
     for(let i = 0; i < consentChk.length; i++){
-    	consentChk[i].checked = e.target.checked;
+    	consentChk.checked = e.target.checked;
     }
 });
 

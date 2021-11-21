@@ -33,7 +33,7 @@
 				</div>
 			</div>
 				<div class="consent">
-					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" />서비스 이용약관 동의 (필수)</div>
+					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" value="1"/>서비스 이용약관 동의 (필수)</div>
 				</div>
 				
 				
@@ -54,7 +54,7 @@
 				</div>
 			</div>
 				<div class="consent">
-					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" />개인정보 처리방침 동의 (필수)</div>
+					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" value="2"/>개인정보 처리방침 동의 (필수)</div>
 				</div>
 			
 			
@@ -72,12 +72,12 @@
 				</div>
 			</div>
 				<div class="consent">
-					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" />개인정보 마케팅 활용 동의 (필수)</div>
+					<div class="consentcheck"><input type="checkbox" class="consentcheckbox" value="3."/>개인정보 마케팅 활용 동의 (필수)</div>
 				</div>
 				
 				
 			<div>
-				<div class="allconsent"><input type="checkbox" class="consentcheckbox" />전체동의</div>
+				<div class="allconsent"><input type="checkbox" class="consentall" name="consentall" />전체동의</div>
 			</div>
 			<div>
 				<a href="/join" class="tayo-button purple">NEXT</a>

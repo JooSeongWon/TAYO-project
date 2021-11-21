@@ -9,7 +9,6 @@ const emaildBtn = document.querySelector('#email');
 
 /*클릭 이벤트 부여*/
 loginBtn.addEventListener('click', function() {
-	console.log("qqqqqqqqqqqqqq")
 	
 	const email = document.querySelector('#email').value;
 	const password = document.querySelector('#password').value;
