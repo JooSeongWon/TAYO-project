@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 
 import fun.tayo.app.dao.ProfileDao;
 import fun.tayo.app.dto.Member;
+import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
