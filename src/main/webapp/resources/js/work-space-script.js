@@ -30,7 +30,7 @@ const INDEX_SPEECH_BUBBLE = '54';
 const INDEX_AVATAR_BOX = '51';
 const INDEX_MY_AVATAR_BOX = '52';
 const INDEX_SYSTEM_UI = '100';
-//const INDEX_BOARD = '99';
+const INDEX_NAV_BAR = '99';
 
 
 //웹소켓 상수
