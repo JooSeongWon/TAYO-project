@@ -106,7 +106,10 @@
             </div>
             <i class="far fa-edit" onclick="fnIconClick('phone', this)"></i>
         </div>
-
+		
+		<!-- 비밀번호 쓰고 들어가기 위한 c:if 문법쓰기 -->
+		<c:if test= "${empty member.password }">
+		
         <div class="password profile-field">
             <div class="password__display active">password</div>
             <div class="password__update">
@@ -115,6 +118,7 @@
             </div>
             <i class="far fa-edit" onclick="fnIconClick('password', this)"></i>
         </div>
+        </c:if>
 
     </div>
 
@@ -132,6 +136,8 @@
         update: document.querySelector('.phone__update'),
         isModifying: false
     };
+    
+    //비밀번호 쓰고 들어가기 위한 c:if 문법쓰기 c:문법쓰기
     const password = {
         display: document.querySelector('.password__display'),
         update: document.querySelector('.password__update'),
