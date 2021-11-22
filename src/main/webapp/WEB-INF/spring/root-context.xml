@@ -35,6 +35,26 @@
 		<property name="configLocation" value="classpath:application-config/mybatis-config.xml"/>
 	</bean>
 
+	<!-- Gmail -->
+	<!-- 메일 보내기 (SEND) -->	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="MetarBusTayo@gmail.com" />
+		<property name="password" value="Metarkh1@" />
+		<property name="defaultEncoding" value="utf-8" />
+		
+		 <!-- email 요청시는 SMTP -->
+		<property name="javaMailProperties">
+			<props>		
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="fun.tayo.app.dao"/>
 	</bean>
