@@ -46,8 +46,9 @@ $(document).ready(function() {
 		         "GRADE" : Message.admin.GRADE,
 		         "FILE_ID" : Message.admin.FILE
 		      }
-		      if(data.GRAND == "A"){
-		    	reset(data);  
+		      if(Message.admin.GRADE == 'A'){
+		    	reset(data)
+		    	return;
 		      } else {
 		      	appendList(data);
 		      }
@@ -73,6 +74,7 @@ $(document).ready(function() {
 	}
 	
 	function reset(list) {
+		console.log("넘어오니?")
 		let questionChatId = list.QUESTION_CHAT_ID;
 		let IdDiv = document.getElementById(questionChatId);
 		let listDiv = IdDiv.firstChild;
@@ -84,7 +86,8 @@ $(document).ready(function() {
         let sendDay = moment(list.SEND_DATE).format('LT')
 		
 		dateSpan.innerText = sendDay;
-		document.getElementById("divchatList").appendChild(IdDiv);
+        let divChatList = document.getElementById("divchatList");
+        divChatList.prepend(IdDiv);
 	}
 	
 	function appendList(list) {
