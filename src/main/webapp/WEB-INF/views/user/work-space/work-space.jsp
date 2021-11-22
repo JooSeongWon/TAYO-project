@@ -33,6 +33,7 @@
     <script src="${pageContext.request.contextPath}/resources/js/modal.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/sockjs.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/work-space-script.js" defer></script>
+    <script src="${pageContext.request.contextPath}/resources/js/work-space-board-script.js" defer></script>
 
     <script>
         const roomId = ${roomId};
@@ -104,6 +105,20 @@
         <div class="my-cam-title"><i class="fas fa-play-circle"></i>&nbsp;ON AIR<i
                 class="fas fa-expand-arrows-alt my-cam-full"></i></div>
         <video src="" class="my-cam" playsinline autoplay width="320" height="180" muted ></video>
+    </div>
+
+    <%--게시판 네비게이션--%>
+    <div class="navbar tayo-scroll-bar">
+        <div class="title">Team Board</div>
+        <div class="online-list">
+            <div class="list__title">online</div>
+            <div class="list__content tayo-scroll-bar"></div>
+        </div>
+        <div class="board-list">
+            <div class="list__title">board</div>
+            <div class="list__content"></div>
+        </div>
+        <div class="navbar__footer"><img src="${pageContext.request.contextPath}/resources/img/logo_mini.png" alt="logo" width="200"></div>
     </div>
 </section>
 

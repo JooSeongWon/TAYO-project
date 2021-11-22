@@ -19,7 +19,7 @@ public class HomeController {
     public String main(Model model) {
 
         model.addAttribute("path", path);
-        return "user/sample/user-template";
+        return "home";
     }
 
     @GetMapping("/admin")

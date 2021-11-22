@@ -11,6 +11,8 @@ import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpSession;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -27,7 +29,7 @@ public class ProfileServiceImpl implements ProfileService {
 	
 	@Override
 	@Transactional
-	public ResponseData update(Member member, String target, String value) {
+	public ResponseData update(MemberSession memberSession, Member member, String target, String value) {
 
 		final ResponseData validation = isValidation(target, value);
 		if(!validation.getResult()) {
@@ -48,6 +50,8 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 
 		profileDao.update(member);
+		memberSession.setProfile(member.getProfile());
+		memberSession.setName(member.getName());
 		return validation;
 	}
 

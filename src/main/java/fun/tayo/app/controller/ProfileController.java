@@ -54,12 +54,16 @@ public class ProfileController {
 
     @ResponseBody
     @PostMapping("/profile")
-    public ResponseData updateProfile(@SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession, @RequestParam String target, @RequestParam String value) {
+    public ResponseData updateProfile(
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
+            @RequestParam String target,
+            @RequestParam String value
+    ) {
 
         log.debug("target {} value {}", target, value);
 
         final Member member = profileService.info(memberSession.getId());
-        return profileService.update(member, target, value);
+        return profileService.update(memberSession, member, target, value);
     }
     
 
