@@ -554,6 +554,7 @@ section {
 .list__content {
     overflow-y: scroll;
     display: flex;
+    flex-direction: column;
     width: 200px;
     height: 200px;
     margin: auto;
@@ -561,8 +562,118 @@ section {
 
     border: 2px solid var(--color-light-grey);
 }
+.board-list {
+    margin-top: 16px;
+}
 
 .board-list > .list__content {
     overflow-y: auto;
     flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: center;
+    font-size: var(--font-small);
+}
+
+.link {
+    cursor: pointer;
+    font-size: var(--font-small);
+    position: relative;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.link--carme {
+    font-family: angie-sans, sans-serif;
+    font-size: 1.1rem;
+}
+
+.link--carme::before {
+    display: none;
+}
+
+.link__graphic {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+}
+
+.link__graphic--stroke path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+}
+
+.link:hover .link__graphic--stroke path {
+    stroke-dashoffset: 0;
+}
+
+.link__graphic--scribble {
+    top: 100%;
+}
+
+.link__graphic--scribble path {
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.link:hover .link__graphic--scribble path {
+    transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
+    transition-duration: 0.3s;
+}
+
+
+.online-member {
+    padding: 8px 16px;
+    display: flex;
+    width: 100%;
+}
+
+.online__img {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--color-light-grey);
+    transition: all 500ms ease-in-out;
+}
+
+.online__img.user {
+    border-color: var(--color-green);
+}
+
+.online__nick {
+    font-size: var(--font-small);
+    line-height: 30px;
+    text-align: center;
+    color: var(--color-dark-grey);
+    flex-grow: 1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.tayo-scroll-bar::-webkit-scrollbar-thumb {
+    background-color: #656565;
+}
+
+.tayo-scroll-bar {
+    scrollbar-color: #656565 transparent;
+}
+
+.new {
+    display: none;
+    color: var(--color-white);
+    background-color: var(--color-orange);
+    font-size: 14px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.active > span > .new {
+    display: inline-block;
 }

@@ -11,6 +11,12 @@ public interface AdminMemberDao {
 
 	int selectCntAll(Paging paramData);
 
+	Member selectMemberById(int memberId);
+
+	List<Member> selectList(Paging paging, Member member1);
+
+	void updateMember(Member member);
+
 
 //	List<Member> selectAdminMember(Paging paging);
 //

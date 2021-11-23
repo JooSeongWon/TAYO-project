@@ -11,6 +11,12 @@ public interface AdminMemberService {
 	
 	Paging getPaging(Paging paramData);
 
+	Member getMember(int memberId);
+
+	List<Member> list(Paging paging, Member member1);
+
+	void update(Member member1);
+
 
 //	List<Member> getList(Paging paging);
 //

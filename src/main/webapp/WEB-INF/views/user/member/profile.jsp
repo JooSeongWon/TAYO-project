@@ -81,6 +81,15 @@
     <h1 class="tayo-under-line">My profile</h1>
 
     <div id="profile">
+		<c:if test= "${empty member.password }">
+			<h3>조회된 비밀번호가 없습니다.</h3>
+		</c:if>
+		
+		<c:if test= "${not empty member.password }">
+			<div class="password profile">
+<!-- 				<input type="password" class="tayp-input password__check" placeholder="check"> -->
+			</div>
+		</c:if>
 
         <c:if test="${empty member.profile}">
             <img class="avatar" src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="프로필 없음">
@@ -106,7 +115,9 @@
             </div>
             <i class="far fa-edit" onclick="fnIconClick('phone', this)"></i>
         </div>
-
+		
+		<!-- 비밀번호 쓰고 들어가기 위한 c:if 문법쓰기 -->
+		
         <div class="password profile-field">
             <div class="password__display active">password</div>
             <div class="password__update">
@@ -132,6 +143,14 @@
         update: document.querySelector('.phone__update'),
         isModifying: false
     };
+    
+    //비밀번호 쓰고 들어가기 위한 c:if 문법쓰기
+    <c:if test= "${empty member.password }">
+    
+    </c:if>
+    <c:if test= "${not empty member.password }">
+    	
+    </c:if>
     const password = {
         display: document.querySelector('.password__display'),
         update: document.querySelector('.password__update'),

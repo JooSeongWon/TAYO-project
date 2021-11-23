@@ -19,5 +19,18 @@
     <select id="selectCntAll" resultType="int" parameterType="fun.tayo.app.common.util.Paging">
 	  		SELECT count(*) FROM member
 	</select>
+	
+	<select id="selectMemberById" resultType="Member" parameterType="_int">
+		SELECT id, grade, ban
+		FROM MEMBER
+		WHERE id = #{memberId}
+	</select>
 
+	<update id="updateMember" parameterType="Member">
+		UPDATE MEMBER
+		SET grade = #{grade}, ban = #{ban}
+		WHERE id = ${id}
+	
+	</update>
+	
 </mapper>
