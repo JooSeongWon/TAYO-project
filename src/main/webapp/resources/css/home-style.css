@@ -107,7 +107,7 @@ section {
 	z-index: 10;
 }
 
-.input-items:hover > a {
+.input-items:hover {
 	animation: MoveScaleUpInitial 0.3s forwards, MoveScaleUpEnd 0.3s forwards 0.3s;
 }
 

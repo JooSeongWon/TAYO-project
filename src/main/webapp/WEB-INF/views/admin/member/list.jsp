@@ -76,7 +76,6 @@
 				<c:when test="${fn:contains(member.grade,'S')}">
 					<option value="S" selected>S</option>
 				</c:when>
-
 			</c:choose>
 
 		</td>
