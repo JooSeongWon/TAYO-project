@@ -34,6 +34,23 @@ public class AdminMemberServiceImple implements AdminMemberService {
 		
 			return paging;
 		}
+
+	@Override
+	public Member getMember(int memberId) {
+		
+		return adminMemberDao.selectMemberById(memberId);
+	}
+
+	@Override
+	public List<Member> list(Paging paging, Member member1) {
+
+		return adminMemberDao.selectList(paging, member1);
+	}
+
+	@Override
+	public void update(Member member) {
+		adminMemberDao.updateMember(member);
+	}
 	
 	
 //	
