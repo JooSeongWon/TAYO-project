@@ -1,6 +1,7 @@
 package fun.tayo.app.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dto.Member;
@@ -15,7 +16,9 @@ public interface AdminMemberDao {
 
 	List<Member> selectList(Paging paging, Member member1);
 
-	void updateMember(Member member);
+	void updateGrade(Map<String, Object> params);
+	
+	void updateBan(Map<String, Object> params);
 
 
 //	List<Member> selectAdminMember(Paging paging);
