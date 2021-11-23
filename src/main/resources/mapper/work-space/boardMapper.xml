@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fun.tayo.app.dao.BoardDao">
+
+    <resultMap id="postSimple" type="Board">
+        <id property="id" column="id"/>
+        <result property="rowNumber" column="row_number"/>
+        <result property="title" column="title"/>
+        <result property="writeDate" column="write_date"/>
+        <result property="planDate" column="plan_date"/>
+        <result property="uploadFileId" column="upload_file_id"/>
+        <result property="read" column="read"/>
+
+        <association property="member" javaType="MemberSession">
+            <id property="id" column="member_id"/>
+            <result property="name" column="member_name"/>
+            <result property="profile" column="member_profile"/>
+        </association>
+    </resultMap>
+
+    <select id="selectTotalCount" resultType="_int">
+        select count(*)
+        from BOARD
+        where WORK_SPACE_ID = #{workSpaceId}
+          and CATEGORY_ID = #{categoryId}
+    </select>
+
+    <select id="selectsByPagingBoardAndMember" resultMap="postSimple">
+        select V.*
+        from (
+                 select ROWNUM                       row_number,
+                        B.id,
+                        B.member_id,
+                        title,
+                        write_date,
+                        plan_date,
+                        M.NAME                       member_name,
+                        M.FILE_ID                    profile,
+                        NVL2(CB.MEMBER_ID, 'Y', 'N') read
+                 FROM (
+                          select id,
+                                 member_id,
+                                 title,
+                                 write_date,
+                                 plan_date
+                          from BOARD
+                          where CATEGORY_ID = #{categoryId}
+                            and WORK_SPACE_ID = #{workSpaceId}
+                          order by id
+                      ) B
+                          INNER JOIN MEMBER M on M.ID = B.MEMBER_ID
+                          LEFT OUTER JOIN CHECKED_BOARD CB on B.ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
+             ) V
+        where row_number between #{paging.startNo} and #{paging.endNo}
+        order by decode(read, 'N', 1), row_number desc
+    </select>
+</mapper>
