@@ -9,4 +9,6 @@ public interface ProfileDao {
 
 	void update(Member member);
 
+	boolean selectByPassword(String memberPassword);
+
 }

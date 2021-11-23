@@ -13,4 +13,6 @@ public interface ProfileService {
 
 	ResponseData update(MemberSession memberSession, Member member, String target, String value);
 
+//	boolean checkPw(String memberPassword);
+
 }

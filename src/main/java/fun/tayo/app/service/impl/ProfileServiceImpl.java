@@ -1,17 +1,16 @@
 package fun.tayo.app.service.impl;
 
-import fun.tayo.app.dto.ResponseData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import fun.tayo.app.dao.ProfileDao;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberSession;
-import fun.tayo.app.dto.UploadFile;
+import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
 
@@ -77,5 +76,19 @@ public class ProfileServiceImpl implements ProfileService {
 
 		return new ResponseData(true, "ok");
 	}
+	
+//	@Override
+//	public boolean checkPw(String memberPassword) {
+//		
+//		if( profileDao.selectByPassword(memberPassword) != null) {
+//			log.debug("비밀번호 확인");
+//			
+//			return true;
+//			
+//		}
+//		
+//		return false;
+//		
+//	}
 	
 }
