@@ -30,6 +30,7 @@
     
 </head>
 <body>
+<div class="page-head">
 <div class="top-class">
 	<div style="height: 100px;"></div>
 	<div class="wave-box">
@@ -40,7 +41,6 @@
 		</div>
 	</div>
 </div>
-<div class="page">
 <section>
 	<div class="logo-box">
 		<div class="logo-items">
@@ -56,6 +56,10 @@
 		</c:if>
 		</div>
 	</div>
+</section>
+</div>
+<div class="page">
+<section>
 	<div class="board-box">
 		<div class="board-title">타요 소개 적어야함</div>
 		<div class="board-list">

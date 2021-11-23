@@ -1,8 +1,14 @@
 @charset "UTF-8";
 
-body {
-	justify-content: flex-start;
-	flex-direction: column;
+
+html {
+	overflow: hidden;
+}
+
+html, body {
+    display: block;
+    width: 100%;
+    margin: 0;
 }
 
 body::-webkit-scrollbar {
@@ -37,14 +43,25 @@ body::-webkit-scrollbar {
 }
 
 .page {
-    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.page-head {
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
 section {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 30px 0px 0px 0px;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
 }
 
 .logo-box {
@@ -163,6 +180,7 @@ section {
 
 	background: #F8F8F8;
 	width: 100%;
+	height: 100%;
 	padding: 2%;
 }
 
@@ -205,4 +223,7 @@ section {
 .input-items > a { font-size: 18px;}	
 .board-title { font-size: var(--font-regular)}
 .board-content { font-size: var(--font-small)}
+}
+@media screen and (min-width: 1600px) {
+	html, body {height: 100%;}
 }

@@ -1,5 +1,8 @@
 package fun.tayo.app.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -11,8 +14,6 @@ import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -75,6 +76,22 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 
 		return new ResponseData(true, "ok");
+	}
+	
+	@Override
+	public boolean isSocial(int memberId) {
+		int cnt = profileDao.selectCntHasPassword(memberId);
+		return cnt == 0;
+	}
+	
+	@Override
+	public boolean checkPassword(int memberId, String password) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("memberId", memberId);
+		params.put("password", password);
+		int result = profileDao.selectCntByIdAndPassword(params);
+		
+		return result > 0;
 	}
 	
 //	@Override
