@@ -26,10 +26,17 @@
 		WHERE id = #{memberId}
 	</select>
 
-	<update id="updateMember" parameterType="Member">
+	<update id="updateGrade" parameterType="map">
 		UPDATE MEMBER
-		SET grade = #{grade}, ban = #{ban}
-		WHERE id = ${id}
+		SET grade = #{grade}
+		WHERE id = #{id}
+	
+	</update>
+	
+	<update id="updateBan" parameterType="map">
+		UPDATE MEMBER
+		SET ban = #{ban}
+		WHERE id = #{id}
 	
 	</update>
 	
