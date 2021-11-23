@@ -5,6 +5,11 @@ modalBackGroundDomObj.style.top = '0';
 modalBackGroundDomObj.style.width = '100vw';
 modalBackGroundDomObj.style.height = '100vh';
 
+Number.prototype.fillZero = function (width) {
+    let n = String(this);//문자열 변환
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;//남는 길이만큼 0으로 채움
+}
+
 //노드
 const miceBtn = document.getElementById('mice');
 const camBtn = document.getElementById('cam');
@@ -442,6 +447,23 @@ class Avatar {
                 openFullscreen(user.video);
             }
         });
+
+
+        //온라인 멤버
+        const onlineMember = document.createElement('div');
+        onlineMember.classList.add('online-member');
+        const onlineMemberAvatar = document.createElement('img');
+        onlineMemberAvatar.classList.add('online__img');
+        onlineMemberAvatar.src = this.profile.src;
+        const onlineMemberNick = document.createElement('div');
+        onlineMemberNick.classList.add('online__nick');
+        onlineMemberNick.innerText = `${this.userName} #${this.userId.fillZero(4)}`;
+
+        onlineMember.appendChild(onlineMemberAvatar);
+        onlineMember.appendChild(onlineMemberNick);
+
+        document.querySelector('.list__content').appendChild(onlineMember);
+        this.onlineMember = onlineMember;
     }
 
     talk(text) {
@@ -735,6 +757,7 @@ class Avatar {
         }
         screen.removeChild(this.videoWrap);
         screen.removeChild(this.avatarBox);
+        document.querySelector('.list__content').removeChild(this.onlineMember);
     }
 }
 
