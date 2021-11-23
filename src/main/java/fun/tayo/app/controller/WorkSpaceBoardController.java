@@ -35,7 +35,8 @@ public class WorkSpaceBoardController {
     ){
         //접속자가 팀멤버가 맞는지 체크
         if(!boardService.isTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
-            throw new RuntimeException("팀멤버 아님 게시판 조회 권한 없음.");
+            log.error("팀멤버 아님 게시판 조회 권한 없음.");
+            throw new RuntimeException("this isn't team member");
         }
         
         //페이징에따라 List 모델에 삽입

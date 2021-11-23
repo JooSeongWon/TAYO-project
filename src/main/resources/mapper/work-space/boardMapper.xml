@@ -32,30 +32,34 @@
     <select id="selectsByPagingBoardAndMember" resultMap="postSimple">
         select V.*
         from (
-                 select ROWNUM                       row_number,
-                        B.id,
-                        B.member_id,
+                 select ROWNUM  row_number,
+                        id,
+                        member_id,
                         title,
                         write_date,
                         plan_date,
-                        M.NAME                       member_name,
-                        M.FILE_ID                    profile,
-                        NVL2(CB.MEMBER_ID, 'Y', 'N') read
+                        NAME    member_name,
+                        FILE_ID profile,
+                        read
+
                  FROM (
-                          select id,
-                                 member_id,
+                          select BOARD.id,
+                                 BOARD.member_id,
                                  title,
                                  write_date,
-                                 plan_date
+                                 plan_date,
+                                 M.NAME,
+                                 M.FILE_ID,
+                                 NVL2(CB.MEMBER_ID, 'Y', 'N') read
                           from BOARD
+                                   LEFT OUTER JOIN CHECKED_BOARD CB on ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
+                                   INNER JOIN MEMBER M on M.ID = BOARD.MEMBER_ID
                           where CATEGORY_ID = #{categoryId}
                             and WORK_SPACE_ID = #{workSpaceId}
-                          order by id
+                          order by read, ID desc
                       ) B
-                          INNER JOIN MEMBER M on M.ID = B.MEMBER_ID
-                          LEFT OUTER JOIN CHECKED_BOARD CB on B.ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
              ) V
         where row_number between #{paging.startNo} and #{paging.endNo}
-        order by decode(read, 'N', 1), row_number desc
+        order by row_number
     </select>
 </mapper>
