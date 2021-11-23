@@ -61,21 +61,25 @@
 <div class="page">
 <section>
 	<div class="board-box">
-		<div class="board-title">타요 소개 적어야함</div>
+		<div class="board-title">Welcome Tayo!</div>
 		<div class="board-list">
 			<div class="board-items">
 				<img src="${pageContext.request.contextPath}/resources/img/logo2.png" alt="logo" class="board-img">
 			</div>
 			<div class="board-content">
-				이이?
+				<p>같은 공간에 있는 팀원들과 편하게 대화해요!</p>
+				같은 가상공간에서 상대의 모습을 보고 쉽고 빠르게 대화할 수 있습니다.
+				비대면 회의, 프로젝트에서의 커뮤니케이션 어려움을 해소합니다.
 			</div>
 		</div>
 		<div class="board-list">
+			<div class="board-content">
+				<p>같은 공간에 있는 팀원들과 편하게 대화해요!</p>
+				같은 가상공간에서 상대의 모습을 보고 쉽고 빠르게 대화할 수 있습니다.
+				비대면 회의, 프로젝트에서의 커뮤니케이션 어려움을 해소합니다.
+			</div>
 			<div class="board-items">
 				<img src="${pageContext.request.contextPath}/resources/img/logo2.png" alt="logo" class="board-img">
-			</div>
-			<div class="board-content">
-				이이?
 			</div>
 		</div>
 	</div>

@@ -170,11 +170,16 @@ section {
 }
 
 
-.board-title { font-size: var(--font-medium)}
+.board-title { 
+	
+	font-size: var(--font-large);
+	
+	padding: 2%;
+	
+	}
 
 .board-box {
 	display: flex;
-	flex-direction: column;
 	flex-direction: column;
 	align-items: center;
 
@@ -194,10 +199,14 @@ section {
 }
 
 .board-content {
-	font-size: var(--font-regular);
+	font-size: 18px;
 	text-align: center;
 	flex-basis: 50%;
 	padding: 2%;
+}
+
+.board-content > p {
+	
 }
 
 .board-items {
@@ -213,17 +222,18 @@ section {
 	width: 100%
 }
 
-@media screen and (max-width: 1000px) {
-.input-items > a { font-size: var(--font-small)}
-.board-title { font-size: var(--font-small)}	
-.board-content { font-size: var(--font-regular)}
-}
-
 @media screen and (max-width: 1500px) {
 .input-items > a { font-size: 18px;}	
-.board-title { font-size: var(--font-regular)}
+.board-title { font-size: var(--font-medium)}	
 .board-content { font-size: var(--font-small)}
 }
+
+@media screen and (max-width: 900px) {
+.input-items > a { font-size: var(--font-small)}
+.board-title { font-size: var(--font-regular)}
+.board-content { font-size: 12px;}
+}
+
 @media screen and (min-width: 1600px) {
 	html, body {height: 100%;}
 }
