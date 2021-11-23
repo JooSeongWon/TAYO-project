@@ -12,7 +12,9 @@ public interface ProfileService {
 	Member info(int memberId);
 
 	ResponseData update(MemberSession memberSession, Member member, String target, String value);
+	
+	boolean isSocial(int memberId);
 
-//	boolean checkPw(String memberPassword);
+	boolean checkPassword(int memberId, String password);
 
 }
