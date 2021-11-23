@@ -1,7 +1,8 @@
 package fun.tayo.app.dao;
 
+import java.util.Map;
+
 import fun.tayo.app.dto.Member;
-import fun.tayo.app.dto.MemberSession;
 
 public interface ProfileDao {
 
@@ -9,6 +10,8 @@ public interface ProfileDao {
 
 	void update(Member member);
 
-	boolean selectByPassword(String memberPassword);
+	int selectCntByIdAndPassword(Map<String, Object> params);
+	
+	int selectCntHasPassword(int memberId);
 
 }

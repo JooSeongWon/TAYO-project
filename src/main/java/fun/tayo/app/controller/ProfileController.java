@@ -24,36 +24,66 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileController {
 
     private final ProfileService profileService;
-
+    
     @GetMapping("/profile")
-    public String profile(HttpSession session, Model model) {
+    public String showCheckPasswordForm(HttpSession session) {
     	
-//    	@RequestParam Member memberpassword
-//    	boolean result = profileService.checkPw(password);
-//    	if(!result) {
-//    		return "rediect:/";
-//    	} else {
-    		
-    		MemberSession member = (MemberSession) session.getAttribute(SessionConst.LOGIN_MEMBER);
-    		log.debug("session : {}", session);
-    		log.debug("/profile : {}", member.getId());
-    		
-    		//로그인된 사용자의 정보 조회
-    		Member memberInfo = profileService.info(member.getId());
-    		log.debug("조회결과 info {}", memberInfo);
-    		
-    		//사용자의 정보, 모델값 전달
-    		model.addAttribute("member", memberInfo);
-    		System.out.println("========" + memberInfo);
-    		
-    		return "user/member/profile";
-//    	}
+    	MemberSession memberSession = (MemberSession) session.getAttribute(SessionConst.LOGIN_MEMBER);
+    	if(session.getAttribute(SessionConst.PROFILE_CHECK_PW) != null ) {
+    		session.setAttribute(SessionConst.PROFILE_CHECK_PW, null);
+    	} 
     	
+    	if(profileService.isSocial(memberSession.getId())) { //소셜회원
+    		session.setAttribute(SessionConst.PROFILE_CHECK_PW, true);
+    		return "redirect:/profile/update";
+    	} 
+    	
+    	//비밀번호 체크 필요
+    	return "user/member/profile";
+    }
+    
+    @ResponseBody
+    @PostMapping("/profile")
+    public ResponseData checkPassword(HttpSession session, String password) {
+    	
+    	MemberSession memberSession = (MemberSession) session.getAttribute(SessionConst.LOGIN_MEMBER);
+    	
+    	if(profileService.checkPassword(memberSession.getId(), password)) {
+    		session.setAttribute(SessionConst.PROFILE_CHECK_PW, true);
+    		return new ResponseData(true, "ok");
+    	} 
+    	
+		return new ResponseData(false, "비밀번호가 일치하지 않습니다.");
+    	
+    }
+    
+
+    @GetMapping("/profile/update")
+    public String profileForm(HttpSession session, Model model) {
+    	
+    	//url 직접 접근 방지
+    	if(session.getAttribute(SessionConst.PROFILE_CHECK_PW) == null) {
+    		return "redirect:/profile";
+    	}
+
+    	MemberSession member = (MemberSession) session.getAttribute(SessionConst.LOGIN_MEMBER);
+    	log.debug("session : {}", session);
+    	log.debug("/profile : {}", member.getId());
+
+    	//로그인된 사용자의 정보 조회
+    	Member memberInfo = profileService.info(member.getId());
+    	log.debug("조회결과 info {}", memberInfo);
+
+    	//사용자의 정보, 모델값 전달
+    	model.addAttribute("member", memberInfo);
+    	System.out.println("========" + memberInfo);
+
+    	return "user/member/update";
 
     }
 
     @ResponseBody
-    @PostMapping("/profile")
+    @PostMapping("/profile/update")
     public ResponseData updateProfile(
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
             @RequestParam String target,
