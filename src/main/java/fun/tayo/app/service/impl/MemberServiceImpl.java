@@ -4,10 +4,14 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import fun.tayo.app.common.SessionConst;
+import fun.tayo.app.common.util.MailHandler;
+import fun.tayo.app.common.util.TempKey;
 import fun.tayo.app.dao.MemberDao;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberLoginParam;
@@ -26,6 +30,8 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired ServletContext context;
 	
 	private final MemberDao memberDao;
+	
+	private JavaMailSender mailSender;
 	
 	public ResponseData login(MemberLoginParam param, HttpSession session) {
 		
@@ -125,5 +131,37 @@ public class MemberServiceImpl implements MemberService{
 	public Integer getProfile(Integer memberId){
 		return memberDao.selectProfileById(memberId);
 		}
+	
+	@Override
+	@Transactional
+	public void create(Member member) {
+		
+//		memberDao.create(member);
+//
+//		// 임의의 authkey 생성
+//		String authkey = new TempKey().getKey(50, false);
+//
+////		member.setAuthkey(authkey);
+//		memberDao.updateAuthkey(member);
+//
+//		// mail 작성 관련 
+//		MailHandler sendMail = new MailHandler(mailSender);
+//
+//		sendMail.setSubject("[Hoon's Board v2.0] 회원가입 이메일 인증");
+//		sendMail.setText(new StringBuffer().append("<h1>[이메일 인증]</h1>")
+//				.append("<p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
+////				.append("<a href='http://localhost:8080/user/joinConfirm?uid=")
+////				.append(member.getUid())                                                 수정하기
+//				.append("&email=")
+//				.append(member.getEmail())
+//				.append("&authkey=")
+//				.append(authkey)
+//				.append("' target='_blenk'>이메일 인증 확인</a>")
+//				.toString());
+//		sendMail.setFrom("관리자 ", "관리자명");
+//		sendMail.setTo(member.getEmail());
+//		sendMail.send();
+//		
+	}
 	
 }

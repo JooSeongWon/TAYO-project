@@ -20,4 +20,6 @@ public interface MemberService {
 	
 	Integer getProfile(Integer memberId);
 
+	void create(Member member);
+
 }
