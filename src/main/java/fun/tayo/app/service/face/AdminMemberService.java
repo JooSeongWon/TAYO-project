@@ -4,6 +4,7 @@ import java.util.List;
 
 import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dto.Member;
+import fun.tayo.app.dto.ResponseData;
 
 public interface AdminMemberService {
 
@@ -15,8 +16,10 @@ public interface AdminMemberService {
 
 	List<Member> list(Paging paging, Member member1);
 
-	void update(Member member1);
-
+	void updateGrade(int memberId, char grade);
+	
+	void updateBan(int memberId, char ban);
+	
 
 //	List<Member> getList(Paging paging);
 //
