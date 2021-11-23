@@ -3,10 +3,31 @@
 <!doctype html>
 <html lang="ko">
 <head>
-    <c:import url="user/template/head-meta.jsp"/>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="description" content="메타버스 가상 코딩공간 타요 입니다.">
+
+
+<%-- 아이콘 --%>
+<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/img/favicon.png"/>
+
+<%-- 자바스크립트 --%>
+<script src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js" ></script>
+<script src="${pageContext.request.contextPath}/resources/js/modal.js" defer></script>
+<script src="${pageContext.request.contextPath}/resources/js/home.js" defer></script>
+
+<%-- 스타일시트 --%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common-style.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/user-style.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/home-style.css">
+
+<%-- fontawesome --%>
+<script src="https://kit.fontawesome.com/0d232bdc2d.js" crossorigin="anonymous"></script>
+
     <title>타요 - 메타버스 코딩공간</title>
-    <link rel="stylesheet" href="https://use.typekit.net/rnz2bks.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/home-style.css">
+    
 </head>
 <body>
 <div class="top-class">
@@ -26,12 +47,12 @@
 			<img src="${pageContext.request.contextPath}/resources/img/logo2.png" alt="logo" class="logo">
 		</div>
 		<div class="input-box">
-		<c:if test="${empty loginMember}">	
-			<div class="input-items"><a href="${pageContext.request.contextPath}/login">login</a></div>
-			<div class="input-items"><a href="${pageContext.request.contextPath}/join">sign up</a></div>
+		<c:if test="${empty loginMember}">
+			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/login';"><a  href="${pageContext.request.contextPath}/login">login</a></div>
+			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/join';"><a href="${pageContext.request.contextPath}/join">sign up</a></div>
 		</c:if>
 		<c:if test="${not empty loginMember}">	
-			<div class="input-items"><a href="${pageContext.request.contextPath}/work-spaces">start now</a></div>
+			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/work-spaces';"><a href="${pageContext.request.contextPath}/work-spaces">start now</a></div>
 		</c:if>
 		</div>
 	</div>
