@@ -30,36 +30,39 @@
     </select>
 
     <select id="selectsByPagingBoardAndMember" resultMap="postSimple">
-        select V.*
-        from (
-                 select ROWNUM  row_number,
-                        id,
-                        member_id,
-                        title,
-                        write_date,
-                        plan_date,
-                        NAME    member_name,
-                        FILE_ID member_profile,
-                        read
+        select *
+        from (select ROWNUM rnum, V.*
+              from (
+                       select ROWNUM  row_number,
+                              id,
+                              member_id,
+                              title,
+                              write_date,
+                              plan_date,
+                              NAME    member_name,
+                              FILE_ID member_profile,
+                              read
 
-                 FROM (
-                          select BOARD.id,
-                                 BOARD.member_id,
-                                 title,
-                                 write_date,
-                                 plan_date,
-                                 M.NAME,
-                                 M.FILE_ID,
-                                 NVL2(CB.MEMBER_ID, 'Y', 'N') read
-                          from BOARD
-                                   LEFT OUTER JOIN CHECKED_BOARD CB on ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
-                                   INNER JOIN MEMBER M on M.ID = BOARD.MEMBER_ID
-                          where CATEGORY_ID = #{categoryId}
-                            and WORK_SPACE_ID = #{workSpaceId}
-                          order by read, ID desc
-                      ) B
-             ) V
-        where row_number between #{paging.startNo} and #{paging.endNo}
-        order by row_number
+                       FROM (
+                                select BOARD.id,
+                                       BOARD.member_id,
+                                       title,
+                                       write_date,
+                                       plan_date,
+                                       M.NAME,
+                                       M.FILE_ID,
+                                       NVL2(CB.MEMBER_ID, 'Y', 'N') read
+                                from BOARD
+                                         LEFT OUTER JOIN CHECKED_BOARD CB on ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
+                                         INNER JOIN MEMBER M on M.ID = BOARD.MEMBER_ID
+                                where CATEGORY_ID = #{categoryId}
+                                  and WORK_SPACE_ID = #{workSpaceId}
+                                order by ID desc
+                            ) B
+                       order by read, row_number
+                   ) V
+             ) V2
+        where rnum between #{paging.startNo} and #{paging.endNo}
+        order by rnum
     </select>
 </mapper>
