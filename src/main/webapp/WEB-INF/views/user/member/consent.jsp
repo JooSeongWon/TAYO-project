@@ -6,7 +6,7 @@
 <c:import url="../template/head-meta.jsp" />
 <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
 <title>타요 - 약관 동의</title>
-
+<script src="${pageContext.request.contextPath}/resources/js/consent.js" defer></script>
 <%-- 스타일 시트 --%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/consent-style.css">
 </head>
@@ -79,8 +79,8 @@
 			<div>
 				<div class="allconsent"><input type="checkbox" class="consentall" name="consentall" />전체동의</div>
 			</div>
-			<div>
-				<a href="/join" class="tayo-button purple">NEXT</a>
+			<div class="tayo-button purple nextBtn">
+				NEXT
 			</div>
 		</div>
 

@@ -1,11 +1,21 @@
 'use strict'
 
-const consentChkAll = document.querySelector('.consentall');
+let consentall = document.querySelector('.consentall');
+let consentcheckbox = document.querySelectorAll('.consentcheckbox');
+let nextBtn = document.querySelector('.nextBtn');
 
-	consentChkAll.addEventListener('change', (e) => {
-    let consentChk = document.querySelectorAll('.consentcheckbox');
-    for(let i = 0; i < consentChk.length; i++){
-    	consentChk.checked = e.target.checked;
-    }
+consentall.addEventListener('click', function(){
+	$(consentcheckbox).prop('checked', this.checked);
+	console.log($(consentcheckbox).is(":checked"))
+})
+
+nextBtn.addEventListener('click',function() {
+	if($('.consentcheckbox:checked').length > 2){
+		console.log("성공")
+		location.href = '/join';
+	}else{
+		console.log("실패")
+		showModal("Tayo", "이용약관을 확인해주세요")
+	}
+	
 });
-
