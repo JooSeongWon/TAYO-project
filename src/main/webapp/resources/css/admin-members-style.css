@@ -1,3 +1,11 @@
 .change {
 	width:45px;
 }
+
+#btnSearch {
+	width: 45px;
+	height: 25px;
+	background: #4b4b4d;
+	border-radius: 4px;
+    color: var(--color-white);
+}
