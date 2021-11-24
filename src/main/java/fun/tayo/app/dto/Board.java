@@ -17,6 +17,7 @@ public class Board {
     private String planDate;
     private Integer uploadFileId;
     private boolean read;
+    private Integer commentsCnt;
 
     private MemberSession member;
     private List<Comments> commentsList;

@@ -28,6 +28,7 @@
         <result property="planDate" column="plan_date"/>
         <result property="uploadFileId" column="upload_file_id"/>
         <result property="read" column="read"/>
+        <result property="commentsCnt" column="comments_cnt"/>
 
         <association property="member" resultMap="memberSimple" columnPrefix="member_"/>
         <collection property="commentsList" resultMap="comments" columnPrefix="comments_"/>
@@ -41,40 +42,43 @@
     </select>
 
     <select id="selectsByPagingBoardAndMember" resultMap="post">
-        select *
-        from (select ROWNUM rnum, V.*
-              from (
-                       select ROWNUM  row_number,
-                              id,
-                              member_id,
-                              title,
-                              write_date,
-                              plan_date,
-                              NAME    member_name,
-                              FILE_ID member_profile,
-                              read
-
-                       FROM (
-                                select BOARD.id,
-                                       BOARD.member_id,
-                                       title,
-                                       write_date,
-                                       plan_date,
-                                       M.NAME,
-                                       M.FILE_ID,
-                                       NVL2(CB.MEMBER_ID, 'Y', 'N') read
-                                from BOARD
-                                         LEFT OUTER JOIN CHECKED_BOARD CB on ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
-                                         INNER JOIN MEMBER M on M.ID = BOARD.MEMBER_ID
-                                where CATEGORY_ID = #{categoryId}
-                                  and WORK_SPACE_ID = #{workSpaceId}
-                                order by ID desc
-                            ) B
-                       order by read, row_number
-                   ) V
-             ) V2
-        where rnum between #{paging.startNo} and #{paging.endNo}
-        order by rnum
+        select V3.*, comments_cnt
+        from (select *
+              from (select ROWNUM rnum, V.*
+                    from (
+                             select ROWNUM  row_number,
+                                    id,
+                                    member_id,
+                                    title,
+                                    write_date,
+                                    plan_date,
+                                    read,
+                                    NAME    member_name,
+                                    FILE_ID member_profile
+                             FROM (
+                                      select BOARD.id,
+                                             BOARD.member_id,
+                                             title,
+                                             write_date,
+                                             plan_date,
+                                             M.NAME,
+                                             M.FILE_ID,
+                                             NVL2(CB.MEMBER_ID, 'Y', 'N') read
+                                      from BOARD
+                                               LEFT OUTER JOIN CHECKED_BOARD CB on ID = CB.BOARD_ID and CB.MEMBER_ID = #{memberId}
+                                               INNER JOIN MEMBER M on M.ID = BOARD.MEMBER_ID
+                                      where CATEGORY_ID = #{categoryId}
+                                        and WORK_SPACE_ID = #{workSpaceId}
+                                      order by ID desc
+                                  ) B
+                             order by read, row_number
+                         ) V
+                   ) V2
+              where rnum between #{paging.startNo} and #{paging.endNo}
+              order by rnum) V3
+                 left outer join (
+            select BOARD_ID, count(*) over (partition by BOARD_ID) comments_cnt from COMMENTS
+        ) CM on CM.BOARD_ID = V3.ID
     </select>
 
     <select id="selectDetail" resultMap="post">

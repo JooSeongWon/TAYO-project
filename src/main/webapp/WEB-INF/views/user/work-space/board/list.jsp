@@ -38,7 +38,7 @@
             <c:if test="${not empty post.planDate}">
                 <div class="post__date">${post.planDate}</div>
             </c:if>
-            <div class="post__title">${post.title}</div>
+            <div class="post__title">${post.title}<c:if test="${not empty post.commentsCnt}"><span>(${post.commentsCnt})</span></c:if></div>
             <div class="post__writer">
                 <c:if test="${empty post.member.profile}">
                     <img src="/resources/img/no-profile.png" alt="프로필" class="writer__img">
