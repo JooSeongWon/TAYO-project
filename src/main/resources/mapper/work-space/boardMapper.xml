@@ -6,20 +6,31 @@
 
 <mapper namespace="fun.tayo.app.dao.BoardDao">
 
-    <resultMap id="postSimple" type="Board">
+    <resultMap id="memberSimple" type="MemberSession">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="profile" column="profile"/>
+    </resultMap>
+
+    <resultMap id="comments" type="Comments">
+        <id property="id" column="id"/>
+        <result property="writeDate" column="write_date"/>
+        <result property="content" column="content"/>
+        <association property="member" resultMap="memberSimple" columnPrefix="member_"/>
+    </resultMap>
+
+    <resultMap id="post" type="Board">
         <id property="id" column="id"/>
         <result property="rowNumber" column="row_number"/>
         <result property="title" column="title"/>
+        <result property="content" column="content"/>
         <result property="writeDate" column="write_date"/>
         <result property="planDate" column="plan_date"/>
         <result property="uploadFileId" column="upload_file_id"/>
         <result property="read" column="read"/>
 
-        <association property="member" javaType="MemberSession">
-            <id property="id" column="member_id"/>
-            <result property="name" column="member_name"/>
-            <result property="profile" column="member_profile"/>
-        </association>
+        <association property="member" resultMap="memberSimple" columnPrefix="member_"/>
+        <collection property="commentsList" resultMap="comments" columnPrefix="comments_"/>
     </resultMap>
 
     <select id="selectTotalCount" resultType="_int">
@@ -29,7 +40,7 @@
           and CATEGORY_ID = #{categoryId}
     </select>
 
-    <select id="selectsByPagingBoardAndMember" resultMap="postSimple">
+    <select id="selectsByPagingBoardAndMember" resultMap="post">
         select *
         from (select ROWNUM rnum, V.*
               from (
@@ -65,4 +76,55 @@
         where rnum between #{paging.startNo} and #{paging.endNo}
         order by rnum
     </select>
+
+    <select id="selectDetail" resultMap="post">
+        select B.ID,
+               B.TITLE,
+               B.CONTENT,
+               BOARD_FILE.UPLOAD_FILE_ID,
+               B.WRITE_DATE,
+               B.PLAN_DATE,
+               B.MEMBER_ID,
+               MEMBER.NAME    member_name,
+               MEMBER.FILE_ID member_profile,
+               C.ID           comments_id,
+               C.WRITE_DATE   comments_write_date,
+               C.CONTENT      comments_content,
+               C.MEMBER_ID    comments_member_id,
+               C.NAME         comments_member_name,
+               C.FILE_ID      comments_member_profile
+        from (select ID, MEMBER_ID, TITLE, CONTENT, WRITE_DATE, PLAN_DATE
+              from BOARD
+              where ID = #{boardId}) B
+                 left outer join BOARD_FILE on B.ID = BOARD_FILE.BOARD_ID
+                 inner join MEMBER on B.MEMBER_ID = MEMBER.ID
+                 left outer join (
+            select COMMENTS.ID, WRITE_DATE, CONTENT, BOARD_ID, MEMBER_ID, MEMBER.NAME, MEMBER.FILE_ID
+            from COMMENTS
+                     inner join MEMBER on COMMENTS.MEMBER_ID = MEMBER.ID) C on B.ID = C.BOARD_ID
+        order by comments_id
+    </select>
+
+    <select id="selectCntNewPost" resultType="_int">
+        select count(*)
+        from (select id
+              from BOARD
+              where WORK_SPACE_ID = #{workSpaceId}
+                and CATEGORY_ID = #{categoryId}) B
+                 left outer join (select BOARD_ID from CHECKED_BOARD where MEMBER_ID = #{memberId}) CB
+                                 on ID = BOARD_ID
+        where BOARD_ID is null
+    </select>
+
+    <select id="selectCntReadCheck" resultType="_int">
+        select count(*)
+        from CHECKED_BOARD
+        where BOARD_ID = #{boardId}
+          and MEMBER_ID = #{memberId}
+    </select>
+
+    <insert id="insertReadCheck">
+        insert into CHECKED_BOARD(board_id, member_id)
+        VALUES (#{boardId}, #{memberId})
+    </insert>
 </mapper>

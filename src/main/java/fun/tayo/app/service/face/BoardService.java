@@ -10,11 +10,21 @@ public interface BoardService {
     /**
      * 팀 멤버인지 확인
      */
-    boolean isTeamMemberInWorkSpace(int memberId, int workSpaceId);
+    boolean isNotTeamMemberInWorkSpace(int memberId, int workSpaceId);
 
     /**
      * 해당 페이지의 게시글 목록 얻기, 페이징 객체에 페이지 정보를 담음
      */
     List<Board> getList(PagingBoardAndMember pagingBoardAndMember);
+
+    /**
+     * 해당 가상공간 카테고리의 해당 회원이 읽지않은 게시글이 있는지 체크
+     */
+    boolean checkNoRead(int memberId, int workSpaceId , int categoryId);
+
+    /**
+     * 게시글 상세보기
+     */
+    Board getDetail(int boardId, boolean noRead, int memberId);
 
 }

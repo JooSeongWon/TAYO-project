@@ -51,7 +51,7 @@
     <title>[${name}] - 타요 가상공간</title>
 </head>
 <body>
-<section class="screen all-shadow" draggable="true">
+<section class="screen all-shadow">
     <%-- 내 캐릭터 --%>
     <div class="avatar user">
         <div class="img-wrap">

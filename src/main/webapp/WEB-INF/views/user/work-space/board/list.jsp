@@ -18,7 +18,7 @@
 </div>
 <div class="board__list tayo-scroll-bar">
     <c:forEach items="${boardList}" var="post" varStatus="i">
-        <div class="post" data-post-no="${post.id}">
+        <div class="post" onclick="displayPost(${post.id}<c:if test="${not post.read}">,true,${categoryId}</c:if>)" >
             <c:if test="${not post.read}">
                 <div class="new-post">N</div>
             </c:if>

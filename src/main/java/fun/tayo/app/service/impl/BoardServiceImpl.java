@@ -9,8 +9,11 @@ import fun.tayo.app.service.face.WorkSpaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -27,8 +30,8 @@ public class BoardServiceImpl implements BoardService {
     private final int PAGING_PAGE_COUNT = 5;
 
     @Override
-    public boolean isTeamMemberInWorkSpace(int memberId, int workSpaceId) {
-        return workSpaceService.getMyWorkSpaceName(workSpaceId, memberId) != null;
+    public boolean isNotTeamMemberInWorkSpace(int memberId, int workSpaceId) {
+        return workSpaceService.getMyWorkSpaceName(workSpaceId, memberId) == null;
     }
 
     @Override
@@ -41,5 +44,34 @@ public class BoardServiceImpl implements BoardService {
         paging.makePaging();
 
         return boardDao.selectsByPagingBoardAndMember(pagingBoardAndMember);
+    }
+
+    @Override
+    @Transactional
+    public Board getDetail(int boardId, boolean noRead, int memberId) {
+        final Board board = boardDao.selectDetail(boardId);
+        if(noRead) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("memberId", memberId);
+            params.put("boardId", boardId);
+
+            final int readCheck = boardDao.selectCntReadCheck(params);
+            if(readCheck == 0) {
+                boardDao.insertReadCheck(params);
+            }
+        }
+
+        return board;
+    }
+
+    @Override
+    public boolean checkNoRead(int memberId, int workSpaceId, int categoryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("workSpaceId", workSpaceId);
+        params.put("categoryId", categoryId);
+
+        int result = boardDao.selectCntNewPost(params);
+        return result != 0;
     }
 }
