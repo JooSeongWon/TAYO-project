@@ -6,39 +6,54 @@
 
 <mapper namespace="fun.tayo.app.dao.MemberDao">
 
-<!-- 	<select id="selectByEmail" resultType="Member">
-		select M.*, upload_file.saved_name profile from (
-			select id, name, phone, email, password, create_date,
-			grade, ban, file_id from MEMBER where EMAIL = #{email}) M
-		left outer join upload_file on M.file_id = upload_file.id
-	</select> -->
-	
+	<!-- <select id="selectByEmail" resultType="Member"> select M.*, upload_file.saved_name 
+		profile from ( select id, name, phone, email, password, create_date, grade, 
+		ban, file_id from MEMBER where EMAIL = #{email}) M left outer join upload_file 
+		on M.file_id = upload_file.id </select> -->
+
 	<select id="selectByEmail" resultType="Member">
-		select 
-			id, name, phone, email, password, create_date,
-			grade, ban, file_id AS profile
+		select
+		id, name, phone, email, password, create_date,
+		grade, ban, file_id AS profile
 		from MEMBER where EMAIL = #{email}
 		ORDER BY id
 	</select>
 
-	<select id="selectCntByEmail" resultType="int" parameterType="Member">
+	<select id="selectCntByEmail" resultType="int"
+		parameterType="Member">
 		SELECT count(*) FROM member
 		WHERE email = #{email }
 	</select>
-	
-	<insert id="insert" parameterType="Member">
-		INSERT INTO member ( id, name, phone, email, password, file_id )
-		VALUES ( member_seq.nextval, #{name}, #{phone}, #{email}, #{password}, #{profile} )
-	</insert>
-	
- 	<insert id="kakaoinsert" parameterType="Member">
-        insert into MEMBER(id, name, email, phone, file_id )
-        values (member_SEQ.nextval, #{name}, #{email}, #{phone}, #{profile})
-    </insert> 
-    
-    <select id="selectProfileById" parameterType="_Integer" resultType="_Integer">
-        select file_id from MEMBER
-        where id = #{memberId}
-    </select>
 
+	<insert id="insert" parameterType="Member">
+		INSERT INTO member ( id, name,
+		phone, email, password, file_id )
+		VALUES ( member_seq.nextval, #{name},
+		#{phone}, #{email}, #{password}, #{profile} )
+	</insert>
+
+	<insert id="kakaoinsert" parameterType="Member">
+		insert into MEMBER(id, name, email, phone, file_id )
+		values (member_SEQ.nextval, #{name}, #{email}, #{phone}, #{profile})
+	</insert>
+
+	<select id="selectProfileById" parameterType="_Integer"
+		resultType="_Integer">
+		select file_id from MEMBER
+		where id = #{memberId}
+	</select>
+
+	<update id="createAuthkey">
+		update member set authkey = #{param1} where email = #{param2}
+	</update>
+
+	<update id="updateAuthstatus">
+		update member set authstatus = 1 where email = #{param2}
+	</update>
+	
 </mapper>
+
+
+
+
+

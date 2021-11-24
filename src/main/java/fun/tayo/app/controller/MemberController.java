@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.Member;
@@ -86,14 +88,17 @@ public class MemberController {
 	}
 
 	@PostMapping(value = "/join")
-	public String joinProc(@ModelAttribute("member") Member member) {
+	public String joinProc(@ModelAttribute("member") Member member) throws Exception {
 
+		//이메일 인증까지 포함
 		boolean joinResult = memberService.join(member);
+		
 
 		if (joinResult) {
-			memberService.create(member);
-
+			
+			
 			log.info("회원가입 성공");
+			
 			return "redirect:/";
 
 		} else {
@@ -150,36 +155,18 @@ public class MemberController {
 		}
 	}
 
-//	@GetMapping("/sendMail")
-//	public void sendMail() throws Exception {
-//		
-//        String subject = "메일";
-//        String content = "메일 테스트 내용";
-//        String from = "보내는이 아이디@도메인주소";
-//        String to = "받는이 아이디@도메인주소";		
-//        
-//        MimeMessage mail = mailSender.createMimeMessage();
-//        //true는 멀티파트 메세지를 사용하겠다는 의미
-//        MimeMessageHelper mailHelper = new MimeMessageHelper(mail,true,"UTF-8");
-//        
-//		/* 단순한 텍스트 메세지만 사용시엔 아래의 코드도 사용 가능 */ 
-//		/* MimeMessageHelper mailHelper = new MimeMessageHelper(mail,"UTF-8"); */
-//        
-//        mailHelper.setFrom(from);
-//        
-//        mailHelper.setTo(to);
-//        mailHelper.setSubject(subject);
-//        
-//        // true는 html을 사용하겠다는 의미 
-//        mailHelper.setText(content, true);
-//        
-//        //단순한 텍스트만 사용하신다면 다음의 코드를 사용 mailHelper.setText(content);
-//        
-//        mailSender.send(mail);
-//        
-//        
-//	}
-	
+	  // 이메일 인증 확인하면 나오는 경로
+	  @RequestMapping(value = "/emailConfirm", method = RequestMethod.GET)
+	  public String emailConfirm(String email, Model model) throws Exception {
+		  
+	      // authstatus 권한 상태 1로 변경
+	      memberService.updateAuthstatus(email);
+	      
+	      // jsp에서 쓰기위해 model에 담음
+	      model.addAttribute("email", email);
+
+	      return "user/member/emailConfirm";
+	  }
 
 }
 

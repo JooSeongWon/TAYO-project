@@ -10,7 +10,8 @@ public interface MemberService {
 
 	ResponseData login(MemberLoginParam memberLoginParam, HttpSession session);
 
-	boolean join(Member member);
+	//이메일 인증 포함 회원가입
+	boolean join(Member member) throws Exception;
 
 	Member getMemberByEmail(String email);
 
@@ -20,6 +21,10 @@ public interface MemberService {
 	
 	Integer getProfile(Integer memberId);
 
-	void create(Member member);
+	//이메일 인증
+
+	// authstatus 1로 변경
+	void updateAuthstatus(String email) throws Exception;
+
 
 }
