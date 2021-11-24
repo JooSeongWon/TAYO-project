@@ -79,8 +79,8 @@
 			<div>
 				<div class="allconsent"><input type="checkbox" class="consentall" name="consentall" />전체동의</div>
 			</div>
-			<div>
-				<a href="/join" class="tayo-button purple">NEXT</a>
+			<div class="tayo-button purple nextBtn">
+				NEXT
 			</div>
 		</div>
 
