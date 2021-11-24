@@ -6,6 +6,7 @@ import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dto.Board;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.PagingBoardAndMember;
+import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class WorkSpaceBoardController {
     ) {
         //접속자가 팀멤버가 맞는지 체크
         if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
-            log.error("팀멤버 아님 게시판 조회 권한 없음.");
+            log.debug("팀멤버 아님 게시판 조회 권한 없음.");
             throw new RuntimeException("this isn't team member");
         }
 
@@ -64,18 +65,22 @@ public class WorkSpaceBoardController {
             @RequestParam(defaultValue = "false") boolean noRead,
             @RequestParam int workSpaceId,
             @PathVariable int boardId,
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
             Model model
-    ){
+    ) {
         //접속자가 팀멤버가 맞는지 체크
         if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
-            log.error("팀멤버 아님 게시판 조회 권한 없음.");
+            log.debug("팀멤버 아님 게시판 조회 권한 없음.");
             throw new RuntimeException("this isn't team member");
         }
 
-        final Board detail = boardService.getDetail(boardId, noRead, memberSession.getId());
+        final Board detail = boardService.getDetail(boardId, noRead, memberSession.getId(), workSpaceId);
+        if (detail == null) {
+            log.debug("권한 없는 사용자 게시글 접근 혹은 존재하지 않는 게시글");
+            throw new RuntimeException("no have access grant or not exist post");
+        }
+
         model.addAttribute("board", detail);
-        log.debug("게시글 상세 [{}]", detail);
 
         return "user/work-space/board/detail";
     }
@@ -83,14 +88,14 @@ public class WorkSpaceBoardController {
     @ResponseBody
     @GetMapping("/read-status")
     public Map<String, Object> getReadStatus(
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
             @RequestParam int workSpaceId,
             @RequestParam(required = false) Integer categoryId
     ) {
         Map<String, Object> resultMap = new HashMap<>();
         int memberId = memberSession.getId();
 
-        if(categoryId == null) {
+        if (categoryId == null) {
             resultMap.put(String.valueOf(BoardCategory.ISSUE), boardService.checkNoRead(memberId, workSpaceId, BoardCategory.ISSUE));
             resultMap.put(String.valueOf(BoardCategory.WORK_PLAN), boardService.checkNoRead(memberId, workSpaceId, BoardCategory.WORK_PLAN));
             resultMap.put(String.valueOf(BoardCategory.QNA), boardService.checkNoRead(memberId, workSpaceId, BoardCategory.QNA));
@@ -99,6 +104,27 @@ public class WorkSpaceBoardController {
         }
 
         return resultMap;
+    }
+
+    @ResponseBody
+    @PostMapping("/{boardId}/comments")
+    public ResponseData putComments(
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
+            @RequestParam int workSpaceId,
+            @RequestParam String content,
+            @PathVariable int boardId
+    ) {
+        //접속자가 팀멤버가 맞는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
+            return new ResponseData(false, "권한이 없습니다.");
+        }
+
+        final int result = boardService.putComments(memberSession, workSpaceId, boardId, content);
+        if (result == 0) {
+            return new ResponseData(false, "요청을 처리할 수 없습니다.");
+        }
+
+        return new ResponseData(true, String.valueOf(result));
     }
 
     private String getCategoryName(int categoryId) {

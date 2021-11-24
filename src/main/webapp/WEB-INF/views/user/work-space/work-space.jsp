@@ -31,6 +31,7 @@
 
     <%-- 자바스크립트 --%>
     <script src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/modal.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/sockjs.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/work-space-script.js" defer></script>

@@ -62,6 +62,6 @@
     </c:if>
 </div>
 <div class="comments-input-panel">
-    <input type="text" class="comments-input-box" placeholder="내용을 입력하세요.">
+    <input type="text" class="comments-input-box" placeholder="내용을 입력하세요." maxlength="100">
     <div class="comments-input-btn">작성</div>
 </div>

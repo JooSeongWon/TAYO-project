@@ -29,6 +29,7 @@
         <result property="uploadFileId" column="upload_file_id"/>
         <result property="read" column="read"/>
         <result property="commentsCnt" column="comments_cnt"/>
+        <result property="workSpaceId" column="work_space_id"/>
 
         <association property="member" resultMap="memberSimple" columnPrefix="member_"/>
         <collection property="commentsList" resultMap="comments" columnPrefix="comments_"/>
@@ -89,6 +90,7 @@
                B.WRITE_DATE,
                B.PLAN_DATE,
                B.MEMBER_ID,
+               B.WORK_SPACE_ID,
                MEMBER.NAME    member_name,
                MEMBER.FILE_ID member_profile,
                C.ID           comments_id,
@@ -97,7 +99,7 @@
                C.MEMBER_ID    comments_member_id,
                C.NAME         comments_member_name,
                C.FILE_ID      comments_member_profile
-        from (select ID, MEMBER_ID, TITLE, CONTENT, WRITE_DATE, PLAN_DATE
+        from (select ID, MEMBER_ID, TITLE, CONTENT, WRITE_DATE, PLAN_DATE, WORK_SPACE_ID
               from BOARD
               where ID = #{boardId}) B
                  left outer join BOARD_FILE on B.ID = BOARD_FILE.BOARD_ID
@@ -127,8 +129,23 @@
           and MEMBER_ID = #{memberId}
     </select>
 
+    <select id="selectCntBoardInWorkSpace" resultType="_int">
+        select count(*)
+        from BOARD
+        where ID = #{boardId}
+          and WORK_SPACE_ID = #{workSpaceId}
+    </select>
+
     <insert id="insertReadCheck">
         insert into CHECKED_BOARD(board_id, member_id)
         VALUES (#{boardId}, #{memberId})
+    </insert>
+
+    <insert id="insertComments" parameterType="Comments" useGeneratedKeys="false">
+        <selectKey keyProperty="id" resultType="_int" order="BEFORE">
+            SELECT COMMENTS_SEQ.nextval FROM DUAL
+        </selectKey>
+        insert into COMMENTS(ID, CONTENT, MEMBER_ID, BOARD_ID)
+        VALUES (#{id}, #{content}, #{member.id}, #{boardId})
     </insert>
 </mapper>

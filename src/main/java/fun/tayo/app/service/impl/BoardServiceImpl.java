@@ -3,6 +3,8 @@ package fun.tayo.app.service.impl;
 import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dao.BoardDao;
 import fun.tayo.app.dto.Board;
+import fun.tayo.app.dto.Comments;
+import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.PagingBoardAndMember;
 import fun.tayo.app.service.face.BoardService;
 import fun.tayo.app.service.face.WorkSpaceService;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +51,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Board getDetail(int boardId, boolean noRead, int memberId) {
+    public Board getDetail(int boardId, boolean noRead, int memberId, int workSpaceId) {
         final Board board = boardDao.selectDetail(boardId);
+
+        if(board == null || board.getWorkSpaceId() != workSpaceId) {
+            return null;
+        }
+
         if(noRead) {
             Map<String, Object> params = new HashMap<>();
             params.put("memberId", memberId);
@@ -73,5 +81,30 @@ public class BoardServiceImpl implements BoardService {
 
         int result = boardDao.selectCntNewPost(params);
         return result != 0;
+    }
+
+    @Override
+    @Transactional
+    public int putComments(MemberSession member, int workSpaceId, int boardId, String content) {
+        if(!StringUtils.hasText(content)) {
+            return 0;
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("workSpaceId", workSpaceId);
+        params.put("boardId", boardId);
+
+        int checkGrant = boardDao.selectCntBoardInWorkSpace(params);
+        if(checkGrant == 0) {
+            return 0;
+        }
+
+        Comments comments= new Comments();
+        comments.setContent(content);
+        comments.setMember(member);
+        comments.setBoardId(boardId);
+
+        boardDao.insertComments(comments);
+        return comments.getId();
     }
 }

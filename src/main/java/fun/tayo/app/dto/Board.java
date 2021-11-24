@@ -10,6 +10,7 @@ import java.util.List;
 @Getter @Setter @ToString
 public class Board {
     private int id;
+    private int workSpaceId;
     private int rowNumber;
     private String title;
     private String content;

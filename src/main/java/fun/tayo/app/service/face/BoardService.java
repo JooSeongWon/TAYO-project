@@ -1,6 +1,7 @@
 package fun.tayo.app.service.face;
 
 import fun.tayo.app.dto.Board;
+import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.PagingBoardAndMember;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public interface BoardService {
     /**
      * 게시글 상세보기
      */
-    Board getDetail(int boardId, boolean noRead, int memberId);
+    Board getDetail(int boardId, boolean noRead, int memberId, int workSpaceId);
 
+    /**
+     * 댓글 작성
+     */
+    int putComments(MemberSession member, int workSpaceId, int boardId, String content);
 }

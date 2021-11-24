@@ -1,6 +1,7 @@
 package fun.tayo.app.dao;
 
 import fun.tayo.app.dto.Board;
+import fun.tayo.app.dto.Comments;
 import fun.tayo.app.dto.PagingBoardAndMember;
 
 import java.util.List;
@@ -37,5 +38,15 @@ public interface BoardDao {
      * 게시글 읽음 처리
      */
     void insertReadCheck(Map<String, Object> params);
+
+    /**
+     * 댓글 작성
+     */
+    int insertComments(Comments comments);
+
+    /**
+     * 게시글 조회 (workSpace와 일치하는지 확인 용)
+     */
+    int selectCntBoardInWorkSpace(Map<String, Object> params);
 
 }

@@ -12,4 +12,5 @@ public class Comments {
     private Date writeDate;
     private String content;
     private MemberSession member;
+    private int boardId;
 }
