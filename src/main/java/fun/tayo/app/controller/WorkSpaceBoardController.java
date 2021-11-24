@@ -1,5 +1,6 @@
 package fun.tayo.app.controller;
 
+import fun.tayo.app.common.BoardCategory;
 import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dto.Board;
@@ -27,18 +28,18 @@ public class WorkSpaceBoardController {
 
     @GetMapping
     public String getBoard(
-            @RequestParam int pageNo,
+            @RequestParam(defaultValue = "1") int pageNo,
             @RequestParam int categoryId,
             @RequestParam int workSpaceId,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
             Model model
-    ){
+    ) {
         //접속자가 팀멤버가 맞는지 체크
-        if(!boardService.isTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
+        if (!boardService.isTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
             log.error("팀멤버 아님 게시판 조회 권한 없음.");
             throw new RuntimeException("this isn't team member");
         }
-        
+
         //페이징에따라 List 모델에 삽입
         Paging paging = new Paging();
         paging.setCurPage(pageNo);
@@ -53,7 +54,22 @@ public class WorkSpaceBoardController {
 
         model.addAttribute("boardList", list);
         model.addAttribute("paging", paging);
+        model.addAttribute("category", getCategoryName(categoryId));
+        model.addAttribute("categoryId", categoryId);
 
         return "user/work-space/board/list";
+    }
+
+    private String getCategoryName(int categoryId) {
+        switch (categoryId) {
+            case BoardCategory.ISSUE:
+                return "Issue";
+            case BoardCategory.WORK_PLAN:
+                return "Work plan";
+            case BoardCategory.QNA:
+                return "QnA";
+        }
+
+        return null;
     }
 }

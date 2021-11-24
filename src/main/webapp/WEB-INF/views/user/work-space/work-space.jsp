@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common-style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/user-style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/work-space-style.css ">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/work-space-board-style.css ">
 
     <%-- 자바스크립트 --%>
     <script src="${pageContext.request.contextPath}/resources/js/jquery-2.2.4.min.js"></script>
@@ -75,7 +76,7 @@
     <div class="range"></div>
 
     <%-- 게시판 네비게이션 바 버튼 --%>
-    <i class="fas fa-chevron-right"></i>
+    <i class="fas fa-chevron-right nav-button"></i>
     <%-- 나가기 버튼 --%>
     <i class="fas fa-reply exit"></i>
     <%-- 하단메뉴 --%>
@@ -131,15 +132,15 @@
         <div class="board-list">
             <div class="list__title">board</div>
             <div class="list__content">
-                <div class="link link--carme issue-btn">
+                <div class="link link--carme issue-btn" onclick="displayBoard(1)">
                     <span>Issue <span class="new">N</span></span>
                     <svg class="link__graphic link__graphic--stroke link__graphic--scribble" width="100%" height="9" viewBox="0 0 101 9"><path d="M.426 1.973C4.144 1.567 17.77-.514 21.443 1.48 24.296 3.026 24.844 4.627 27.5 7c3.075 2.748 6.642-4.141 10.066-4.688 7.517-1.2 13.237 5.425 17.59 2.745C58.5 3 60.464-1.786 66 2c1.996 1.365 3.174 3.737 5.286 4.41 5.423 1.727 25.34-7.981 29.14-1.294" pathLength="1"/></svg>
                 </div>
-                <div class="link link--carme plan-btn">
+                <div class="link link--carme plan-btn" onclick="displayBoard(2)">
                     <span>Work plan <span class="new">N</span></span>
                     <svg class="link__graphic link__graphic--stroke link__graphic--scribble" width="100%" height="9" viewBox="0 0 101 9"><path d="M.426 1.973C4.144 1.567 17.77-.514 21.443 1.48 24.296 3.026 24.844 4.627 27.5 7c3.075 2.748 6.642-4.141 10.066-4.688 7.517-1.2 13.237 5.425 17.59 2.745C58.5 3 60.464-1.786 66 2c1.996 1.365 3.174 3.737 5.286 4.41 5.423 1.727 25.34-7.981 29.14-1.294" pathLength="1"/></svg>
                 </div>
-                <div class="link link--carme qna-btn">
+                <div class="link link--carme qna-btn" onclick="displayBoard(3)">
                     <span>QnA <span class="new">N</span></span>
                     <svg class="link__graphic link__graphic--stroke link__graphic--scribble" width="100%" height="9" viewBox="0 0 101 9"><path d="M.426 1.973C4.144 1.567 17.77-.514 21.443 1.48 24.296 3.026 24.844 4.627 27.5 7c3.075 2.748 6.642-4.141 10.066-4.688 7.517-1.2 13.237 5.425 17.59 2.745C58.5 3 60.464-1.786 66 2c1.996 1.365 3.174 3.737 5.286 4.41 5.423 1.727 25.34-7.981 29.14-1.294" pathLength="1"/></svg>
                 </div>

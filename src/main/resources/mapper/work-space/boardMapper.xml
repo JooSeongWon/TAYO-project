@@ -39,7 +39,7 @@
                         write_date,
                         plan_date,
                         NAME    member_name,
-                        FILE_ID profile,
+                        FILE_ID member_profile,
                         read
 
                  FROM (

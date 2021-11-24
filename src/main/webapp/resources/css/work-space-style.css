@@ -20,7 +20,7 @@ section {
 }
 
 /* 좌측 네비 여닫이 버튼 */
-.fa-chevron-right {
+.nav-button {
     font-size: var(--font-medium);
     color: var(--color-dark-grey);
     border-radius: 50%;
@@ -39,7 +39,7 @@ section {
     transition: left 1000ms ease-in-out, transform 1000ms ease-in-out, color 150ms linear;
 }
 
-.fa-chevron-right:hover {
+.nav-button:hover {
     color: var(--color-puple);
 }
 
@@ -484,7 +484,7 @@ section {
 
 
 /* 네비게이션 바 */
-.fa-chevron-right.active {
+.nav-button.active {
     left: 200px;
     transform: rotate(0.5turn);
     background: none;
