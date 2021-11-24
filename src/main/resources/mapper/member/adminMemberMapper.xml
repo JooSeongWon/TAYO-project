@@ -5,19 +5,33 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="fun.tayo.app.dao.AdminMemberDao">
-
+	
+	<sql id="selectBoard">
+	   	SELECT
+ 	  		id, name, email, phone, create_date, grade, ban
+	     FROM Member
+	</sql>
+	
+	<sql id="whereTitleSearch">
+		WHERE name LIKE '%' || #{search} || '%'
+	</sql>
+	
    <select id="selectList" resultType="Member" parameterType="fun.tayo.app.common.util.Paging">
-        SELECT * FROM ( SELECT rownum rnum, M.* FROM (
-        	SELECT
-        		id, name, email, phone, create_date, grade, ban
-        	FROM Member
-        	ORDER BY id ) M
-        ) R
+        SELECT * FROM (
+        	SELECT rownum rnum, M.* FROM (
+	        	<include refid="selectBoard"/>
+	        	<include refid="whereTitleSearch"/>
+	        	ORDER BY id 
+	        	) M
+     	   ) R
         WHERE rnum BETWEEN #{startNo} AND #{endNo}
     </select>
     
     <select id="selectCntAll" resultType="int" parameterType="fun.tayo.app.common.util.Paging">
-	  		SELECT count(*) FROM member
+	  	SELECT count(*) FROM (
+	  		<include refid="selectBoard"/>
+			<include refid="whereTitleSearch"/>	 		
+		)
 	</select>
 	
 	<select id="selectMemberById" resultType="Member" parameterType="_int">

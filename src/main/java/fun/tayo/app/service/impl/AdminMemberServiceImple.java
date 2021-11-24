@@ -40,18 +40,6 @@ public class AdminMemberServiceImple implements AdminMemberService {
 		}
 
 	@Override
-	public Member getMember(int memberId) {
-		
-		return adminMemberDao.selectMemberById(memberId);
-	}
-
-	@Override
-	public List<Member> list(Paging paging, Member member1) {
-
-		return adminMemberDao.selectList(paging, member1);
-	}
-	
-	@Override
 	public void updateGrade(int memberId, char grade) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("id", memberId);
@@ -70,15 +58,5 @@ public class AdminMemberServiceImple implements AdminMemberService {
 	}
 	
 	
-//	
-//	@Override
-//	public List<Member> getList(Paging paging) {
-//		return adminMemberDao.selectAdminMember(paging);
-//	}
-//	
-//	@Override
-//	public Paging getPaging(int currentPage) {
-//		return new Paging(adminMemberDao.selectCntAll(), currentPage);
-//	}
 	
 }

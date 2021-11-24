@@ -14,15 +14,12 @@ public interface AdminMemberDao {
 
 	Member selectMemberById(int memberId);
 
-	List<Member> selectList(Paging paging, Member member1);
+//	List<Member> selectList(Paging paging, Member member1);
 
 	void updateGrade(Map<String, Object> params);
 	
 	void updateBan(Map<String, Object> params);
 
 
-//	List<Member> selectAdminMember(Paging paging);
-//
-//	int selectCntAll();
 
 }

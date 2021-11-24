@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fun.tayo.app.common.util.Paging;
 import fun.tayo.app.dto.Member;
-import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,42 +52,5 @@ public class AdminMemberController {
 	}
 	
 	
-//	@RequestMapping(value="/admin/members/update")
-//	public String memberUpdate(@PathVariable int memberId, Model model) {
-//	
-//		
-//	}
-	
-	
-	
-//	@RequestMapping(method = RequestMethod.POST)
-//	public List<Member> getMemberList(Paging paramData, Model model) {
-////		log.debug("/admin/list");
-//		
-//		//페이징 계산
-//		Paging paging = adminMemberService.getPaging( paramData );
-////		log.debug("{}", paging);
-//		
-//		//멤버 목록 조회
-//		List<Member> list = adminMemberService.list(paging);
-////			for(Member m : list) {
-////			log.debug("{}", m);
-////		}
-//		
-//		return list;
-//	}
-	
-//	private final AdminMemberService adminMemberService;
-	
-//	@GetMapping("/admin")
-//	public String memberList(Model model) {
-//		
-//		Paging paging = adminMemberService.getPaging(1);
-//		
-//		List<Member> memberlist = adminMemberService.getList(paging);
-//		model.addAttribute("list", memberlist);
-//		
-//		return "admin/member/member";
-//		
-//	}
+
 }

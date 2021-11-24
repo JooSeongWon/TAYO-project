@@ -40,12 +40,10 @@
 		<th style="width: 15%;">가입일</th>
 		<th style="width: 10%;">권한</th>
 		<th style="width: 10%; text-align: auto;">회원제재</th>
-		<th><button class="change">변경</button></th>
 	</tr>
 </thead>
 <tbody>
 
-<form action="${pageContext.request.contextPath}/admin/members/${member.id}" method="post">
 <c:forEach items="${list }" var="member">
 	<tr>
 		<td>${member.id }</td>
@@ -53,68 +51,42 @@
 		<td>${member.email }</td>
 		<td>${member.phone }</td>
 		<td><fmt:formatDate value="${member.createDate }" pattern="yy-MM-dd"/></td>
-<%-- 		<td><fmt:formatDate value="${member.createDate }" pattern="yy-MM-dd HH:mm:ss"/></td> --%>
-
-<%-- 		<td>${member.grade }</td> --%>
-<%-- 		<td>${member.ban }</td> --%>
 		<td>
-		<select name="grade">
-			<option value="N">일반회원</option>
-			<option value="A">관리자</option>
-			<option value="S">최고관리자</option>
-		</select>
+			<c:if test="${loginMember.grade eq 'S'.charAt(0)}"> 
+				<select id="${member.id }" class="grade">
+					<option value="N" <c:if test="${fn:contains(member.grade,'N')}">selected="selected"</c:if>>일반회원</option>
+					<option value="A" <c:if test="${fn:contains(member.grade,'A')}">selected="selected"</c:if>>관리자</option>
+					<option value="S" <c:if test="${fn:contains(member.grade,'S')}">selected="selected"</c:if>>최고관리자</option>
+				</select>
+			</c:if>
 			
-			<c:choose>
-				<c:when test="${fn:contains(member.grade,'N')}">
-					<option value="N" selected>N</option>
-				</c:when>
-				
-				<c:when test="${fn:contains(member.grade,'A')}">
-					<option value="A" selected>A</option>
-				</c:when>
-
-				<c:when test="${fn:contains(member.grade,'S')}">
-					<option value="S" selected>S</option>
-				</c:when>
-			</c:choose>
-
+			<c:if test="${loginMember.grade eq 'A'.charAt(0)}">
+				<c:if test="${fn:contains(member.grade,'N')}">일반회원</c:if>
+				<c:if test="${fn:contains(member.grade,'A')}">관리자</c:if>
+				<c:if test="${fn:contains(member.grade,'S')}">최고관리자</c:if>
+			</c:if>
 		</td>
-
-
-
-<!-- 		<td> -->
-<!-- 			<select name="grade"> -->
-<!-- 				<option value="N"> -->
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="${member.grade eq 'N' }"> --%>
-<!-- 							<option value="N" selected>일반회원</option> -->
-<%-- 						</c:when> --%>
-<%-- 					</c:choose> --%>
-<!-- 				</option> -->
-<!-- 			</select> -->
-<!-- 		</td> -->
-	
-<!-- 		<td> -->
-<%-- 			<c:choose> --%>
-<%-- 				<c:when test="${member.grade eq 'N'}">일반회원</c:when> --%>
-<%-- 				<c:when test="${member.grade eq 'A'}">관리자</c:when> --%>
-<%-- 				<c:when test="${member.grade eq 'S'}">최고관리자</c:when> --%>
-<%-- 			</c:choose> --%>
-			
-<!-- 		</td> -->
 		
-		<td>${member.ban }</td>
+		<td>
+			<select id="${member.id }" class="ban">
+				<option value="N" <c:if test="${fn:contains(member.ban, 'N')}">selected="selected"</c:if>>정상</option>
+				<option value="Y" <c:if test="${fn:contains(member.ban, 'Y')}">selected="selected"</c:if>>이용정지</option>
+			</select>
+		</td>
 	</tr>
+
+		
 </c:forEach>
-</form>
 </tbody>
 </table>
 
-<!-- <div class="float-right"> -->
-<!-- 	<button>변경</button> -->
-<!-- </div> -->
-
 <c:import url="/WEB-INF/views/admin/member/paging.jsp"></c:import>
+
+<div class="form-inline text-center">
+	<i class="fas fa-search"></i>
+	<input class="form-control" type="text" id="search" value="${param.search }" placeholder="Name" onkeyup="enterkey()"/>
+	<button id="btnSearch">검색</button>
+</div>
 
 </section>
 </body>
