@@ -1,11 +1,7 @@
 'use strict'
 
-const consentChkAll = document.querySelector('.consentall');
+$('.consentall').click(function(){
+	$('.consentcheckbox').prop('checked', this.checked);
+})
 
-	consentChkAll.addEventListener('change', (e) => {
-    let consentChk = document.querySelectorAll('.consentcheckbox');
-    for(let i = 0; i < consentChk.length; i++){
-    	consentChk.checked = e.target.checked;
-    }
-});
 
