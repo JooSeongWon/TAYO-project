@@ -27,6 +27,9 @@ public interface MemberService {
 	// authstatus 1로 변경
 	void updateAuthstatus(String email) throws Exception;
 
+	//이메일발송
+	public void sendEmail(Member member, String div) throws Exception;
+	
 	//비밀번호 찾기
 	void findPw(HttpServletResponse response, Member member);
 
