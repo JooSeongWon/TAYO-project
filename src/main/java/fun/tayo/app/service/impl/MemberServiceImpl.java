@@ -47,10 +47,19 @@ public class MemberServiceImpl implements MemberService{
         	
             return new ResponseData(false, "일치하는 회원정보가 없습니다.");
         }
-
+        
+        if(member.getAuthstatus() == 0) {
+        	return new ResponseData(false, "이메일 인증을 해주세요.");
+        }
+        
+        if(member.getBan() == 'Y') {
+        	return new ResponseData(false, "이용정지 당한 아이디 입니다.");
+        }
+        
+        log.debug("membermembermembermembermembermembermembermembermembermembermembermembermember {}", member);
+        
         //로그인 완료
         setLogin(member, session);
-        log.debug("profile {}", member.getProfile());
         
         return new ResponseData(true, "로그인 성공") ;		
 		

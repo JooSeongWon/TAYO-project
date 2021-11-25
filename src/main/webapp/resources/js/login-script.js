@@ -26,7 +26,6 @@ loginBtn.addEventListener('click', function() {
 
 /*엔터 이벤트 부여*/
 passwordBtn.addEventListener('keydown', function(e) {
-	console.log("qweqwe")
 	if(e.key === 'Enter'){
 		loginBtn.click();
 	}
@@ -34,7 +33,6 @@ passwordBtn.addEventListener('keydown', function(e) {
 });
 
 emaildBtn.addEventListener('keydown', function(e) {
-	console.log("qweqwe")
 	if(e.key === 'Enter'){
 		loginBtn.click();
 	}

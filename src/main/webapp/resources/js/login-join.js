@@ -76,6 +76,42 @@ function errorCallBack(e) {
     showModal('TAYO', '서버오류');
 }
 
+// 유효성 검사
 
+const name = document.querySelector('#name');
+const email = document.querySelector('#email');
+const phone = document.querySelector('#phone');
+const password = document.querySelector('#password');
 
+const joinField = {name, email, phone, password};
+
+//유효성검사
+function isValidation(target, value, valueConfirm) {
+
+    let regex;
+
+    switch (target) {
+    
+        case 'name':
+            regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+            return value.match(regex);
+            
+        case 'email':
+        	regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+        	return value.match(regex);
+        	
+        case 'phone':
+            regex = /^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$/;
+            return value.match(regex);
+            
+        case 'password':
+            if(!valueConfirm) return false;
+            if(value !== valueConfirm) return false;
+
+            regex = /^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$/;
+            return value.match(regex);
+    }
+
+    return false;
+}
 
