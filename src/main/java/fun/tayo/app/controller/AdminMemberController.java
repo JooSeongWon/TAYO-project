@@ -23,7 +23,7 @@ public class AdminMemberController {
 	
 	private final AdminMemberService adminMemberService;
 	
-	@RequestMapping(value="/admin/members")
+	@RequestMapping(value={"/admin/members", "/admin"})
 	public String list(Paging paramData, Model model) {
 		
 		//페이징 계산

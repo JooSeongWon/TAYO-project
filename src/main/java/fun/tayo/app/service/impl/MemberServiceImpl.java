@@ -105,7 +105,7 @@ public class MemberServiceImpl implements MemberService{
 	    
 	    // 메일 발송
 	    MailHandler sendMail = new MailHandler(mailSender);
-	    
+
 	    sendMail.setSubject("[Tayo 회원가입 서비스 이메일 인증 입니다.]");
 	    sendMail.setText(new StringBuffer().append("<h1>Tayo 가입 메일인증 입니다</h1>")
 	        .append("<a href=https://localhost:8443/emailConfirm?email=")
@@ -116,12 +116,7 @@ public class MemberServiceImpl implements MemberService{
 	    sendMail.send();
 		member.setAuthkey(authkey);
 		
-		//회원가입 결과 확인
-		if( memberDao.selectCntByEmail(member) > 0 ) {
-			return true;
-		}
-		
-		return false;
+		return true;
 	}
 
 	@Override

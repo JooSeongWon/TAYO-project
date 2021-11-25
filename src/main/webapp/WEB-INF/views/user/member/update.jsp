@@ -169,6 +169,7 @@
 
                 //수정할거임 
                 if(!isValidation(target, input.value, confirm.value)) {
+                    showModal('실패', '입력값이 바르지 않습니다.');
                     return;
                 }
 
@@ -183,6 +184,7 @@
                     return;
                 }
                 if(!isValidation(target, input.value)) {
+                    showModal('실패', '입력값이 바르지 않습니다.');
                     return;
                 }
             }
@@ -214,212 +216,27 @@
             return false;
         }*/
 
+        let regex;
+
         //찬혁님이랑 얘기해서 유효성검사 추가
         switch (target) {
-            case 'name':fnValidationName(value);
+            case 'name':
+                regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+                return value.match(regex);
 
-                break;
-            case 'phone':fnValidationPhone(value);
+            case 'phone':
+                regex = /^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$/;
+                return value.match(regex);
+            case 'password':
+                if(!valueConfirm) return false;
+                if(value !== valueConfirm) return false;
 
-                break;
-            case 'password':fnValidationPassword(value);
-
-                break;
+                regex = /^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$/;
+                return value.match(regex);
         }
 
-        return true;
+        return false;
     }
-    
-    //이름 한글 영어 입력 체크
-    let nameCheck = false;
-    
-    var fnValidationName = function (name) {
-    	let nameError = 0; //초기화
-    	
-    	if(name != null) {
-    		
-    		//한글 체크
-    		if(fnValidationNameKor(name)) {
-    			console.log('1')
-    		} else {
-    			nameError++;
-    			console.log('2')
-    		}
-    		//영어 체크
-    		if(fnValidationNameEng(name)) {
-    			console.log('3')
-    		} else {
-    			nameError++;
-    			console.log('4')
-    		}
-    		
-    		//길이 체크
-    		if(!fnValidationNameLength(name)) {
-    			console.log('5')
-			} else {
-				nameError++;
-				console.log('6')
-			}
-    		console.log('7')
-    	} else {
-    		nameError++;
-    		console.log('8')
-    	}
-    	console.log('9')
-    	if(nameError < 1 ) {
-    		nameCheck = true;
-    		console.log('10')
-    	}
-    }
-    
-    //이름 한글체크
-    var fnValidationNameKor = function(name) {
-    	let result = false;
-    	if(name.search(/^[가-힣]+$/) != -1 ) {
-    		result = true;
-    	}
-    	return result;
-    };
-    
- 	// 이름 영어체크
-    var fnValidationNameEng = function(name) {
-		let result = false;
-		if(name.search(/[a-zA-Z]/ig)  != -1 ) {
-			result = true;
-		}
-		return result;
-	};
-	
-	//이름 길이체크
-	var fnValidationNameLength = function(name) {
-		let result = false;
-		// 길이(8~20)
-		if(!/^[가-힣a-zA-Z]{8,20}$/.test(name)) {
-			result = true;
-		} else {
-			result = false;
-		}
-
-		return result;
-	}
-    
-    // 전화번호 입력 체크
-    let phoneCheck = false;
-    
-    var fnValidationPhone = function(phone) {
-    	let phoneError = 0;
-    	
-    	if(phone != null ) {
-    		if(fnValidationPhone(phone)) {
-    			console.log('a')
-    		} else {
-    			phoneError++;
-    			console.log('b')
-    		}
-    		
-    	} else {
-    		phoneError++;
-    		console.log('c')
-    	}
-    	
-    	if( phoneError < 1 ) {
-    		phoneCheck = true;
-    		console.log('d')
-    	}
-    }
-    
-    //전화번호 체크
-    var fnValidationPhone = function(phone) {
-    	let result = false;
-    	if(phone.search(/^01([0]{3})-?([0-9]{3,4})-?([0-9]{4})$/) != -1 ) {
-    		result = true;
-    	}
-    	return result;
-    };
-    
-    
-    // 비밀번호 영어 입력 체크
-    let passwdCheck = false;
-    
-    
-    var fnValidationPassword = function (password) {
-    	let passwdError = 0 ; //초기화
-    	
-    	if(password != null) {
-    		
-    		// 영어 체크 
-    		if(fnValidtaionPwdEng(password)) {
-    		}else{
-    			passwdError++;
-    		}
-    		
-			//2-2.숫자포함
-			if(fnValidtaionPwdNumber(password)) {
-			}else{
-				passwdError++;
-			}
-			//2-3.특수문자
-			if(fnValidtaionPwdChar(password)) {
-			}else{
-				passwdError++;
-			}
-			//2-4.길이
-			if(!fnValidationPwdLength(password)) {
-			}else{
-				passwdError++;
-			}
-    		
-    		//
-    	} else {
-    		passwdError++;
-    	}
-    	
-    	if(passwdError < 1) {
-			passwdCheck = true;
-		}
-    	
-    }
-    
-    // 비밀번호 영어체크
-    var fnValidtaionPwdEng = function (password) {
-		let result = false;
-		if(password.search(/[a-zA-Z]/ig)  != -1 ){
-			result = true;
-		}
-		return result;
-	};
-	
-	// 비밀번호 특문 체크
-	var fnValidtaionPwdChar  = function (password) {
-		let result = false;
-		if(password.search(/[!@#$%^&*()?_~]/g)  != -1 ) {
-			result = true;
-		}
-		return result;
-	};
-	
-	// 비밀번호 숫자 체크 
-	var fnValidtaionPwdNumber = function (password) {
-		let result = false;
-		if(password.search(/[0-9]/g) != -1 ) {
-			result = true;
-		}
-		return result;
-	};
-	
-	// 비밀번호 길이 채크
-	var fnValidationPwdLength = function (password) {
-		let result;
-		// 길이(8~20)
-		if(!/^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$/.test(password)) {
-			result = true;
-		} else {
-			result = false;
-		}
-
-		return result;
-	};
-	
     
 
     function updateCallback(data, target, btn) {

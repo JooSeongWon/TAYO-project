@@ -12,19 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @Value("${upload.path}")
-    private String path;
-
     @GetMapping("/")
-    public String main(Model model) {
-
-        model.addAttribute("path", path);
+    public String main() {
         return "home";
-    }
-
-    @GetMapping("/admin")
-    public String adminMain() {
-
-        return "admin/sample/admin-template";
     }
 }
