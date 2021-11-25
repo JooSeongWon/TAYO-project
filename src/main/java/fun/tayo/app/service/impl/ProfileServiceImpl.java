@@ -2,6 +2,7 @@ package fun.tayo.app.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,21 +62,29 @@ public class ProfileServiceImpl implements ProfileService {
 		if(!StringUtils.hasText(value)) {
 			return new ResponseData(false, "값을 입력해주세요!");
 		}
-
+		
+		String pattern = "";
+		boolean regex;
+		
 		//유효성검사 내용 채우기
 		switch (target) {
 			case "name":
-
+				pattern = "^[가-힣a-zA-Z0-9]{2,10}$";
+				
 				break;
 			case "phone":
-
+				pattern = "^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$";
+				
 				break;
 			case "password":
-
+				pattern = "^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$";
+				
 				break;
 		}
+		
+		regex = Pattern.matches(pattern, value); 
+		return new ResponseData(regex, "입력값이 바르지 않습니다!");
 
-		return new ResponseData(true, "ok");
 	}
 	
 	@Override
