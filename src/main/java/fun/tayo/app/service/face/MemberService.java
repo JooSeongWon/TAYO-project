@@ -1,5 +1,6 @@
 package fun.tayo.app.service.face;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import fun.tayo.app.dto.Member;
@@ -10,7 +11,8 @@ public interface MemberService {
 
 	ResponseData login(MemberLoginParam memberLoginParam, HttpSession session);
 
-	boolean join(Member member);
+	//이메일 인증 포함 회원가입
+	boolean join(Member member) throws Exception;
 
 	Member getMemberByEmail(String email);
 
@@ -20,6 +22,13 @@ public interface MemberService {
 	
 	Integer getProfile(Integer memberId);
 
-	void create(Member member);
+	//이메일 인증
+
+	// authstatus 1로 변경
+	void updateAuthstatus(String email) throws Exception;
+
+	//비밀번호 찾기
+	void findPw(HttpServletResponse response, Member member);
+
 
 }

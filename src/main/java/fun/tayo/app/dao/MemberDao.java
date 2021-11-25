@@ -11,19 +11,19 @@ public interface MemberDao {
 
 	int selectCntByEmail(Member member);
 
-
+	//이메일 인증 포함
 	void insert(Member member);
 	
 	void kakaoinsert(Member member);
 
-
 	Integer selectProfileById(Integer memberId);
 
+	// 이메일 인증
+	// 디비에 authkey저장
+	void createAuthkey(String email, String authkey);
 
-	void create(Member member);
+	// 이메일 인증 후 authstatus 1로  변경
+	void updateAuthstatus(String email);
 
-
-	void updateAuthkey(Member member); 
-	
 	
 }

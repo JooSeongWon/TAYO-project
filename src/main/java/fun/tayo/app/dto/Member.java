@@ -18,5 +18,6 @@ public class Member {
 	private char ban;
 	private Integer profile;
 	private String savedName; 
-	
+	private String authkey;
+	private int authstatus;
 }

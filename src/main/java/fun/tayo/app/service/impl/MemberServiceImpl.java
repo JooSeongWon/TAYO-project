@@ -1,12 +1,14 @@
 package fun.tayo.app.service.impl;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
 
 import fun.tayo.app.common.SessionConst;
@@ -30,8 +32,7 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired ServletContext context;
 	
 	private final MemberDao memberDao;
-	
-	private JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 	
 	public ResponseData login(MemberLoginParam param, HttpSession session) {
 		
@@ -79,8 +80,9 @@ public class MemberServiceImpl implements MemberService{
 	 * 
 	 * return false; }
 	 */
+	@Transactional
 	@Override
-	public boolean join(Member member) {
+	public boolean join(Member member) throws Exception {
 				
 		//중복 ID 확인
 		if( memberDao.selectCntByEmail(member) > 0 ) {
@@ -93,6 +95,26 @@ public class MemberServiceImpl implements MemberService{
 		
 		//회원가입(삽입)
 		memberDao.insert(member);
+		
+		//이메일 인증
+		// 임의의 authkey 생성
+		String authkey = new TempKey().getKey(10, false);
+
+		// 인증키 DB에 저장
+	    memberDao.createAuthkey(member.getEmail(), authkey);
+	    
+	    // 메일 발송
+	    MailHandler sendMail = new MailHandler(mailSender);
+	    
+	    sendMail.setSubject("[Tayo 회원가입 서비스 이메일 인증 입니다.]");
+	    sendMail.setText(new StringBuffer().append("<h1>Tayo 가입 메일인증 입니다</h1>")
+	        .append("<a href=https://localhost:8443/emailConfirm?email=")
+	        .append(member.getEmail()).append("&key=").append(authkey)
+	        .append("' target='_blenk'>가입 완료를 위해 이메일 이곳을 눌러주세요</a>").toString());
+	    sendMail.setFrom("MetarBusTayo@gmail.com", "Tayo");
+	    sendMail.setTo(member.getEmail());
+	    sendMail.send();
+		member.setAuthkey(authkey);
 		
 		//회원가입 결과 확인
 		if( memberDao.selectCntByEmail(member) > 0 ) {
@@ -132,36 +154,34 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.selectProfileById(memberId);
 		}
 	
+	
+	//이메일 인증 시 authstatus값 1로 변경
 	@Override
-	@Transactional
-	public void create(Member member) {
+	public void updateAuthstatus(String email) throws Exception {
 		
-//		memberDao.create(member);
-//
-//		// 임의의 authkey 생성
-//		String authkey = new TempKey().getKey(50, false);
-//
-////		member.setAuthkey(authkey);
-//		memberDao.updateAuthkey(member);
-//
-//		// mail 작성 관련 
-//		MailHandler sendMail = new MailHandler(mailSender);
-//
-//		sendMail.setSubject("[Hoon's Board v2.0] 회원가입 이메일 인증");
-//		sendMail.setText(new StringBuffer().append("<h1>[이메일 인증]</h1>")
-//				.append("<p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
-////				.append("<a href='http://localhost:8080/user/joinConfirm?uid=")
-////				.append(member.getUid())                                                 수정하기
-//				.append("&email=")
-//				.append(member.getEmail())
-//				.append("&authkey=")
-//				.append(authkey)
-//				.append("' target='_blenk'>이메일 인증 확인</a>")
-//				.toString());
-//		sendMail.setFrom("관리자 ", "관리자명");
-//		sendMail.setTo(member.getEmail());
-//		sendMail.send();
-//		
+		memberDao.updateAuthstatus(email);
 	}
 	
+	//비밀번호 찾기
+	@Override
+	public void findPw(HttpServletResponse response, Member member) {
+		
+		
+		
+	}
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
