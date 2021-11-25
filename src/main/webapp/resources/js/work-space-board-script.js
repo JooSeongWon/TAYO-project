@@ -284,6 +284,27 @@ function displayCreateForm(categoryId) {
                 oEditors.getById["create__post-content"].exec("UPDATE_CONTENTS_FIELD", []);
 
                 //입력값 검증
+                const categoryIdInput = document.querySelector('#create__post-category');
+                if(categoryIdInput.value === CATEGORY_ID_WORK_PLAN) {
+                    const planStart = document.querySelector('#create__plan-date-first');
+                    const planEnd = document.querySelector('#create__plan-date-second');
+
+                    if(planStart.value.length < 1 || planEnd.value.length < 1) {
+                        showModal('실패', '일정을 입력하세요.');
+                        return;
+                    }
+                }
+
+                const title = document.querySelector('#create__post-title');
+                const content = document.querySelector('#create__post-content');
+                if(title.value.length < 2 || title.value.length > 30) {
+                    showModal('실패', '제목은 2-30자리 사이로 입력하세요.');
+                    return;
+                }
+                if(content.value.length < 1) {
+                    showModal('실패', '내용을 입력하세요.');
+                    return;
+                }
 
                 //데이터 전송
                 const formData = new FormData(document.querySelector('#form'));
