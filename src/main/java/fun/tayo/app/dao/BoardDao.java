@@ -42,11 +42,21 @@ public interface BoardDao {
     /**
      * 댓글 작성
      */
-    int insertComments(Comments comments);
+    void insertComments(Comments comments);
 
     /**
      * 게시글 조회 (workSpace와 일치하는지 확인 용)
      */
     int selectCntBoardInWorkSpace(Map<String, Object> params);
+
+    /**
+     * 댓글 조회 (작성자 일치 확인 용)
+     */
+    int selectCntCommentsOfMember(Map<String, Object> params);
+
+    /**
+     * 댓글 삭제
+     */
+    int deleteComments(int commentsId);
 
 }

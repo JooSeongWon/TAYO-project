@@ -21,7 +21,7 @@ public interface BoardService {
     /**
      * 해당 가상공간 카테고리의 해당 회원이 읽지않은 게시글이 있는지 체크
      */
-    boolean checkNoRead(int memberId, int workSpaceId , int categoryId);
+    boolean checkNoRead(int memberId, int workSpaceId, int categoryId);
 
     /**
      * 게시글 상세보기
@@ -32,4 +32,9 @@ public interface BoardService {
      * 댓글 작성
      */
     int putComments(MemberSession member, int workSpaceId, int boardId, String content);
+
+    /**
+     * 댓글 삭제
+     */
+    boolean deleteComments(int memberId, int workSpaceId, int boardId, int commentsId);
 }

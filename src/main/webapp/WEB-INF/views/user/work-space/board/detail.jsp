@@ -53,7 +53,7 @@
                 </div>
             </div>
             <c:if test="${comments.member.id eq loginMember.id}">
-                <i class="fas fa-trash-alt comments-delete-btn"></i>
+                <i class="fas fa-trash-alt comments-delete-btn" onclick="deleteComments(${comments.id}, this)"></i>
             </c:if>
         </div>
     </c:forEach>

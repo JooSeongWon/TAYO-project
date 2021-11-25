@@ -21,16 +21,16 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("work-spaces/board")
+@RequestMapping("work-spaces/{workSpaceId}/board")
 public class WorkSpaceBoardController {
 
     private final BoardService boardService;
 
     @GetMapping
     public String getBoard(
+            @PathVariable int workSpaceId,
             @RequestParam(defaultValue = "1") int pageNo,
             @RequestParam int categoryId,
-            @RequestParam int workSpaceId,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
             Model model
     ) {
@@ -62,9 +62,9 @@ public class WorkSpaceBoardController {
 
     @GetMapping("/{boardId}")
     public String getBoardDetail(
-            @RequestParam(defaultValue = "false") boolean noRead,
-            @RequestParam int workSpaceId,
+            @PathVariable int workSpaceId,
             @PathVariable int boardId,
+            @RequestParam(defaultValue = "false") boolean noRead,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
             Model model
     ) {
@@ -88,8 +88,8 @@ public class WorkSpaceBoardController {
     @ResponseBody
     @GetMapping("/read-status")
     public Map<String, Object> getReadStatus(
+            @PathVariable int workSpaceId,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
-            @RequestParam int workSpaceId,
             @RequestParam(required = false) Integer categoryId
     ) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -109,10 +109,10 @@ public class WorkSpaceBoardController {
     @ResponseBody
     @PostMapping("/{boardId}/comments")
     public ResponseData putComments(
+            @PathVariable int workSpaceId,
+            @PathVariable int boardId,
             @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
-            @RequestParam int workSpaceId,
-            @RequestParam String content,
-            @PathVariable int boardId
+            @RequestParam String content
     ) {
         //접속자가 팀멤버가 맞는지 체크
         if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
@@ -125,6 +125,27 @@ public class WorkSpaceBoardController {
         }
 
         return new ResponseData(true, String.valueOf(result));
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{boardId}/comments/{commentsId}")
+    public ResponseData deleteComments(
+            @PathVariable int workSpaceId,
+            @PathVariable int boardId,
+            @PathVariable int commentsId,
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession
+    ) {
+        //접속자가 팀멤버가 맞는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
+            return new ResponseData(false, "권한이 없습니다.");
+        }
+
+        final boolean result = boardService.deleteComments(memberSession.getId(), workSpaceId, boardId, commentsId);
+        if(!result) {
+            return new ResponseData(false, "요청을 처리할 수 없습니다.");
+        }
+
+        return new ResponseData(true, "ok");
     }
 
     private String getCategoryName(int categoryId) {

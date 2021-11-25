@@ -136,6 +136,13 @@
           and WORK_SPACE_ID = #{workSpaceId}
     </select>
 
+    <select id="selectCntCommentsOfMember" resultType="_int">
+        select count(*)
+        from COMMENTS
+        where ID = #{commentsId}
+          and MEMBER_ID = #{memberId}
+    </select>
+
     <insert id="insertReadCheck">
         insert into CHECKED_BOARD(board_id, member_id)
         VALUES (#{boardId}, #{memberId})
@@ -148,4 +155,10 @@
         insert into COMMENTS(ID, CONTENT, MEMBER_ID, BOARD_ID)
         VALUES (#{id}, #{content}, #{member.id}, #{boardId})
     </insert>
+
+    <delete id="deleteComments" parameterType="_int">
+        delete
+        from COMMENTS
+        where ID = #{commentsId}
+    </delete>
 </mapper>

@@ -86,16 +86,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public int putComments(MemberSession member, int workSpaceId, int boardId, String content) {
-        if(!StringUtils.hasText(content)) {
-            return 0;
-        }
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("workSpaceId", workSpaceId);
-        params.put("boardId", boardId);
-
-        int checkGrant = boardDao.selectCntBoardInWorkSpace(params);
-        if(checkGrant == 0) {
+        if(!StringUtils.hasText(content) || hasNotGrantBoardAccess(boardId, workSpaceId)) {
             return 0;
         }
 
@@ -107,4 +98,34 @@ public class BoardServiceImpl implements BoardService {
         boardDao.insertComments(comments);
         return comments.getId();
     }
+
+    @Override
+    @Transactional
+    public boolean deleteComments(int memberId, int workSpaceId, int boardId, int commentsId) {
+        if(hasNotGrantBoardAccess(boardId, workSpaceId) || hasNotGrantCommentsEdit(commentsId, memberId)) {
+            return false;
+        }
+
+        return boardDao.deleteComments(commentsId) != 0;
+    }
+
+    private boolean hasNotGrantBoardAccess(int boardId, int workSpaceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("workSpaceId", workSpaceId);
+        params.put("boardId", boardId);
+
+        int checkGrant = boardDao.selectCntBoardInWorkSpace(params);
+        return checkGrant == 0;
+    }
+
+    private boolean hasNotGrantCommentsEdit(int commentsId, int memberId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("commentsId", commentsId);
+        params.put("memberId", memberId);
+
+        int checkGrant = boardDao.selectCntCommentsOfMember(params);
+        return checkGrant == 0;
+    }
+
+
 }

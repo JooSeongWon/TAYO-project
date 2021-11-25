@@ -4,6 +4,7 @@ const CATEGORY_ID_WORK_PLAN = '2';
 const CATEGORY_ID_QNA = '3';
 
 let lastPage;
+let currentPostId;
 
 const categoryButtons = {};
 categoryButtons[CATEGORY_ID_ISSUE] = document.querySelector('.issue-btn');
@@ -34,8 +35,8 @@ let showBoard = false;
 function displayBoard(categoryId, pageNo = 1) {
     $.ajax({
         type: 'GET',
-        url: '/work-spaces/board',
-        data: {categoryId, pageNo, workSpaceId: roomId},
+        url: `/work-spaces/${roomId}/board`,
+        data: {categoryId, pageNo},
         dataType: 'html',
         success: (data) => {
             lastPage = () => {
@@ -77,11 +78,12 @@ function displaySubWindow(data) {
 function displayPost(postId, noRead, categoryId) {
     $.ajax({
         type: 'GET',
-        url: `/work-spaces/board/${postId}`,
+        url: `/work-spaces/${roomId}/board/${postId}`,
         dataType: 'html',
-        data: {noRead, workSpaceId: roomId},
+        data: {noRead},
         success: (data) => {
             displaySubWindow(data);
+            currentPostId = postId;
 
             //코멘트 등록 이벤트
             const commentsInputBox = document.querySelector('.comments-input-box');
@@ -106,8 +108,8 @@ function displayPost(postId, noRead, categoryId) {
 function checkNewPost(categoryId) {
     $.ajax({
         type: 'GET',
-        url: '/work-spaces/board/read-status',
-        data: {categoryId, workSpaceId: roomId},
+        url: `/work-spaces/${roomId}/board/read-status`,
+        data: {categoryId},
         dataType: 'json',
         success: (data) => {
             for (let categoryId in data) {
@@ -143,16 +145,14 @@ function putComments(postId, content) {
 
     $.ajax({
         type: 'POST',
-        url: `/work-spaces/board/${postId}/comments`,
-        data: {content, workSpaceId: roomId},
+        url: `/work-spaces/${roomId}/board/${postId}/comments`,
+        data: {content},
         dataType: 'json',
         success: (data) => {
             if (!data.result) {
                 showModal('실패', data.message);
                 return;
             }
-
-            console.log('댓글작성 테스트 번호:{}', data.message)//test
 
             const commentsList = document.querySelector('.comments-list');
             if (commentsList) {
@@ -191,10 +191,42 @@ function putComments(postId, content) {
                 comments.appendChild(commentsDelBtn);
 
                 commentsList.appendChild(comments);
+
+                commentsDelBtn.onclick = () => deleteComments(Number(data.message), commentsDelBtn);
             }
         },
         error: () => {
             showModal('실패', '요청을 처리할 수 없습니다.');
         }
+    });
+}
+
+/* 댓글 삭제 */
+function deleteComments(commentsId, node, checkDel = false) {
+    if(!checkDel) {
+        showModal(
+            '삭제확인',
+            '삭제 후 복구할수 없습니다. <br>정말 삭제하시겠습니까?',
+            ()=> deleteComments(commentsId, node, true),
+            ()=>{}
+        );
+        return;
+    }
+
+    $.ajax({
+        type: 'DELETE',
+        url: `/work-spaces/${roomId}/board/${currentPostId}/comments/${commentsId}`,
+        dataType: 'json',
+        success: (data) => {
+            if(!data.result) {
+                showModal('실패', data.message);
+                return;
+            }
+
+            const commentsNode = node.parentNode;
+            const commentsList = document.querySelector('.comments-list');
+            commentsList.removeChild(commentsNode);
+        },
+        error: () => showModal('실패', '요청을 처리할 수 없습니다.')
     });
 }
