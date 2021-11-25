@@ -1,5 +1,6 @@
 package fun.tayo.app.service.face;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import fun.tayo.app.dto.Member;
@@ -25,6 +26,9 @@ public interface MemberService {
 
 	// authstatus 1로 변경
 	void updateAuthstatus(String email) throws Exception;
+
+	//비밀번호 찾기
+	void findPw(HttpServletResponse response, Member member);
 
 
 }

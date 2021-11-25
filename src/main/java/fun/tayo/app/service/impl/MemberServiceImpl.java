@@ -1,6 +1,7 @@
 package fun.tayo.app.service.impl;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,6 +161,15 @@ public class MemberServiceImpl implements MemberService{
 		
 		memberDao.updateAuthstatus(email);
 	}
+	
+	//비밀번호 찾기
+	@Override
+	public void findPw(HttpServletResponse response, Member member) {
+		
+		
+		
+	}
+	
 	
 }
 
