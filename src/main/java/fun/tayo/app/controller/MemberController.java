@@ -86,9 +86,10 @@ public class MemberController {
 		return "user/member/join";
 
 	}
-
+	
+	@ResponseBody
 	@PostMapping(value = "/join")
-	public String joinProc(@ModelAttribute("member") Member member) throws Exception {
+	public ResponseData joinProc(@ModelAttribute("member") Member member) throws Exception {
 
 		//이메일 인증까지 포함
 		boolean joinResult = memberService.join(member);
@@ -96,16 +97,15 @@ public class MemberController {
 
 		if (joinResult) {
 
-
 			log.info("회원가입 성공");
 
-			return "redirect:/";
+			return new ResponseData(true, "회원가입 성공");
 
 		} else {
 
 			log.info("회원가입 실패");
 
-			return "redirect:/user/member/join";
+			return new ResponseData(false, "회원가입 실패");
 		}
 	}
 

@@ -18,19 +18,19 @@
 
 
 <label>USER NAME </label><br>
-<input type="text" id="name" name="name" class="tayo-input" placeholder="USER NAME" /><br><br>
+<input type="text" id="name" name="name" class="tayo-input" placeholder="USER NAME" onclick="inputClick('name')"/><br><br>
 
 <label>Email </label><br>
-<input type="email" id="email" name="email" class="tayo-input" placeholder="Email" /><br><br>
+<input type="email" id="email" name="email" class="tayo-input" placeholder="Email" onclick="inputClick('email')" /><br><br>
 
 <label>Phone</label><br>
-<input type="text" id="phone" name="phone" class="tayo-input" placeholder="Phone" /><br><br>
+<input type="text" id="phone" name="phone" class="tayo-input" placeholder="Phone" onclick="inputClick('phone')"/><br><br>
 
 <label>Password</label><br>
-<input type="password" id="password" name="password" class="tayo-input" placeholder="Password" /><br><br>
+<input type="password" id="password" name="password" class="tayo-input" placeholder="Password" onclick="inputClick('pasword')" /><br><br>
 
 <label>Confirm</label><br>
-<input type="password" id="confirm" name="password" class="tayo-input" placeholder="Password" /><br><br>
+<input type="password" id="confirm" name="password" class="tayo-input" placeholder="Password"/><br><br>
 
 <button id="joinBtn">회원가입</button>
 

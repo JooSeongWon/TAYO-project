@@ -14,7 +14,7 @@
 	<select id="selectByEmail" resultType="Member">
 		select
 		id, name, phone, email, password, create_date,
-		grade, ban, file_id AS profile
+		grade, ban, file_id AS profile, authkey, authstatus
 		from MEMBER where EMAIL = #{email}
 		ORDER BY id
 	</select>
@@ -33,8 +33,8 @@
 	</insert>
 
 	<insert id="kakaoinsert" parameterType="Member">
-		insert into MEMBER(id, name, email, phone, file_id )
-		values (member_SEQ.nextval, #{name}, #{email}, #{phone}, #{profile})
+		insert into MEMBER(id, name, email, phone, file_id, authstatus )
+		values (member_SEQ.nextval, #{name}, #{email}, #{phone}, #{profile}, 1)
 	</insert>
 
 	<select id="selectProfileById" parameterType="_Integer"

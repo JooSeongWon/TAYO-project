@@ -6,18 +6,51 @@ setModalParentNode(document.querySelector('.page-content'));
 const joinBtn = document.querySelector('#joinBtn');
 joinBtn.addEventListener('click', join);
 
+const body = document.body;
+
+const lodingBack = {
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	position: 'absolute',
+	zIndex: '9998',
+	width: '100%',
+	height: '100%',
+	backgroundColor: 'rgba(0,0,0,0.4)'		
+}
+
+const lodingImg = {
+    zIndex: '9999',
+    margin: 'auto'
+}
+
+const lodingBackDom = document.createElement('div');
+const lodingImgDom = document.createElement('img');
+lodingImgDom.setAttribute('src', '/resources/img/loading.gif');
+
+lodingBackDom.appendChild(lodingImgDom)
+
+$(lodingBackDom).css(lodingBack);
+$(lodingImgDom).css(lodingImg);
+
+
 function join() {
 	const name = document.querySelector('#name').value;
     const email = document.querySelector('#email').value;
     const phone = document.querySelector('#phone').value;
     const password = document.querySelector('#password').value;
-
+    
+    body.appendChild(lodingBackDom);
+    
     $.ajax({
         type: 'POST',
         url: '/join',
         data: {name: name, email: email, phone: phone , password: password},
-        dataType: 'html',
-        success: joinCallBack,
+        dataType: 'json',
+        success: function(data) {
+        	joinCallBack(data);
+        	body.removeChild(lodingBackDom);
+		},
         error: errorCallBack
     });
 }
@@ -26,21 +59,100 @@ function join() {
 // 회원가입에 성공하면 /로 이동
 function joinCallBack(data) {
 	
-//	showModal('환영합니다!', '회원가입 완료!!');
-	
-	location.href = "/";
+	if(data.result){
+		showModal("TAYO", "회원가입 완료!!" , function() {
+			location.href = "/";
+		})
+	}
+	else {
+		showModal('TAYO', '회원가입 양식을 지켜주세요');
+	}
 	
 }
 
-//function goMain() {
-//	location.href = "/";
-//}
 
 // 회원가입에 실패하면 실패 '요청을 처리할 수 없습니다.' 출력
 function errorCallBack(e) {
-    showModal('실패', '양식을 지켜주세요');
+	body.removeChild(lodingBackDom);
+    showModal('TAYO', '서버오류');
+}
+
+// 유효성 검사
+
+const joinField = {name, email, phone, password};
+
+
+function inputClick(target) {
+	
+	let regex;
+	let info;
+	
+    switch (target) {
+    
+        case 'name':
+            regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+            info = document.querySelector('#name');
+            onkeyup(info ,regex)
+            
+        case 'email':
+        	regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+        	info = document.querySelector('#email');
+        	onkeyup(info ,regex);
+        	
+        case 'phone':
+            regex = /^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$/;
+            info = document.querySelector('#phone');
+            onkeyup(info ,regex);
+            
+        case 'password':
+            regex = /^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$/;
+            info = document.querySelector('#password');
+            onkeyup(info ,regex);
+    }
+    
+}
+
+function onkeyup(info, regex) {
+	info.addEventListener('focusout',function(e) {
+		let value = this.value;
+		
+		if(value.match(regex)){
+			console.log("올바른 입력")
+			
+		} else {
+			showModal("TAYO", "올바르지않은 입력값");
+		}
+	})
 }
 
 
+//유효성검사
+function isValidation(target, value, valueConfirm) {
 
+    let regex;
+
+    switch (target) {
+    
+        case 'name':
+            regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+            return value.match(regex);
+            
+        case 'email':
+        	regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+        	return value.match(regex);
+        	
+        case 'phone':
+            regex = /^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$/;
+            return value.match(regex);
+            
+        case 'password':
+            if(!valueConfirm) return false;
+            if(value !== valueConfirm) return false;
+
+            regex = /^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$/;
+            return value.match(regex);
+    }
+
+    return false;
+}
 
