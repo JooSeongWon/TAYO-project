@@ -73,17 +73,58 @@ function joinCallBack(data) {
 
 // 회원가입에 실패하면 실패 '요청을 처리할 수 없습니다.' 출력
 function errorCallBack(e) {
+	body.removeChild(lodingBackDom);
     showModal('TAYO', '서버오류');
 }
 
 // 유효성 검사
 
-const name = document.querySelector('#name');
-const email = document.querySelector('#email');
-const phone = document.querySelector('#phone');
-const password = document.querySelector('#password');
-
 const joinField = {name, email, phone, password};
+
+
+function inputClick(target) {
+	
+	let regex;
+	let info;
+	
+    switch (target) {
+    
+        case 'name':
+            regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+            info = document.querySelector('#name');
+            onkeyup(info ,regex)
+            
+        case 'email':
+        	regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+        	info = document.querySelector('#email');
+        	onkeyup(info ,regex);
+        	
+        case 'phone':
+            regex = /^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$/;
+            info = document.querySelector('#phone');
+            onkeyup(info ,regex);
+            
+        case 'password':
+            regex = /^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$/;
+            info = document.querySelector('#password');
+            onkeyup(info ,regex);
+    }
+    
+}
+
+function onkeyup(info, regex) {
+	info.addEventListener('focusout',function(e) {
+		let value = this.value;
+		
+		if(value.match(regex)){
+			console.log("올바른 입력")
+			
+		} else {
+			showModal("TAYO", "올바르지않은 입력값");
+		}
+	})
+}
+
 
 //유효성검사
 function isValidation(target, value, valueConfirm) {
