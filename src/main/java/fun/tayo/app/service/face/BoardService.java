@@ -4,7 +4,9 @@ import fun.tayo.app.dto.Board;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.PagingBoardAndMember;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface BoardService {
 
@@ -37,4 +39,9 @@ public interface BoardService {
      * 댓글 삭제
      */
     boolean deleteComments(int memberId, int workSpaceId, int boardId, int commentsId);
+
+    /**
+     * 게시글 작성
+     */
+    int createNewPost(Map<String, Object> params) throws IOException;
 }

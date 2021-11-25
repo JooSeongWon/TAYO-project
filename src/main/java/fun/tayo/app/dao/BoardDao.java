@@ -59,4 +59,13 @@ public interface BoardDao {
      */
     int deleteComments(int commentsId);
 
+    /**
+     * 게시글 작성
+     */
+    void insert(Map<String, Object> params);
+
+    /**
+     * 파일 연결
+     */
+    void insertBoardFileLink(Map<String, Object> params);
 }
