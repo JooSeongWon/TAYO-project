@@ -229,6 +229,12 @@ function putComments(postId, content) {
 
                 commentsList.appendChild(comments);
 
+                //댓글이 없었을경우 안내 삭제
+                const noticeNoComments = document.querySelector('.no-comments');
+                if(noticeNoComments) {
+                    commentsList.removeChild(noticeNoComments);
+                }
+
                 commentsDelBtn.onclick = () => deleteComments(Number(data.message), commentsDelBtn);
             }
         },
@@ -264,6 +270,13 @@ function deleteComments(commentsId, node, checkDel = false) {
             const commentsNode = node.parentNode;
             const commentsList = document.querySelector('.comments-list');
             commentsList.removeChild(commentsNode);
+
+            if(!commentsList.querySelector('.comments')) {
+                const noComments = document.createElement('div');
+                noComments.classList.add('no-comments');
+                noComments.innerText = '댓글이 없습니다.';
+                commentsList.appendChild(noComments);
+            }
         },
         error: () => showModal('실패', '요청을 처리할 수 없습니다.')
     });
@@ -337,6 +350,10 @@ function displayCreateForm(categoryId) {
                 }
                 if (content.value.length < 1) {
                     showModal('실패', '내용을 입력하세요.');
+                    return;
+                }
+                if (content.value.length > 1000) {
+                    showModal('실패', '내용이 너무 길어요!');
                     return;
                 }
 
@@ -479,6 +496,10 @@ function displayUpdateForm(postId) {
                 }
                 if (content.value.length < 1) {
                     showModal('실패', '내용을 입력하세요.');
+                    return;
+                }
+                if (content.value.length > 1000) {
+                    showModal('실패', '내용이 너무 길어요!');
                     return;
                 }
 
