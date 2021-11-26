@@ -9,4 +9,9 @@ public interface FileDao {
      */
     UploadFile selectByFileId(int fileId);
 
+    /**
+     * file 저장
+     */
+    void insert(UploadFile uploadFile);
+
 }

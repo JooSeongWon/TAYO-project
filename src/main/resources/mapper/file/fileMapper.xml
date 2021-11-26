@@ -12,4 +12,12 @@
         where ID = #{fileId}
     </select>
 
+    <insert id="insert" parameterType="UploadFile">
+        <selectKey keyProperty="id" resultType="_int" order="BEFORE">
+            SELECT UPLOAD_FILE_SEQ.nextval FROM DUAL
+        </selectKey>
+        insert into UPLOAD_FILE(ID, SAVED_NAME, ORIGIN_NAME, MEMBER_ID)
+        VALUES (#{id}, #{savedName}, #{originName}, #{memberId})
+    </insert>
+
 </mapper>

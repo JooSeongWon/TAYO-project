@@ -34,6 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/modal.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/sockjs.js" defer></script>
+    <script src="${pageContext.request.contextPath}/resources/se2/js/service/HuskyEZCreator.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/work-space-script.js" defer></script>
     <script src="${pageContext.request.contextPath}/resources/js/work-space-board-script.js" defer></script>
 

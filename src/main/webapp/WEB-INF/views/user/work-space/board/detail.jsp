@@ -13,7 +13,7 @@
     <c:if test="${not empty board.uploadFileId}">
         <img src="/img/${board.uploadFileId}" alt="사진" class="board-file">
     </c:if>
-    <p>${board.content}</p>
+    ${board.content}
 </div>
 <div class="control-panel tayo-under-line">
     <c:if test="${loginMember.id eq board.member.id}">

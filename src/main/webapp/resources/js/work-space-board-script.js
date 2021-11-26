@@ -6,6 +6,7 @@ const CATEGORY_ID_QNA = '3';
 let lastPage;
 let currentPostId;
 
+const oEditors = [];
 const categoryButtons = {};
 categoryButtons[CATEGORY_ID_ISSUE] = document.querySelector('.issue-btn');
 categoryButtons[CATEGORY_ID_WORK_PLAN] = document.querySelector('.plan-btn');
@@ -44,7 +45,10 @@ function displayBoard(categoryId, pageNo = 1) {
             };
 
             displaySubWindow(data);
-            //새글 버튼 이벤트 추가할것
+
+            //새글 버튼 이벤트
+            const insertBtn = document.querySelector('.board__insert-button');
+            insertBtn.addEventListener('click', () => displayCreateForm(categoryId));
         },
         error: () => showModal('실패', '요청을 처리할 수 없습니다.')
     });
@@ -203,12 +207,13 @@ function putComments(postId, content) {
 
 /* 댓글 삭제 */
 function deleteComments(commentsId, node, checkDel = false) {
-    if(!checkDel) {
+    if (!checkDel) {
         showModal(
             '삭제확인',
             '삭제 후 복구할수 없습니다. <br>정말 삭제하시겠습니까?',
-            ()=> deleteComments(commentsId, node, true),
-            ()=>{}
+            () => deleteComments(commentsId, node, true),
+            () => {
+            }
         );
         return;
     }
@@ -218,7 +223,7 @@ function deleteComments(commentsId, node, checkDel = false) {
         url: `/work-spaces/${roomId}/board/${currentPostId}/comments/${commentsId}`,
         dataType: 'json',
         success: (data) => {
-            if(!data.result) {
+            if (!data.result) {
                 showModal('실패', data.message);
                 return;
             }
@@ -229,4 +234,112 @@ function deleteComments(commentsId, node, checkDel = false) {
         },
         error: () => showModal('실패', '요청을 처리할 수 없습니다.')
     });
+}
+
+/* 새글 작성 폼 */
+function displayCreateForm(categoryId) {
+
+    $.ajax({
+        type: 'GET',
+        url: `/work-spaces/${roomId}/board/create`,
+        dataType: 'html',
+        success: (data) => {
+            displaySubWindow(data);
+
+            //카테고리 설정
+            const category = document.querySelector('#create__post-category');
+            category.value = categoryId;
+
+            const planDatePanel = document.querySelector('.create__plan-date');
+            if (categoryId.toString() === CATEGORY_ID_WORK_PLAN && !planDatePanel.classList.contains('active')) {
+                planDatePanel.classList.add('active');
+            }
+
+            category.addEventListener('change', () => {
+                if (category.value === CATEGORY_ID_WORK_PLAN && !planDatePanel.classList.contains('active')) {
+                    planDatePanel.classList.add('active');
+                }
+                if (category.value !== CATEGORY_ID_WORK_PLAN && planDatePanel.classList.contains('active')) {
+                    planDatePanel.classList.remove('active');
+                }
+            });
+
+            //스마트 에디터
+            nhn.husky.EZCreator.createInIFrame({
+                oAppRef: oEditors,
+                elPlaceHolder: "create__post-content",
+                sSkinURI: "/resources/se2/SmartEditor2Skin.html",
+                fCreator: "createSEditor2",
+                htParams: {
+                    bUseToolbar: true,
+                    bUseVerticalResizer: false,
+                    bUseModeChanger: true
+                }
+            });
+
+            //작성 버튼 이벤트
+            const acceptBtn = document.querySelector('.create__accept-btn');
+            acceptBtn.addEventListener('click', () => {
+                //스마트에디터 값 textarea에 적용
+                oEditors.getById["create__post-content"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                //입력값 검증
+                const categoryIdInput = document.querySelector('#create__post-category');
+                if(categoryIdInput.value === CATEGORY_ID_WORK_PLAN) {
+                    const planStart = document.querySelector('#create__plan-date-first');
+                    const planEnd = document.querySelector('#create__plan-date-second');
+
+                    if(planStart.value.length < 1 || planEnd.value.length < 1) {
+                        showModal('실패', '일정을 입력하세요.');
+                        return;
+                    }
+                }
+
+                const title = document.querySelector('#create__post-title');
+                const content = document.querySelector('#create__post-content');
+                if(title.value.length < 2 || title.value.length > 30) {
+                    showModal('실패', '제목은 2-30자리 사이로 입력하세요.');
+                    return;
+                }
+                if(content.value.length < 1) {
+                    showModal('실패', '내용을 입력하세요.');
+                    return;
+                }
+
+                //데이터 전송
+                const formData = new FormData(document.querySelector('#form'));
+                $.ajax({
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    url: `/work-spaces/${roomId}/board/create`,
+                    dataType: 'json',
+                    success: (data) => {
+                        if(!data.result) {
+                            showModal('실패', data.message);
+                            return;
+                        }
+
+                        displayPost(data.message);
+                    },
+                    error: () => showModal('실패', '요청을 처리할 수 없습니다.')
+                });
+
+            });
+
+        },
+        error: console.log
+    });
+
+}
+
+/* 파일 용량 체크 */
+function checkSize(input) {
+    if (input.files && input.files[0].size > (1024 * 1024)) {
+        showModal('실패', '최대 1mb까지만 업로드 가능합니다.');
+        input.value = null;
+    }
 }

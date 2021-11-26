@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +136,7 @@ public class WorkSpaceBoardController {
             @PathVariable int workSpaceId,
             @PathVariable int boardId,
             @PathVariable int commentsId,
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession
     ) {
         //접속자가 팀멤버가 맞는지 체크
         if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
@@ -141,11 +144,68 @@ public class WorkSpaceBoardController {
         }
 
         final boolean result = boardService.deleteComments(memberSession.getId(), workSpaceId, boardId, commentsId);
-        if(!result) {
+        if (!result) {
             return new ResponseData(false, "요청을 처리할 수 없습니다.");
         }
 
         return new ResponseData(true, "ok");
+    }
+
+    @GetMapping("/create")
+    public String getCreateForm(
+            @PathVariable int workSpaceId,
+            @SessionAttribute(SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        //접속자가 팀멤버가 맞는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
+            throw new RuntimeException();
+        }
+
+        return "user/work-space/board/input-form";
+    }
+
+    @ResponseBody
+    @PostMapping("/create")
+    public ResponseData createNewPost(
+            @PathVariable int workSpaceId,
+            @SessionAttribute(SessionConst.LOGIN_MEMBER) MemberSession memberSession,
+            @RequestParam String planDateStart,
+            @RequestParam String planDateEnd,
+            @RequestParam int category,
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam MultipartFile file
+    ) throws IOException {
+
+        //접속자가 팀멤버가 맞는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)) {
+            return new ResponseData(false, "권한이 없습니다.");
+        }
+
+        Map<String, Object> requestParams = new HashMap<>();
+        if (category == BoardCategory.WORK_PLAN) {
+            if(!StringUtils.hasText(planDateStart) || !StringUtils.hasText(planDateEnd)){
+                return new ResponseData(false, "일정 날짜를 입력하세요.");
+            }
+
+            requestParams.put("planDate", planDateStart.replace("-", "") +
+                            "-" +
+                            planDateEnd.replace("-", "")
+            );
+        }
+        requestParams.put("categoryId", category);
+        requestParams.put("title", title);
+        requestParams.put("content", content);
+        requestParams.put("file", file);
+        requestParams.put("memberId", memberSession.getId());
+        requestParams.put("workSpaceId", workSpaceId);
+
+        final int newPostId = boardService.createNewPost(requestParams);
+
+        if(newPostId == 0) { //검증오류
+            return new ResponseData(false, "입력값을 확인하세요.");
+        }
+        return new ResponseData(true, String.valueOf(newPostId));
     }
 
     private String getCategoryName(int categoryId) {

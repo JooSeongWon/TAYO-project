@@ -156,6 +156,19 @@
         VALUES (#{id}, #{content}, #{member.id}, #{boardId})
     </insert>
 
+    <insert id="insert" parameterType="map" useGeneratedKeys="false">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            SELECT BOARD_SEQ.nextval FROM DUAL
+        </selectKey>
+        insert into BOARD(ID, MEMBER_ID, WORK_SPACE_ID, CATEGORY_ID, TITLE, CONTENT, PLAN_DATE)
+        VALUES (#{id}, #{memberId}, #{workSpaceId}, #{categoryId}, #{title}, #{content}, #{planDate})
+    </insert>
+
+    <insert id="insertBoardFileLink" parameterType="map">
+        insert into BOARD_FILE(UPLOAD_FILE_ID, BOARD_ID)
+        VALUES (#{fileId}, #{boardId})
+    </insert>
+
     <delete id="deleteComments" parameterType="_int">
         delete
         from COMMENTS
