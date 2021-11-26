@@ -28,7 +28,7 @@
 		</div> <!-- questionBox -->
 		
 <%-- 		<a class="deleteBtn" href="${pageContext.request.contextPath }/admin/question/delete/${question.id}"> --%>
-		<i id="deleteBtn" class="fas fa-eraser fa-2x" data-question-id = "${question.id }"></i>
+		<i id="deleteBtn" class="fas fa-eraser fa-2x deleteBtn" data-question-id = "${question.id }"></i>
 <!-- 		</a> -->
 		<div class="questionBox">
 			<span class="answer">

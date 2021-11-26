@@ -35,6 +35,7 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
     private final String RELAY_OFFER = "offer";
     private final String RELAY_ANSWER = "answer";
     private final String RELAY_ICE = "ice";
+    private final String SYSTEM_NEW_POST = "newPost";
 
     private final Map<Integer, WorkSpaceRoom> roomMap = new ConcurrentHashMap<>();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -209,6 +210,15 @@ public class WorkSpaceHandler extends TextWebSocketHandler {
 
     public int getOnlineMemberNum(int workSpaceId) {
         return roomMap.containsKey(workSpaceId) ? roomMap.get(workSpaceId).getOnlineMemberNum() : 0;
+    }
+
+    //새로운 게시글 알림
+    public void sendNewPostMessage(int workSpaceId, int memberId) {
+        Message message = new Message();
+        message.setType(SYSTEM_NEW_POST);
+        message.setSender(memberId);
+        message.setRoomId(workSpaceId);
+        relayMessageToAllMemberInSameRoom(message);
     }
 
     //방생성
