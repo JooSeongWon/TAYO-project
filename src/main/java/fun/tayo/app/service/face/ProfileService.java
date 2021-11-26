@@ -3,9 +3,12 @@ package fun.tayo.app.service.face;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
+import fun.tayo.app.dto.ResponseObject;
 import fun.tayo.app.dto.UploadFile;
 
 import javax.servlet.http.HttpSession;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ProfileService {
 
@@ -16,5 +19,7 @@ public interface ProfileService {
 	boolean isSocial(int memberId);
 
 	boolean checkPassword(int memberId, String password);
+
+	ResponseData fileUpload(MultipartFile upFile, int memberId);
 
 }

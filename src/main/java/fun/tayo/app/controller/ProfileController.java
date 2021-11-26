@@ -5,15 +5,19 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import fun.tayo.app.common.SessionConst;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
+import fun.tayo.app.service.face.FileService;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -96,5 +100,12 @@ public class ProfileController {
         return profileService.update(memberSession, member, target, value);
     }
     
+    @PostMapping("/profile/fileupload/{memberId}")
+    public ResponseData updateFile(MultipartFile upFile , @PathVariable("memberId") int memberId) {
+    	
+    	ResponseData responseData = profileService.fileUpload(upFile, memberId);
+    	
+    	return responseData;
+    }
 
 }

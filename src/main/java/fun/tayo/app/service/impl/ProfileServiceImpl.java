@@ -2,16 +2,23 @@ package fun.tayo.app.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import fun.tayo.app.dao.FileDao;
+import fun.tayo.app.dao.MemberDao;
 import fun.tayo.app.dao.ProfileDao;
 import fun.tayo.app.dto.Member;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
+import fun.tayo.app.dto.UploadFile;
+import fun.tayo.app.service.face.FileService;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileServiceImpl implements ProfileService {
 	
 	private final ProfileDao profileDao;
+	private final FileDao fileDao;
+	private final MemberDao memberDao;
+	private final FileService fileService;
+    
+	@Value("${upload.path}")
+    private String uploadPath;
 	
 	@Override
 	public Member info(int memberId) {
@@ -103,18 +116,28 @@ public class ProfileServiceImpl implements ProfileService {
 		return result > 0;
 	}
 	
-//	@Override
-//	public boolean checkPw(String memberPassword) {
-//		
-//		if( profileDao.selectByPassword(memberPassword) != null) {
-//			log.debug("비밀번호 확인");
-//			
-//			return true;
-//			
-//		}
-//		
-//		return false;
-//		
-//	}
+	@Override
+	public ResponseData fileUpload(MultipartFile upFile, int memberId) {
+		
+		boolean TypeImg = fileService.isTypeImage(upFile);
+		
+		if(!TypeImg) {
+			return new ResponseData(false, "이미지형식이 아닙니다.");
+		}
+		
+		UploadFile uploadFile = new UploadFile();
+		uploadFile.setMemberId(memberId);
+		uploadFile.setOriginName(upFile.getOriginalFilename());
+		uploadFile.setSavedName(UUID.randomUUID().toString());
+		
+		Integer emptyFile = memberDao.selectProfileById(memberId);
+
+		if(emptyFile != null) {
+			fileDao.delete(emptyFile);
+		}
+		
+		
+		return null;
+	}
 	
 }

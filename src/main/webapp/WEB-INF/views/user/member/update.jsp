@@ -35,7 +35,6 @@
             height: 120px;
             border: 2px solid var(--color-light-grey);
             border-radius: 50%;
-            margin: auto;
         }
 
         div[class$='update'] {
@@ -69,7 +68,41 @@
             color: var(--color-puple);
         }
 
-
+		.input-file {
+			display: none;
+		}
+		
+		.profile-img {
+			position: relative;
+			text-align: center;
+			margin: 0 auto;
+		}
+		
+		.input-file-button {
+			width: 35px;
+			height: 35px;
+			background-color: var(--color-puple);
+			border-radius: 50%;
+			text-align: center;
+			display: flex;
+        	justify-content: center;
+        	align-items: center;
+        	cursor: pointer;
+        	
+        	position: absolute;
+        	top: 85px; 
+        	left: 89px;
+		}
+		
+		.fas .fa-camera {
+			width: 50%;
+			height: 50%;
+			margin: auto;
+		}
+		
+		.fa-camera{
+			color: var(--color-white);
+		}
     </style>
 </head>
 <body>
@@ -81,18 +114,21 @@
     <h1 class="tayo-under-line">My profile</h1>
 
     <div id="profile">
-
-        <c:if test="${empty member.profile}">
-            <img class="avatar" src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="프로필 없음">
-        </c:if>
-        <c:if test="${not empty member.profile}">
-            <img class="avatar" src="/img/${member.profile}" alt="프로필사진">
-        </c:if>
+    	
+		<div class="profile-img">
+        	<c:if test="${empty member.profile}">
+            	<img class="avatar" src="${pageContext.request.contextPath}/resources/img/no-profile.png" alt="프로필 없음">
+        	</c:if>
+        	<c:if test="${not empty member.profile}">
+            	<img class="avatar" src="/img/${member.profile}" alt="프로필사진">
+        	</c:if>
         
-		<label className="input-file-button" for="input-file">
-  		<i class="fas fa-camera"></i>
-		</label>
-		<input type="file" id="input-file" style={{display:"none"}}/>
+			<div class="input-file-button" >
+  				<i class="fas fa-camera"></i>
+			</div>
+		</div>
+		<input type="file" id="input-file" class="input-file" accept="image/*"/>
+		
 		
         <div class="email profile-field">${member.email }</div>
 
@@ -130,7 +166,45 @@
 </section>
 
 <script type="text/javascript">
+	const inputfilebtn = document.querySelector('.input-file-button')
+	const inputfile = document.querySelector('.input-file')
+	
+	inputfilebtn.addEventListener("click", function(e) {
+		inputfile.click()
+	});
+	
+	inputfile.addEventListener("change", function(e) {
+		let fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp|pdf)$/;
+		var elem = inputfile.value;
 
+        if(!elem.match(fileForm) ) {
+	        showModal("TAYO", "이미지 파일이 아닙니다 :(")
+        }else{
+        	let formData = new FormData();
+        	let file = inputfile.files[0];
+        	
+        	formData.append("uploadFile" , file);
+        	
+        	
+        	console.log(file);
+//         	'${loginMember.id}'
+        	$.ajax({ 
+        		type: "POST", 
+        		enctype: 'multipart/form-data',
+        		url: '/profile/fileupload/' + '${loginMember.id}' , 
+        		data: formData,
+        		processData: false,
+        		contentType: false,
+        		success: function(result){
+        			console.log(result)		
+        		}, 
+        		error: function(e){
+        			console.log(e)
+        		} 
+        	});
+        }
+    });
+	
     const name = {
         display: document.querySelector('.name__display'),
         update: document.querySelector('.name__update'),
