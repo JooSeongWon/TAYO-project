@@ -127,7 +127,7 @@ $(document).ready(function(){
 	dataType : "JSON",
 	success : function(data) {
 		console.log(data)
-		location.href = "${contextPath}/question/service/" + data;
+		location.href = "${contextPath}/question/service";
 	},
 	error : function() {
 		console.log("openChat 메소드 실패");
