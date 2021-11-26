@@ -27,9 +27,8 @@
     <textarea id="create__post-content" cols="100" rows="30" style="width: 780px; height: 330px;"
               name="content">${board.content}</textarea>
     <c:if test="${not empty board.uploadFileId}">
-        <div class="update__post-old-file">기존 첨부파일 : ${board.uploadFileName}</div>
+        <div class="update__post-old-file">기존 첨부파일 : ${board.uploadFileName} <span class="old-file__delete">삭제</span> </div>
     </c:if>
-    <input type="file" id="create__post-file" name="file" onchange="checkSize(this)"
-           accept="image/png, image/gif, image/jpeg">
+    <input type="file" id="create__post-file" name="file" accept="image/png, image/gif, image/jpeg">
 </div>
 <div class="tayo-button create__accept-btn">수정</div>
