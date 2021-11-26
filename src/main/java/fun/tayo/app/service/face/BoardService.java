@@ -44,4 +44,14 @@ public interface BoardService {
      * 게시글 작성
      */
     int createNewPost(Map<String, Object> params) throws IOException;
+
+    /**
+     * 멤버 작성글 맞는지 체크
+     */
+    boolean checkBoardNotWrittenFromMember(int boardId, int memberId);
+
+    /**
+     * 글 수정
+     */
+    boolean updatePost(Map<String, Object> params) throws IOException;
 }

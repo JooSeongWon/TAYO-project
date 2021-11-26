@@ -28,7 +28,8 @@
 }
 
 .board__insert-button,
-.board__back-button {
+.board__back-button,
+.post__back-button {
     position: absolute;
     top: 16px;
     left: 16px;
@@ -425,4 +426,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.update__post-old-file {
+    margin-top: 8px;
 }

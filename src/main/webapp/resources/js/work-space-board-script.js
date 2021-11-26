@@ -6,7 +6,6 @@ const CATEGORY_ID_QNA = '3';
 let lastPage;
 let currentPostId;
 
-const oEditors = [];
 const categoryButtons = {};
 categoryButtons[CATEGORY_ID_ISSUE] = document.querySelector('.issue-btn');
 categoryButtons[CATEGORY_ID_WORK_PLAN] = document.querySelector('.plan-btn');
@@ -76,6 +75,10 @@ function displaySubWindow(data) {
     if (backBtn) {
         backBtn.addEventListener('click', lastPage);
     }
+    const postBackBtn = document.querySelector('.post__back-button');
+    if (postBackBtn) {
+        postBackBtn.addEventListener('click', () => displayPost(currentPostId));
+    }
 }
 
 /* 포스트 상세보기 */
@@ -97,7 +100,15 @@ function displayPost(postId, noRead, categoryId) {
                 commentsInputBox.value = '';
             });
 
-            //수정, 삭제 이벤트 추가할것
+            //수정 이벤트
+            const updateBtn = document.querySelector('.control-edit-btn');
+            if(updateBtn) {
+                updateBtn.addEventListener('click', () => {
+                    displayUpdateForm(postId);
+                });
+            }
+            
+            //삭제 이벤트 추가해야함
 
             if (noRead) { //새글 갱신
                 checkNewPost(categoryId);
@@ -264,6 +275,7 @@ function displayCreateForm(categoryId) {
                 }
             });
 
+            const oEditors = [];
             //스마트 에디터
             nhn.husky.EZCreator.createInIFrame({
                 oAppRef: oEditors,
@@ -342,4 +354,69 @@ function checkSize(input) {
         showModal('실패', '최대 1mb까지만 업로드 가능합니다.');
         input.value = null;
     }
+}
+
+/* 수정 폼 */
+function displayUpdateForm(postId) {
+    $.ajax({
+        type: 'GET',
+        url: `/work-spaces/${roomId}/board/${postId}/update`,
+        dataType: 'html',
+        success: (data) => {
+            displaySubWindow(data);
+
+            const oEditors = [];
+            //스마트 에디터
+            nhn.husky.EZCreator.createInIFrame({
+                oAppRef: oEditors,
+                elPlaceHolder: "create__post-content",
+                sSkinURI: "/resources/se2/SmartEditor2Skin.html",
+                fCreator: "createSEditor2",
+                htParams: {
+                    bUseToolbar: true,
+                    bUseVerticalResizer: false,
+                    bUseModeChanger: true
+                }
+            });
+
+            //수정 버튼 이벤트
+            const acceptBtn = document.querySelector('.create__accept-btn');
+            acceptBtn.addEventListener('click', () => {
+                //스마트에디터 값 textarea에 적용
+                oEditors.getById["create__post-content"].exec("UPDATE_CONTENTS_FIELD", []);
+
+                //입력값 검증
+                const categoryIdInput = document.querySelector('#create__post-category');
+                if(categoryIdInput.value === CATEGORY_ID_WORK_PLAN) {
+                    const planStart = document.querySelector('#create__plan-date-first');
+                    const planEnd = document.querySelector('#create__plan-date-second');
+
+                    if(planStart.value.length < 1 || planEnd.value.length < 1) {
+                        showModal('실패', '일정을 입력하세요.');
+                        return;
+                    }
+                }
+
+                const title = document.querySelector('#create__post-title');
+                const content = document.querySelector('#create__post-content');
+                if(title.value.length < 2 || title.value.length > 30) {
+                    showModal('실패', '제목은 2-30자리 사이로 입력하세요.');
+                    return;
+                }
+                if(content.value.length < 1) {
+                    showModal('실패', '내용을 입력하세요.');
+                    return;
+                }
+                
+                //수정값 체크
+
+                //데이터 전송
+                
+
+            });
+
+        },
+        error: console.log
+    });
+
 }

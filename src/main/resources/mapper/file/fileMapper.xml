@@ -20,4 +20,8 @@
         VALUES (#{id}, #{savedName}, #{originName}, #{memberId})
     </insert>
 
+    <delete id="delete" parameterType="_int">
+        delete from UPLOAD_FILE where ID = #{fileId}
+    </delete>
+
 </mapper>

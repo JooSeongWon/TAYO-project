@@ -27,6 +27,7 @@
         <result property="writeDate" column="write_date"/>
         <result property="planDate" column="plan_date"/>
         <result property="uploadFileId" column="upload_file_id"/>
+        <result property="uploadFileName" column="upload_file_name"/>
         <result property="read" column="read"/>
         <result property="commentsCnt" column="comments_cnt"/>
         <result property="workSpaceId" column="work_space_id"/>
@@ -91,18 +92,20 @@
                B.PLAN_DATE,
                B.MEMBER_ID,
                B.WORK_SPACE_ID,
-               MEMBER.NAME    member_name,
-               MEMBER.FILE_ID member_profile,
-               C.ID           comments_id,
-               C.WRITE_DATE   comments_write_date,
-               C.CONTENT      comments_content,
-               C.MEMBER_ID    comments_member_id,
-               C.NAME         comments_member_name,
-               C.FILE_ID      comments_member_profile
+               UPLOAD_FILE.ORIGIN_NAME upload_file_name,
+               MEMBER.NAME             member_name,
+               MEMBER.FILE_ID          member_profile,
+               C.ID                    comments_id,
+               C.WRITE_DATE            comments_write_date,
+               C.CONTENT               comments_content,
+               C.MEMBER_ID             comments_member_id,
+               C.NAME                  comments_member_name,
+               C.FILE_ID               comments_member_profile
         from (select ID, MEMBER_ID, TITLE, CONTENT, WRITE_DATE, PLAN_DATE, WORK_SPACE_ID
               from BOARD
               where ID = #{boardId}) B
                  left outer join BOARD_FILE on B.ID = BOARD_FILE.BOARD_ID
+                 left outer join UPLOAD_FILE on BOARD_FILE.UPLOAD_FILE_ID = UPLOAD_FILE.ID
                  inner join MEMBER on B.MEMBER_ID = MEMBER.ID
                  left outer join (
             select COMMENTS.ID, WRITE_DATE, CONTENT, BOARD_ID, MEMBER_ID, MEMBER.NAME, MEMBER.FILE_ID
@@ -143,6 +146,13 @@
           and MEMBER_ID = #{memberId}
     </select>
 
+    <select id="selectCntBoardOfMember" resultType="_int">
+        select count(*)
+        from BOARD
+        where ID = #{boardId}
+          and MEMBER_ID = #{memberId}
+    </select>
+
     <insert id="insertReadCheck">
         insert into CHECKED_BOARD(board_id, member_id)
         VALUES (#{boardId}, #{memberId})
@@ -168,6 +178,22 @@
         insert into BOARD_FILE(UPLOAD_FILE_ID, BOARD_ID)
         VALUES (#{fileId}, #{boardId})
     </insert>
+
+    <update id="update" parameterType="map">
+        update BOARD set
+        <trim prefixOverrides=",">
+            <if test="title != null">
+                , TITLE = #{title}
+            </if>
+            <if test="content != null">
+                , CONTENT = #{content}
+            </if>
+            <if test="planDate != null">
+                , PLAN_DATE = #{planDate}
+            </if>
+        </trim>
+        where ID = #{boardId}
+    </update>
 
     <delete id="deleteComments" parameterType="_int">
         delete

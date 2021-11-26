@@ -184,13 +184,13 @@ public class WorkSpaceBoardController {
 
         Map<String, Object> requestParams = new HashMap<>();
         if (category == BoardCategory.WORK_PLAN) {
-            if(!StringUtils.hasText(planDateStart) || !StringUtils.hasText(planDateEnd)){
+            if (!StringUtils.hasText(planDateStart) || !StringUtils.hasText(planDateEnd)) {
                 return new ResponseData(false, "일정 날짜를 입력하세요.");
             }
 
             requestParams.put("planDate", planDateStart.replace("-", "") +
-                            "-" +
-                            planDateEnd.replace("-", "")
+                    "-" +
+                    planDateEnd.replace("-", "")
             );
         }
         requestParams.put("categoryId", category);
@@ -202,10 +202,81 @@ public class WorkSpaceBoardController {
 
         final int newPostId = boardService.createNewPost(requestParams);
 
-        if(newPostId == 0) { //검증오류
+        if (newPostId == 0) { //검증오류
             return new ResponseData(false, "입력값을 확인하세요.");
         }
         return new ResponseData(true, String.valueOf(newPostId));
+    }
+
+    @GetMapping("/{boardId}/update")
+    public String getUpdateForm(
+            @PathVariable int workSpaceId,
+            @PathVariable int boardId,
+            @SessionAttribute(SessionConst.LOGIN_MEMBER) MemberSession memberSession,
+            Model model
+    ) {
+        //접속자가 팀멤버가 맞는지, 접속자가 작성한 글이 맞는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)
+                || boardService.checkBoardNotWrittenFromMember(boardId, memberSession.getId())) {
+            throw new RuntimeException();
+        }
+
+        //게시글
+        final Board detail = boardService.getDetail(boardId, false, memberSession.getId(), workSpaceId);
+        if (detail == null) {
+            throw new RuntimeException();
+        }
+
+        model.addAttribute("board", detail);
+        return "user/work-space/board/update-form";
+    }
+
+    @ResponseBody
+    @PatchMapping("/{boardId}")
+    public ResponseData updatePost(
+            @PathVariable int workSpaceId,
+            @PathVariable int boardId,
+            @SessionAttribute(SessionConst.LOGIN_MEMBER) MemberSession memberSession,
+            @RequestParam(required = false) String planDateStart,
+            @RequestParam(required = false) String planDateEnd,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false) MultipartFile file,
+            @RequestParam(required = false) Boolean deleteFile,
+            @RequestParam() int category
+    ) throws IOException {
+
+        //접속자가 팀멤버가 맞는지, 수정권한이 있는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)
+                || boardService.checkBoardNotWrittenFromMember(boardId, memberSession.getId())) {
+            return new ResponseData(false, "권한이 없습니다.");
+        }
+
+        Map<String, Object> requestParams = new HashMap<>();
+        if (category == BoardCategory.WORK_PLAN) {
+            if (StringUtils.hasText(planDateStart) && StringUtils.hasText(planDateEnd)) {
+                requestParams.put("planDate", planDateStart.replace("-", "") +
+                        "-" +
+                        planDateEnd.replace("-", "")
+                );
+            }
+        }
+
+        requestParams.put("categoryId", category);
+        requestParams.put("title", title);
+        requestParams.put("content", content);
+        requestParams.put("file", file);
+        requestParams.put("memberId", memberSession.getId());
+        requestParams.put("workSpaceId", workSpaceId);
+        requestParams.put("boardId", boardId);
+        requestParams.put("deleteFile", deleteFile);
+
+        final boolean result = boardService.updatePost(requestParams);
+
+        if (!result) { //검증오류
+            return new ResponseData(false, "입력값을 확인하세요.");
+        }
+        return new ResponseData(true, "ok");
     }
 
     private String getCategoryName(int categoryId) {

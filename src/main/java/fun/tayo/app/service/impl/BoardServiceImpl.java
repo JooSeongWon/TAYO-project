@@ -5,6 +5,7 @@ import fun.tayo.app.dao.BoardDao;
 import fun.tayo.app.dao.FileDao;
 import fun.tayo.app.dto.*;
 import fun.tayo.app.service.face.BoardService;
+import fun.tayo.app.service.face.FileService;
 import fun.tayo.app.service.face.WorkSpaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class BoardServiceImpl implements BoardService {
     private final WorkSpaceService workSpaceService;
     private final BoardDao boardDao;
     private final FileDao fileDao;
+    private final FileService fileService;
 
     //한페이지에 보여질 게시글 수
     @SuppressWarnings("FieldCanBeLocal")
@@ -32,9 +34,6 @@ public class BoardServiceImpl implements BoardService {
     //보여질 페이지 수
     @SuppressWarnings("FieldCanBeLocal")
     private final int PAGING_PAGE_COUNT = 5;
-
-    //업로드가능 확장자
-    private static final List<String> contentTypes = Arrays.asList("image/png", "image/jpeg", "image/gif");
 
     //파일 저장경로
     @Value("${upload.path}")
@@ -121,7 +120,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public int createNewPost(Map<String, Object> params) throws IOException {
         //입력값 검증
-        if (!validateNewPostParams(params)) {
+        if (isNotValidationNewPostParams(params, false)) {
             return 0;
         }
 
@@ -129,18 +128,12 @@ public class BoardServiceImpl implements BoardService {
         final MultipartFile file = (MultipartFile) params.get("file");
 
         //첨부파일 저장 처리
+        String fullPath = null;
         if (!file.isEmpty()) {
-            String originName = file.getOriginalFilename();
-            String saveName = UUID.randomUUID().toString();
-            String fullPath = filePath + saveName;
-
-            UploadFile uploadFile = new UploadFile();
-            uploadFile.setMemberId(memberId);
-            uploadFile.setOriginName(originName);
-            uploadFile.setSavedName(saveName);
+            final UploadFile uploadFile = getUploadFile(memberId, file);
+            fullPath = filePath + uploadFile.getSavedName();
 
             fileDao.insert(uploadFile);
-            file.transferTo(new File(fullPath));
 
             params.put("fileId", uploadFile.getId());
         }
@@ -152,25 +145,109 @@ public class BoardServiceImpl implements BoardService {
         params.put("boardId", boardId);
         params.remove("id");
 
-        //파일 연결
-        if (params.containsKey("fileId")) {
-            boardDao.insertBoardFileLink(params);
-        }
-
         //게시글 읽음처리
         boardDao.insertReadCheck(params);
+
+        //파일 연결, 물리적 저장
+        if (fullPath != null) {
+            boardDao.insertBoardFileLink(params);
+            file.transferTo(new File(fullPath));
+        }
 
         //게시글 id 반환
         return (int) boardId;
     }
 
-    private boolean validateNewPostParams(Map<String, Object> params) {
-        final String title = (String) params.get("title");
-        final String content = (String) params.get("content");
-        final MultipartFile file = (MultipartFile) params.get("file");
+    @Override
+    public boolean checkBoardNotWrittenFromMember(int boardId, int memberId) {
+        return hasNotGrantBoardEdit(boardId, memberId);
+    }
 
-        boolean result = StringUtils.hasText(title) && StringUtils.hasText(content);
-        return result && (file.isEmpty() || contentTypes.contains(file.getContentType()));
+    @Override
+    @Transactional
+    public boolean updatePost(Map<String, Object> params) throws IOException {
+        //입력값 검증
+        if (isNotValidationNewPostParams(params, true)) {
+            return false;
+        }
+
+        final int boardId = (int) params.get("boardId");
+        final int memberId = (int) params.get("memberId");
+        final int workSpaceId = (int) params.get("workSpaceId");
+
+        final Board board = getDetail(boardId, false, memberId, workSpaceId);
+        if (board == null) return false;
+
+        //파일처리
+        String oldFilePath = null;
+        String newFilePath = null;
+        final MultipartFile file = params.get("file") != null ? (MultipartFile) params.get("file") : null;
+        final Boolean deleteFile = params.get("deleteFile") != null ? (Boolean) params.get("deleteFile") : null;
+
+        if (file != null && !file.isEmpty()) {
+
+            //기존파일 있는경우
+            if (board.getUploadFileId() != null) {
+                final UploadFile oldFile = fileService.findByFileId(board.getUploadFileId());
+                oldFilePath = filePath + oldFile.getSavedName(); //물리 저장경로
+                fileDao.delete(oldFile.getId()); //파일삭제 (연결삭제 CASCADE)
+            }
+
+            UploadFile uploadFile = getUploadFile(memberId, file);
+            newFilePath = filePath + uploadFile.getSavedName();
+
+            fileDao.insert(uploadFile); //파일 저장
+
+            params.put("fileId", uploadFile.getId());
+        } else if (//기존 파일 삭제
+                deleteFile != null //
+                && deleteFile
+                && board.getUploadFileId() != null) {
+
+            final UploadFile oldFile = fileService.findByFileId(board.getUploadFileId());
+            oldFilePath = filePath + oldFile.getSavedName(); //물리 저장경로
+            fileDao.delete(oldFile.getId()); //파일삭제 (연결삭제 CASCADE)
+        }
+        params.remove("file");
+
+        //게시글 수정
+        boardDao.update(params);
+
+        //파일 연결, 물리적 저장
+        if (newFilePath != null) {
+            boardDao.insertBoardFileLink(params);
+            file.transferTo(new File(newFilePath));
+        }
+
+        //기존파일 물리적 삭제
+        if (oldFilePath != null) {
+            final File oldFile = new File(oldFilePath);
+            //noinspection ResultOfMethodCallIgnored
+            oldFile.delete();
+        }
+
+        return true;
+    }
+
+    private UploadFile getUploadFile(int memberId, MultipartFile file) {
+        String originName = file.getOriginalFilename();
+        String saveName = UUID.randomUUID().toString();
+
+        UploadFile uploadFile = new UploadFile();
+        uploadFile.setMemberId(memberId);
+        uploadFile.setOriginName(originName);
+        uploadFile.setSavedName(saveName);
+        return uploadFile;
+    }
+
+    private boolean isNotValidationNewPostParams(Map<String, Object> params, boolean nullable) {
+        final String title = params.get("title") != null ? (String) params.get("title") : null;
+        final String content = params.get("content") != null ? (String) params.get("content") : null;
+        final MultipartFile file = params.get("file") != null ? (MultipartFile) params.get("file") : null;
+
+        boolean result = (nullable && title == null) || StringUtils.hasText(title);
+        result = result && ((nullable && content == null) || StringUtils.hasText(content));
+        return !result || (file != null && !file.isEmpty() && !fileService.isTypeImage(file));
     }
 
     private boolean hasNotGrantBoardAccess(int boardId, int workSpaceId) {
@@ -179,6 +256,15 @@ public class BoardServiceImpl implements BoardService {
         params.put("boardId", boardId);
 
         int checkGrant = boardDao.selectCntBoardInWorkSpace(params);
+        return checkGrant == 0;
+    }
+
+    private boolean hasNotGrantBoardEdit(int boardId, int memberId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("boardId", boardId);
+
+        int checkGrant = boardDao.selectCntBoardOfMember(params);
         return checkGrant == 0;
     }
 

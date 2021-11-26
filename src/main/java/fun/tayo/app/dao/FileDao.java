@@ -14,4 +14,9 @@ public interface FileDao {
      */
     void insert(UploadFile uploadFile);
 
+    /**
+     * file 삭제
+     */
+    void delete(int fileId);
+
 }

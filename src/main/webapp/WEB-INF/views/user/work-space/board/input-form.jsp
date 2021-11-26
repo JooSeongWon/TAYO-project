@@ -18,7 +18,7 @@
             <option value="2">Work Plan</option>
             <option value="3">QnA</option>
         </select>
-        <input type="text" id="create__post-title" maxlength="30" placeholder="제목을 입력하세요." name="title">
+        <input type="text" id="create__post-title" maxlength="30" placeholder="제목을 입력하세요." name="title" spellcheck="false">
     </div>
     <textarea id="create__post-content" cols="100" rows="30" style="width: 780px; height: 330px;" name="content"></textarea>
     <input type="file" id="create__post-file" name="file" onchange="checkSize(this)" accept="image/png, image/gif, image/jpeg">

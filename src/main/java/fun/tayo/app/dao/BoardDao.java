@@ -68,4 +68,14 @@ public interface BoardDao {
      * 파일 연결
      */
     void insertBoardFileLink(Map<String, Object> params);
+
+    /**
+     * 멤버가 작성한 글인지 체크
+     */
+    int selectCntBoardOfMember(Map<String, Object> params);
+
+    /**
+     * 게시글 수정
+     */
+    void update(Map<String, Object> params);
 }
