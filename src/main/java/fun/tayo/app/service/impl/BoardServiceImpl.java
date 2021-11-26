@@ -201,8 +201,8 @@ public class BoardServiceImpl implements BoardService {
             params.put("fileId", uploadFile.getId());
         } else if (//기존 파일 삭제
                 deleteFile != null //
-                && deleteFile
-                && board.getUploadFileId() != null) {
+                        && deleteFile
+                        && board.getUploadFileId() != null) {
 
             final UploadFile oldFile = fileService.findByFileId(board.getUploadFileId());
             oldFilePath = filePath + oldFile.getSavedName(); //물리 저장경로
@@ -210,8 +210,10 @@ public class BoardServiceImpl implements BoardService {
         }
         params.remove("file");
 
-        //게시글 수정
-        boardDao.update(params);
+        //게시글 수정 - 파일만 수정한경우 게시글 수정 안함
+        if (params.get("title") != null || params.get("content") != null || params.get("planDate") != null) {
+            boardDao.update(params);
+        }
 
         //파일 연결, 물리적 저장
         if (newFilePath != null) {
@@ -227,6 +229,29 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return true;
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(int boardId, int memberId, int workSpaceId) {
+        //파일 있는지 체크
+        final Board board = getDetail(boardId, false, memberId, workSpaceId);
+        String oldFilePath = null;
+
+        if (board.getUploadFileId() != null) {
+            final UploadFile oldFile = fileService.findByFileId(board.getUploadFileId());
+            oldFilePath = filePath + oldFile.getSavedName(); //물리 저장경로
+            fileDao.delete(oldFile.getId()); //파일삭제 (연결삭제 CASCADE)
+        }
+
+        boardDao.delete(boardId); //게시글 삭제
+
+        //파일 물리적 삭제
+        if (oldFilePath != null) {
+            final File oldFile = new File(oldFilePath);
+            //noinspection ResultOfMethodCallIgnored
+            oldFile.delete();
+        }
     }
 
     private UploadFile getUploadFile(int memberId, MultipartFile file) {

@@ -200,4 +200,10 @@
         from COMMENTS
         where ID = #{commentsId}
     </delete>
+
+    <delete id="delete" parameterType="_int">
+        delete
+        from BOARD
+        where ID = #{boardId}
+    </delete>
 </mapper>

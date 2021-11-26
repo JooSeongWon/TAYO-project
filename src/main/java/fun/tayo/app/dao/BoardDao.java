@@ -78,4 +78,9 @@ public interface BoardDao {
      * 게시글 수정
      */
     void update(Map<String, Object> params);
+
+    /**
+     * 게시글 삭제
+     */
+    void delete(int boardId);
 }

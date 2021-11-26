@@ -54,4 +54,9 @@ public interface BoardService {
      * 글 수정
      */
     boolean updatePost(Map<String, Object> params) throws IOException;
+
+    /**
+     * 글삭제 (CASCADE 파일링크, 읽음처리, 코멘트)
+     */
+    void deletePost(int boardId, int memberId, int workSpaceId);
 }

@@ -431,3 +431,13 @@
 .update__post-old-file {
     margin-top: 8px;
 }
+
+.update__post-old-file.delete {
+    text-decoration: line-through;
+}
+
+.old-file__delete {
+    color: var(--color-red);
+    text-decoration: underline;
+    cursor: pointer;
+}

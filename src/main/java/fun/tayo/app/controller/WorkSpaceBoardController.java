@@ -232,7 +232,7 @@ public class WorkSpaceBoardController {
     }
 
     @ResponseBody
-    @PatchMapping("/{boardId}")
+    @PostMapping("/{boardId}/update")
     public ResponseData updatePost(
             @PathVariable int workSpaceId,
             @PathVariable int boardId,
@@ -242,8 +242,7 @@ public class WorkSpaceBoardController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String content,
             @RequestParam(required = false) MultipartFile file,
-            @RequestParam(required = false) Boolean deleteFile,
-            @RequestParam() int category
+            @RequestParam(required = false) Boolean deleteFile
     ) throws IOException {
 
         //접속자가 팀멤버가 맞는지, 수정권한이 있는지 체크
@@ -253,7 +252,7 @@ public class WorkSpaceBoardController {
         }
 
         Map<String, Object> requestParams = new HashMap<>();
-        if (category == BoardCategory.WORK_PLAN) {
+        if (planDateStart != null && planDateEnd != null) {
             if (StringUtils.hasText(planDateStart) && StringUtils.hasText(planDateEnd)) {
                 requestParams.put("planDate", planDateStart.replace("-", "") +
                         "-" +
@@ -262,7 +261,6 @@ public class WorkSpaceBoardController {
             }
         }
 
-        requestParams.put("categoryId", category);
         requestParams.put("title", title);
         requestParams.put("content", content);
         requestParams.put("file", file);
@@ -276,6 +274,23 @@ public class WorkSpaceBoardController {
         if (!result) { //검증오류
             return new ResponseData(false, "입력값을 확인하세요.");
         }
+        return new ResponseData(true, "ok");
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{boardId}")
+    public ResponseData deletePost(
+            @PathVariable int workSpaceId,
+            @PathVariable int boardId,
+            @SessionAttribute(SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        //접속자가 팀멤버가 맞는지, 삭제권한이 있는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)
+                || boardService.checkBoardNotWrittenFromMember(boardId, memberSession.getId())) {
+            return new ResponseData(false, "권한이 없습니다.");
+        }
+
+        boardService.deletePost(boardId, memberSession.getId(), workSpaceId);
         return new ResponseData(true, "ok");
     }
 

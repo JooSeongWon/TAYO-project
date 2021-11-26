@@ -102,13 +102,35 @@ function displayPost(postId, noRead, categoryId) {
 
             //수정 이벤트
             const updateBtn = document.querySelector('.control-edit-btn');
-            if(updateBtn) {
+            if (updateBtn) {
                 updateBtn.addEventListener('click', () => {
-                    displayUpdateForm(postId);
+                    displayUpdateForm(postId, categoryId);
                 });
             }
-            
-            //삭제 이벤트 추가해야함
+
+            //삭제 이벤트
+            const deleteBtn = document.querySelector('.control-delete-btn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    showModal('삭제 확인', '삭제시에 복구가 불가능합니다. <br>정말 삭제하시겠습니까?', () => {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: `/work-spaces/${roomId}/board/${postId}`,
+                            dataType: 'json',
+                            success: (data) => {
+                                if (!data.result) {
+                                    showModal('실패', data.message);
+                                    return;
+                                }
+
+                                lastPage();
+                            },
+                            error: () => showModal('실패', '요청을 처리할 수 없습니다.')
+                        });
+                    }, () => {
+                    });
+                });
+            }
 
             if (noRead) { //새글 갱신
                 checkNewPost(categoryId);
@@ -297,11 +319,11 @@ function displayCreateForm(categoryId) {
 
                 //입력값 검증
                 const categoryIdInput = document.querySelector('#create__post-category');
-                if(categoryIdInput.value === CATEGORY_ID_WORK_PLAN) {
+                if (categoryIdInput.value === CATEGORY_ID_WORK_PLAN) {
                     const planStart = document.querySelector('#create__plan-date-first');
                     const planEnd = document.querySelector('#create__plan-date-second');
 
-                    if(planStart.value.length < 1 || planEnd.value.length < 1) {
+                    if (planStart.value.length < 1 || planEnd.value.length < 1) {
                         showModal('실패', '일정을 입력하세요.');
                         return;
                     }
@@ -309,11 +331,11 @@ function displayCreateForm(categoryId) {
 
                 const title = document.querySelector('#create__post-title');
                 const content = document.querySelector('#create__post-content');
-                if(title.value.length < 2 || title.value.length > 30) {
+                if (title.value.length < 2 || title.value.length > 30) {
                     showModal('실패', '제목은 2-30자리 사이로 입력하세요.');
                     return;
                 }
-                if(content.value.length < 1) {
+                if (content.value.length < 1) {
                     showModal('실패', '내용을 입력하세요.');
                     return;
                 }
@@ -330,7 +352,7 @@ function displayCreateForm(categoryId) {
                     url: `/work-spaces/${roomId}/board/create`,
                     dataType: 'json',
                     success: (data) => {
-                        if(!data.result) {
+                        if (!data.result) {
                             showModal('실패', data.message);
                             return;
                         }
@@ -379,6 +401,62 @@ function displayUpdateForm(postId) {
                 }
             });
 
+
+            //수정값 체크
+            const formData = new FormData();
+
+            const contentNode = document.querySelector('#create__post-content');
+            const oldContent = contentNode.value;
+            const titleNode = document.querySelector('#create__post-title');
+            const oldFileName = document.querySelector('.update__post-old-file');
+            const oldFileDelBtn = document.querySelector('.old-file__delete');
+            const fileNode = document.querySelector('#create__post-file');
+            const planFirst = document.querySelector('#create__plan-date-first');
+            const planSecond = document.querySelector('#create__plan-date-second');
+
+            //수정 이벤트
+            if (planFirst) {
+                planFirst.addEventListener('change', () => {
+                    formData.delete(planFirst.getAttribute('name'));
+                    formData.delete(planSecond.getAttribute('name'));
+
+                    formData.append(planFirst.getAttribute('name'), planFirst.value);
+                    formData.append(planSecond.getAttribute('name'), planSecond.value);
+                })
+            }
+            if (planSecond) {
+                planSecond.addEventListener('change', () => {
+                    formData.delete(planFirst.getAttribute('name'));
+                    formData.delete(planSecond.getAttribute('name'));
+
+                    formData.append(planFirst.getAttribute('name'), planFirst.value);
+                    formData.append(planSecond.getAttribute('name'), planSecond.value);
+                })
+            }
+            titleNode.addEventListener('change', () => {
+                formData.delete(titleNode.getAttribute('name'));
+
+                formData.append(titleNode.getAttribute('name'), titleNode.value);
+            });
+            fileNode.addEventListener('change', () => {
+                checkSize(fileNode);
+                if (fileNode.value != null) {
+                    formData.delete(fileNode.getAttribute('name'));
+
+                    formData.append(fileNode.getAttribute('name'), fileNode.files[0], fileNode.files[0].name);
+                }
+            });
+
+            if (oldFileDelBtn) {
+                oldFileDelBtn.addEventListener('click', () => {
+                    formData.delete('deleteFile');
+
+                    formData.append('deleteFile', 'true');
+                    oldFileName.removeChild(oldFileDelBtn);
+                    oldFileName.classList.add('delete');
+                })
+            }
+
             //수정 버튼 이벤트
             const acceptBtn = document.querySelector('.create__accept-btn');
             acceptBtn.addEventListener('click', () => {
@@ -386,12 +464,8 @@ function displayUpdateForm(postId) {
                 oEditors.getById["create__post-content"].exec("UPDATE_CONTENTS_FIELD", []);
 
                 //입력값 검증
-                const categoryIdInput = document.querySelector('#create__post-category');
-                if(categoryIdInput.value === CATEGORY_ID_WORK_PLAN) {
-                    const planStart = document.querySelector('#create__plan-date-first');
-                    const planEnd = document.querySelector('#create__plan-date-second');
-
-                    if(planStart.value.length < 1 || planEnd.value.length < 1) {
+                if (planFirst && planSecond) {
+                    if (planFirst.value.length < 1 || planSecond.value.length < 1) {
                         showModal('실패', '일정을 입력하세요.');
                         return;
                     }
@@ -399,19 +473,42 @@ function displayUpdateForm(postId) {
 
                 const title = document.querySelector('#create__post-title');
                 const content = document.querySelector('#create__post-content');
-                if(title.value.length < 2 || title.value.length > 30) {
+                if (title.value.length < 2 || title.value.length > 30) {
                     showModal('실패', '제목은 2-30자리 사이로 입력하세요.');
                     return;
                 }
-                if(content.value.length < 1) {
+                if (content.value.length < 1) {
                     showModal('실패', '내용을 입력하세요.');
                     return;
                 }
-                
-                //수정값 체크
+
+                //content 수정 감지
+                if (oldContent !== contentNode.value) {
+                    formData.delete(contentNode.getAttribute('name'));
+
+                    formData.append(contentNode.getAttribute('name'), contentNode.value);
+                }
 
                 //데이터 전송
-                
+                $.ajax({
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    url: `/work-spaces/${roomId}/board/${postId}/update`,
+                    dataType: 'json',
+                    success: (data) => {
+                        if (!data.result) {
+                            showModal('실패', data.message);
+                            return;
+                        }
+
+                        displayPost(postId);
+                    },
+                    error: () => showModal('실패', '요청을 처리할 수 없습니다.')
+                });
 
             });
 
