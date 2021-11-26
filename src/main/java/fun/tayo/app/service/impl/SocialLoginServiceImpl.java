@@ -1,11 +1,6 @@
 package fun.tayo.app.service.impl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.sun.jndi.toolkit.url.UrlUtil;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,10 +31,12 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 	private final MemberService memberService;
 	
 	@Override
-	public boolean login(String code, HttpServletRequest request) {
-		
+	public boolean login(String code, HttpServletRequest request) throws UnsupportedEncodingException {
+
+		final String host = request.getHeader(HttpHeaders.HOST);
+
 		//액세스토큰 받기 
-		final String KakaoAccessToken = getKakaoAccessToken(code);
+		final String KakaoAccessToken = getKakaoAccessToken(code, host);
 		
 		//액세스토큰이 null일경우
 		if(KakaoAccessToken == null) {
@@ -125,11 +124,10 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 	}
 
 
-	private String getKakaoAccessToken(String code) {
+	private String getKakaoAccessToken(String code, String host) throws UnsupportedEncodingException {
 		
 		String clientId = "d688ecbcd7678fc036df85dfda0efcf3"; //애플리케이션 클라이언트 아이디값;
-		String redirectURI = "https%3a%2f%2flocalhost%3a8443%2flogin%2fkakao";
-
+		String redirectURI = UrlUtil.encode("https://"+ host +"/login/kakao", "utf-8");
 
 		String apiURL = "https://kauth.kakao.com/oauth/token";
 		String params = "grant_type=authorization_code";
