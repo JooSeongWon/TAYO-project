@@ -231,6 +231,29 @@ public class BoardServiceImpl implements BoardService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public void deletePost(int boardId, int memberId, int workSpaceId) {
+        //파일 있는지 체크
+        final Board board = getDetail(boardId, false, memberId, workSpaceId);
+        String oldFilePath = null;
+
+        if (board.getUploadFileId() != null) {
+            final UploadFile oldFile = fileService.findByFileId(board.getUploadFileId());
+            oldFilePath = filePath + oldFile.getSavedName(); //물리 저장경로
+            fileDao.delete(oldFile.getId()); //파일삭제 (연결삭제 CASCADE)
+        }
+
+        boardDao.delete(boardId); //게시글 삭제
+
+        //파일 물리적 삭제
+        if (oldFilePath != null) {
+            final File oldFile = new File(oldFilePath);
+            //noinspection ResultOfMethodCallIgnored
+            oldFile.delete();
+        }
+    }
+
     private UploadFile getUploadFile(int memberId, MultipartFile file) {
         String originName = file.getOriginalFilename();
         String saveName = UUID.randomUUID().toString();

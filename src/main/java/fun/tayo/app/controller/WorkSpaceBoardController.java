@@ -277,6 +277,23 @@ public class WorkSpaceBoardController {
         return new ResponseData(true, "ok");
     }
 
+    @ResponseBody
+    @DeleteMapping("/{boardId}")
+    public ResponseData deletePost(
+            @PathVariable int workSpaceId,
+            @PathVariable int boardId,
+            @SessionAttribute(SessionConst.LOGIN_MEMBER) MemberSession memberSession
+    ) {
+        //접속자가 팀멤버가 맞는지, 삭제권한이 있는지 체크
+        if (boardService.isNotTeamMemberInWorkSpace(memberSession.getId(), workSpaceId)
+                || boardService.checkBoardNotWrittenFromMember(boardId, memberSession.getId())) {
+            return new ResponseData(false, "권한이 없습니다.");
+        }
+
+        boardService.deletePost(boardId, memberSession.getId(), workSpaceId);
+        return new ResponseData(true, "ok");
+    }
+
     private String getCategoryName(int categoryId) {
         switch (categoryId) {
             case BoardCategory.ISSUE:

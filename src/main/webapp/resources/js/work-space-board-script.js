@@ -108,7 +108,29 @@ function displayPost(postId, noRead, categoryId) {
                 });
             }
 
-            //삭제 이벤트 추가해야함
+            //삭제 이벤트
+            const deleteBtn = document.querySelector('.control-delete-btn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    showModal('삭제 확인', '삭제시에 복구가 불가능합니다. <br>정말 삭제하시겠습니까?', () => {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: `/work-spaces/${roomId}/board/${postId}`,
+                            dataType: 'json',
+                            success: (data) => {
+                                if (!data.result) {
+                                    showModal('실패', data.message);
+                                    return;
+                                }
+
+                                lastPage();
+                            },
+                            error: () => showModal('실패', '요청을 처리할 수 없습니다.')
+                        });
+                    }, () => {
+                    });
+                });
+            }
 
             if (noRead) { //새글 갱신
                 checkNewPost(categoryId);
@@ -425,7 +447,7 @@ function displayUpdateForm(postId) {
                 }
             });
 
-            if(oldFileDelBtn) {
+            if (oldFileDelBtn) {
                 oldFileDelBtn.addEventListener('click', () => {
                     formData.delete('deleteFile');
 
@@ -461,7 +483,7 @@ function displayUpdateForm(postId) {
                 }
 
                 //content 수정 감지
-                if(oldContent !== contentNode.value) {
+                if (oldContent !== contentNode.value) {
                     formData.delete(contentNode.getAttribute('name'));
 
                     formData.append(contentNode.getAttribute('name'), contentNode.value);
