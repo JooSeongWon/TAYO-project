@@ -92,23 +92,10 @@ public class MemberController {
 	public ResponseData joinProc(@ModelAttribute("member") Member member) throws Exception {
 
 		//이메일 인증까지 포함
-		boolean joinResult = memberService.join(member);
+		return memberService.join(member);
 
 
-		if (joinResult) {
-
-			log.info("회원가입 성공");
-
-			return new ResponseData(true, "회원가입 성공");
-
-		} else {
-
-			log.info("회원가입 실패");
-
-			return new ResponseData(false, "회원가입 실패");
-		}
 	}
-
 	@GetMapping("/login/kakao")
 	public String kakaoLogin(@RequestParam(required = false) String code, HttpServletRequest request) {
 		try {

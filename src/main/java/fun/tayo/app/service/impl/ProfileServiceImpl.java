@@ -72,33 +72,40 @@ public class ProfileServiceImpl implements ProfileService {
         memberSession.setName(member.getName());
         return validation;
     }
-
-    private ResponseData isValidation(String target, String value) {
+    
+    @Override
+    public ResponseData isValidation(String target, String value) {
         if (!StringUtils.hasText(value)) {
             return new ResponseData(false, "값을 입력해주세요!");
         }
 
         String pattern = "";
+        String message = "입력값이 바르지 않습니다";
         boolean regex;
 
         //유효성검사 내용 채우기
         switch (target) {
             case "name":
                 pattern = "^[가-힣a-zA-Z0-9]{2,10}$";
-
+                message = "이름은 영문자/한글/숫자를 2~10글자 내로 입력하세요";
                 break;
             case "phone":
                 pattern = "^01[0-9]-?([0-9]{3,4})-?([0-9]{4})$";
-
+                message = "번호가 올바르지 않습니다";
                 break;
             case "password":
                 pattern = "^[a-zA-Z0-9!@#$%^&*()?_~]{8,20}$";
-
+                message = "비밀번호는 영문자/숫자/특수문자를 8~20글자 내로 입력하세요";
                 break;
+            case "email":
+                pattern = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
+                message = "이메일주소가 올바르지 않습니다";
+                break;
+                
         }
 
         regex = Pattern.matches(pattern, value);
-        return new ResponseData(regex, "입력값이 바르지 않습니다!");
+        return new ResponseData(regex, message);
 
     }
 

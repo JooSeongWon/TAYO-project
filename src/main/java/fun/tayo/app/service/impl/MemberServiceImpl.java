@@ -1,10 +1,8 @@
 package fun.tayo.app.service.impl;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +17,7 @@ import fun.tayo.app.dto.MemberLoginParam;
 import fun.tayo.app.dto.MemberSession;
 import fun.tayo.app.dto.ResponseData;
 import fun.tayo.app.service.face.MemberService;
+import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,11 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-	//서블릿 컨텍스트 객체
-	@Autowired ServletContext context;
 
 	private final MemberDao memberDao;
 	private final JavaMailSender mailSender;
+	private final ProfileService profileService;
 
 	public ResponseData login(MemberLoginParam param, HttpSession session) {
 
@@ -90,15 +88,36 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	@Transactional
 	@Override
-	public boolean join(Member member) throws Exception {
-
+	public ResponseData join(Member member) throws Exception {
+		
+		ResponseData result = profileService.isValidation("name", member.getName());
+		if(!result.getResult()) {
+			return result;
+		}
+		
+		result = profileService.isValidation("email", member.getEmail());
+		if(!result.getResult()) {
+			return result;
+		}
+		
+		result = profileService.isValidation("password", member.getPassword());
+		if(!result.getResult()) {
+			return result;
+		}
+		
+		result = profileService.isValidation("phone", member.getPhone());
+		if(!result.getResult()) {
+			return result;
+		}
+		
+		
+		
 		//중복 ID 확인
 		if( memberDao.selectCntByEmail(member) > 0 ) {
 			log.debug("중복된 이메일 입니다!!");
-
-
+			
 			//로그인 실패
-			return false;
+			return new ResponseData(false, "중복된 이메일 입니다");
 		}
 
 		//회원가입(삽입)
@@ -124,7 +143,7 @@ public class MemberServiceImpl implements MemberService{
 		sendMail.send();
 		member.setAuthkey(authkey);
 
-		return true;
+		return new ResponseData(true, "ok");
 	}
 
 	@Override

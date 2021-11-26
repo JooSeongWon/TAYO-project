@@ -12,7 +12,7 @@ public interface MemberService {
 	ResponseData login(MemberLoginParam memberLoginParam, HttpSession session);
 
 	//이메일 인증 포함 회원가입
-	boolean join(Member member) throws Exception;
+	ResponseData join(Member member) throws Exception;
 
 	Member getMemberByEmail(String email);
 
