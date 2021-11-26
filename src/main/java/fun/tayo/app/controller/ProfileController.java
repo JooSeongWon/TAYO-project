@@ -1,5 +1,6 @@
 package fun.tayo.app.controller;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import fun.tayo.app.service.face.FileService;
 import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -99,13 +102,15 @@ public class ProfileController {
         final Member member = profileService.info(memberSession.getId());
         return profileService.update(memberSession, member, target, value);
     }
-    
-    @PostMapping("/profile/fileupload/{memberId}")
-    public ResponseData updateFile(MultipartFile upFile , @PathVariable("memberId") int memberId) {
-    	
-    	ResponseData responseData = profileService.fileUpload(upFile, memberId);
-    	
-    	return responseData;
+
+	@ResponseBody
+    @PostMapping("/profile/fileupload")
+    public ResponseData updateFile(
+			@RequestParam(value = "uploadFile") MultipartFile upFile ,
+			@SessionAttribute(value = SessionConst.LOGIN_MEMBER)MemberSession memberSession
+	) throws IOException {
+
+		return profileService.fileUpload(upFile, memberSession);
     }
 
 }

@@ -17,21 +17,28 @@
         WHERE ID = #{memberId }
 
     </select>
-    
+
     <select id="selectCntHasPassword" resultType="_int" parameterType="_int">
         SELECT count(*)
         FROM MEMBER
-        WHERE ID = #{memberId } and PASSWORD is not null
+        WHERE ID = #{memberId }
+          and PASSWORD is not null
 
     </select>
-    
+
     <select id="selectCntByIdAndPassword" resultType="_int" parameterType="map">
         SELECT count(*)
         FROM MEMBER
-        WHERE ID = #{memberId } and PASSWORD  = #{password}
+        WHERE ID = #{memberId }
+          and PASSWORD = #{password}
 
     </select>
 
+    <update id="updateProfile" parameterType="UploadFile">
+        update MEMBER
+        set FILE_ID = #{id}
+        where ID = #{memberId}
+    </update>
 
     <update id="update" parameterType="Member">
         update MEMBER

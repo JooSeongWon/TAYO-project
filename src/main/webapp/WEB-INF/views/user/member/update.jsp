@@ -191,16 +191,21 @@
         	$.ajax({ 
         		type: "POST", 
         		enctype: 'multipart/form-data',
-        		url: '/profile/fileupload/' + '${loginMember.id}' , 
+        		url: '/profile/fileupload',
         		data: formData,
+                dataType: 'json',
         		processData: false,
         		contentType: false,
-        		success: function(result){
-        			console.log(result)		
-        		}, 
-        		error: function(e){
-        			console.log(e)
-        		} 
+        		success: function(data){
+        			if(!data.result) {
+                        showModal('실패', data.message);
+                        return;
+                    }
+
+                    //성공
+                    location.reload();
+        		},
+        		error: () => showModal('실패', '요청을 처리할 수 없습니다.')
         	});
         }
     });

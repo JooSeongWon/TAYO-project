@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 public interface ProfileService {
 
 	Member info(int memberId);
@@ -20,6 +22,6 @@ public interface ProfileService {
 
 	boolean checkPassword(int memberId, String password);
 
-	ResponseData fileUpload(MultipartFile upFile, int memberId);
+	ResponseData fileUpload(MultipartFile upFile, MemberSession member) throws IOException;
 
 }
