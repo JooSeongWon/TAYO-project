@@ -51,6 +51,15 @@
 		update member set authstatus = 1 where email = #{param2}
 	</update>
 	
+	<select id="memberCheck" resultType="Member">
+		SELECT * FROM MEMBER
+		WHERE EMAIL = #{email}
+	</select>
+	
+	<update id="updatePassword" >
+	UPDATE MEMBER SET PASSWORD = #{password} WHERE EMAIL = #{email}
+	</update>	
+	
 </mapper>
 
 
