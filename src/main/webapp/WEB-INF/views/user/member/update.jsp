@@ -88,7 +88,12 @@
         <c:if test="${not empty member.profile}">
             <img class="avatar" src="/img/${member.profile}" alt="프로필사진">
         </c:if>
-
+        
+		<label className="input-file-button" for="input-file">
+  		<i class="fas fa-camera"></i>
+		</label>
+		<input type="file" id="input-file" style={{display:"none"}}/>
+		
         <div class="email profile-field">${member.email }</div>
 
         <div class="name profile-field">
