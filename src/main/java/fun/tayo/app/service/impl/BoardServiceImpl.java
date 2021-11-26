@@ -7,6 +7,7 @@ import fun.tayo.app.dto.*;
 import fun.tayo.app.service.face.BoardService;
 import fun.tayo.app.service.face.FileService;
 import fun.tayo.app.service.face.WorkSpaceService;
+import fun.tayo.app.websocket.WorkSpaceHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardDao boardDao;
     private final FileDao fileDao;
     private final FileService fileService;
+    private final WorkSpaceHandler workSpaceHandler;
 
     //한페이지에 보여질 게시글 수
     @SuppressWarnings("FieldCanBeLocal")
@@ -153,6 +155,10 @@ public class BoardServiceImpl implements BoardService {
             boardDao.insertBoardFileLink(params);
             file.transferTo(new File(fullPath));
         }
+
+        //방인원 새글 알람
+        final Thread thread = new Thread(() -> workSpaceHandler.sendNewPostMessage((Integer) params.get("workSpaceId"), memberId));
+        thread.start();
 
         //게시글 id 반환
         return (int) boardId;

@@ -50,6 +50,7 @@ const RELAY_SET_LIVE = "setLive";
 const RELAY_OFFER = "offer";
 const RELAY_ANSWER = "answer";
 const RELAY_ICE = "ice";
+const SYSTEM_NEW_POST = "newPost";
 
 //유저맵
 const userMap = {};
@@ -1013,6 +1014,10 @@ function receiveMessage(event) {
         case RELAY_ICE:
             const iceId = message.sender;
             userMap[iceId].receiveIce(message.message);
+            break;
+        //새글 알림
+        case SYSTEM_NEW_POST:
+            checkNewPost();
             break;
     }
 }
