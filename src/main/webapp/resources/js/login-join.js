@@ -89,8 +89,8 @@ function join() {
 function joinCallBack(data) {
 	
 	if(data.result){
-		showModal("TAYO", "회원가입 완료!!" , function() {
-			location.href = "/";
+		showModal("TAYO", "이메일로 인증코드가 발급되었습니다." , function() {
+			location.href = "/login";
 		})
 	}
 	else {
