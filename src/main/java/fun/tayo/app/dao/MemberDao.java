@@ -14,7 +14,6 @@ public interface MemberDao {
 	//이메일 인증 포함
 	void insert(Member member);
 	
-	void kakaoinsert(Member member);
 
 	Integer selectProfileById(Integer memberId);
 
@@ -37,6 +36,9 @@ public interface MemberDao {
 
 	//변경된 비밀번호 DB저장
 	void updatePassword(Member member);
+
+
+	void kakaoinsert(Member member);
 
 	
 }

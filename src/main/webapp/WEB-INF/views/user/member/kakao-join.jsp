@@ -13,7 +13,6 @@
 <body>
 	<c:import url="../template/header.jsp" />
 
-	<%-- 각자의 내용 작성 fixed-center 나 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
 	<section class="all-shadow fixed-center">
 
 		<label>Email </label><br> 

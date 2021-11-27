@@ -39,7 +39,6 @@
 						<div id="loginBtn" class="tayo-button purple loginBtn" >Login</div>
 						<div type="button" id="kakaoLoginBtn" class="tayo-button purple"
 						onclick="location.href ='https://kauth.kakao.com/oauth/authorize?client_id=d688ecbcd7678fc036df85dfda0efcf3&redirect_uri=${redirectUri}'">kakao Login</div>
-<!-- 						<button id="join" class="tayo-input joinBtn" onclick="location.href='/join'">회원가입</button> -->
 						<div id="findpw" class="tayo-button purple findpw" onclick="location.href='/findpw'">비밀번호 찾기</div>
 					</div>
 				</div>

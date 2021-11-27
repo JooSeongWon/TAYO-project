@@ -55,7 +55,6 @@ public class MemberServiceImpl implements MemberService {
             return new ResponseData(false, "이용정지 당한 아이디 입니다.");
         }
 
-        log.debug("membermembermembermembermembermembermembermembermembermembermembermembermember {}", member);
 
         //로그인 완료
         setLogin(member, session);
