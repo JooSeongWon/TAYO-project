@@ -47,11 +47,12 @@ public class QuestionChatController {
 	
 	
 	
-	@GetMapping(value = "/service/{questionId}")
+	@GetMapping(value = "/service")
 	public String joinChatRoom(
-			@PathVariable("questionId") int questionId,
+			@SessionAttribute(value = SessionConst.LOGIN_MEMBER) MemberSession memberSession,
 			Model model			
 			) {
+		int questionId = questionChatService.openChat(memberSession);
 		model.addAttribute("questionId", questionId);
 		return "user/question-chat/question-chat";
 	}

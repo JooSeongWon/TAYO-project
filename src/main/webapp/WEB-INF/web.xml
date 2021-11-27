@@ -90,4 +90,10 @@
     <error-page>
         <location>/error-page/500</location>
     </error-page>
+
+    <!--세션 만료시간-->
+    <session-config>
+        <session-timeout>180</session-timeout>
+    </session-config>
+
 </web-app>

@@ -85,7 +85,7 @@ section {
 	border-radius: 5px;
 	width: 50%;
 	max-width: 230px;
-	
+	word-wrap: break-word;
 }
 
 .day{

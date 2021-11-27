@@ -74,7 +74,6 @@ $(document).ready(function() {
 	}
 	
 	function reset(list) {
-		console.log("넘어오니?")
 		let questionChatId = list.QUESTION_CHAT_ID;
 		let IdDiv = document.getElementById(questionChatId);
 		let listDiv = IdDiv.firstChild;
@@ -236,7 +235,10 @@ $(document).ready(function() {
 	
 	//메세지 보내기
 	inputButton.addEventListener('click', function() {
-				
+		if(inputMessage.value.length > 250){
+			showModal("TAYO", "메세지 길이는 250자 이하입니다.")
+			return;
+		}		
 		let data = {
 			"questionChatId": questionId,
 			"content" : inputMessage.value,
@@ -256,7 +258,7 @@ $(document).ready(function() {
 
 	
 	function CheckLR(data) {
-		const LR = (data.GRADE != "A") ? "left" : "right";
+		const LR = (data.GRADE == "N") ? "left" : "right";
  		appendMessageTag(LR, data);
 	}
 	

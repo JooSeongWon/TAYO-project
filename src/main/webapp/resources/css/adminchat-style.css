@@ -114,6 +114,7 @@ section {
 	border-radius: 5px;
 	max-width: 350px;
     margin: 0.8% 0%;
+    word-wrap: break-word;
 }
 
 .profile{

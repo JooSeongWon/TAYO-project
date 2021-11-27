@@ -45,6 +45,11 @@ $(document).ready(function() {
 	//메세지 보내기
 	inputButton.addEventListener('click', function() {
 		
+		if(inputMessage.value.length > 250){
+			showModal("TAYO", "메세지 길이는 250자 이하입니다.")
+			return;
+		}
+		
 		let data = {
 			"questionChatId": questionId,
 			"content" : inputMessage.value,
@@ -162,7 +167,7 @@ $(document).ready(function() {
 
 <div class="con-box">
 	<span class="con-box__description">customer service center</span>
-	<i class="fas fa-sign-out-alt control-box__icon"></i>
+	<i onclick="location.href='/question'" class="fas fa-sign-out-alt control-box__icon"></i>
 </div>
 <div class="chat-box">
     <div id="divChatData"></div>

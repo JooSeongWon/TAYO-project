@@ -42,7 +42,7 @@
                     JOIN MEMBER M on qc.member_id = m.id ) QMSG
                     )
             WHERE rm = 1
-            ORDER BY send_date DESC
+            ORDER BY send_date ASC
 	</select>
 
 	<select id="selectMessageByQId" parameterType="_int" resultType="hashmap">

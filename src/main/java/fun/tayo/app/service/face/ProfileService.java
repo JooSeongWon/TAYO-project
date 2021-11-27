@@ -24,4 +24,5 @@ public interface ProfileService {
 
 	ResponseData fileUpload(MultipartFile upFile, MemberSession member) throws IOException;
 
+	public ResponseData isValidation(String target, String value);
 }

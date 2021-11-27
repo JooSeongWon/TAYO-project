@@ -94,7 +94,7 @@ function joinCallBack(data) {
 		})
 	}
 	else {
-		showModal('TAYO', '회원가입 양식을 지켜주세요');
+		showModal('TAYO', data.message);
 	}
 	
 }
