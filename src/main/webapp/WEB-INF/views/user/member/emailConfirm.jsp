@@ -20,8 +20,6 @@
 
     alert(userEmail + '님 회원가입을 축하합니다. 이제 로그인이 가능 합니다.');
     
-    showModal("TAYO", "비밀번호가 일치하지 않습니다.");
-    
     window.open('', '_self', ''); 
     
     self.location = '/login';
