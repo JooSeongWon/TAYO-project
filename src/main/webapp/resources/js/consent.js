@@ -1,5 +1,7 @@
 'use strict'
 
+setModalParentNode(document.querySelector('.page-content'));
+
 let consentall = document.querySelector('.consentall');
 let consentcheckbox = document.querySelectorAll('.consentcheckbox');
 let nextBtn = document.querySelector('.nextBtn');

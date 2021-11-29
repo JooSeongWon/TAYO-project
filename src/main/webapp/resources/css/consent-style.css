@@ -1,12 +1,39 @@
 @charset "UTF-8";
 
-.container {
-	padding: 10px;
-    width: 800px;
-    height: 700px;
+section {
+    padding: 0;
+    max-width: 600px;
+    width: 95%;
 }
 
 .consentbox {
+    font-size: 14px;
+    margin: 48px 42px 8px;
+    height: 120px;
 	border: 1px solid #ccc;
-	
+    border-radius: 4px;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.consentcheck {
+    font-size: var(--font-small);
+    margin: 0 42px 8px;
+}
+
+.consentcheckbox {
+    margin-right: 16px;
+}
+
+.under-line {
+    width: 100%;
+    margin-top: 36px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--color-light-grey);
+}
+
+.nextBtn {
+    margin: 52px auto;
+    width: 300px;
+    height: 40px;
 }

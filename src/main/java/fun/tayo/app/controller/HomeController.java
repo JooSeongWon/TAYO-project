@@ -14,4 +14,14 @@ public class HomeController {
     public String main() {
         return "home";
     }
+
+    @GetMapping("/test1")
+    public String consent() {
+        return "user/member/consent";
+    }
+
+    @GetMapping("/test2")
+    public String emailConfirm() {
+        return "user/member/emailConfirm";
+    }
 }
