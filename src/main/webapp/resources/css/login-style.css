@@ -1,0 +1,16 @@
+section {
+    display: flex;
+    flex-direction: column;
+}
+
+section > input:first-child {
+    margin-top: 70px;
+}
+
+section > input {
+    margin: 4px 0;
+}
+
+section > input.tayo-input::placeholder {
+    color: var(--color-grey);
+}
