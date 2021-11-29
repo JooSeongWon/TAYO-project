@@ -110,6 +110,19 @@ footer {
     padding: 24px 16px;
 }
 
+i.footer__icon{
+	width: 30px;
+	height: 30px;
+	font-size: 30px;
+}
+
+.footer__ibox{
+	cursor: pointer;
+}
+
+.footer__ibox > p {
+	font-size: 10px;
+}
 
 /* Responsive */
 @media screen and (max-width: 768px) {
