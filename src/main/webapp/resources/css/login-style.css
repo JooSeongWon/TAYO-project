@@ -2,7 +2,8 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 500px;
+    max-width: 500px;
+    width: 90%;
     padding: 0;
 }
 
@@ -59,9 +60,6 @@ section > input.tayo-input::placeholder {
 }
 
 @media screen and (max-width: 550px){
-    section {
-        width: 95%;
-    }
 
     .loginBtn, #kakaoLoginBtn, section > input.tayo-input {
         width: 90%;

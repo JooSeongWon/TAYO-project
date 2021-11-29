@@ -41,20 +41,19 @@ font-weight: bold;
 	-ms-overflow-style: none;
 }
 
-.wrap::-webkit-scrollbar {
-	display: none;
-	width: 0 !important;
-}
-
 .no {
 	float: right;
 }
 
 .tayo-under-line {
-    border-bottom: 2px solid var(-color-light-grey);
     padding-bottom: 6px;
     margin: 0 auto;
     width: 350px;
+}
+
+.noticeBox {
+	border-radius: 4px;
+	margin-top: 8px;
 }
 </style>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>

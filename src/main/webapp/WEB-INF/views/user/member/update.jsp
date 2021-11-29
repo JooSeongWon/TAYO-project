@@ -103,6 +103,10 @@
 		.fa-camera{
 			color: var(--color-white);
 		}
+
+        #profile {
+            margin-bottom: 36px;
+        }
     </style>
 </head>
 <body>
