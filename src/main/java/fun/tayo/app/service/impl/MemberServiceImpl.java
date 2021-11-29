@@ -55,7 +55,6 @@ public class MemberServiceImpl implements MemberService {
             return new ResponseData(false, "이용정지 당한 아이디 입니다.");
         }
 
-        log.debug("membermembermembermembermembermembermembermembermembermembermembermembermember {}", member);
 
         //로그인 완료
         setLogin(member, session);
@@ -225,20 +224,19 @@ public class MemberServiceImpl implements MemberService {
 //		memberDao.updateTemporaryPw(member.getEmail(), member.getPassword());
 
         // 메일 발송
-        MailHandler sendMail = new MailHandler(mailSender);
+		MailHandler sendMail = new MailHandler(mailSender);
 
-        sendMail.setSubject("[Tayo 임시 비밀번호 발급메일입니다..]");
-        sendMail.setText(new StringBuffer()
-                .append("<h1>Tayo 임시비밀번호 입니다</h1>")
-                .append(member.getEmail())
-                .append("&key=")
-                .append(member.getPassword())
-                .append("' target='_blenk'>로그인 후 마이페이지에서 비밀번호를 변경해주세요!</a>").toString());
-        sendMail.setFrom("MetarBusTayo@gmail.com", "Tayo");
-        sendMail.setTo(member.getEmail());
-        sendMail.send();
-        member.setAuthkey(member.getPassword());
+		sendMail.setSubject("[Tayo 임시 비밀번호 발급메일입니다..]");
+		sendMail.setText(new StringBuffer().append("<h1>Tayo 임시비밀번호 입니다</h1>")
+				.append("임시비밀번호=").append(member.getPassword())
+				.append("입니다. "
+						+ "로그인 후 마이페이지에서 비밀번호를 변경해주세요!").toString());
+		sendMail.setFrom("MetarBusTayo@gmail.com", "Tayo");
+		sendMail.setTo(member.getEmail());
+		sendMail.send();
+		member.setAuthkey(member.getPassword());
 
-    }
+	}
+
 
 }

@@ -91,7 +91,7 @@ public class MemberController {
         //이메일 인증까지 포함
         return memberService.join(member, host);
     }
-
+    
     @GetMapping("/login/kakao")
     public String kakaoLogin(@RequestParam(required = false) String code, HttpServletRequest request) {
         try {
@@ -118,7 +118,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-
+    @ResponseBody
     @PostMapping("/kakao-join")
     public String kakaoJoin(Member member) {
         log.debug("member {} ", member);
@@ -159,11 +159,10 @@ public class MemberController {
 
         return "user/member/findpw";
     }
-
+    
+    @ResponseBody
     @RequestMapping(value = "/findpw", method = RequestMethod.POST)
     public void findPw(@ModelAttribute Member member, HttpServletResponse response) throws Exception {
-
-        log.debug("findpwPOST member value test {}", member);
 
         memberService.findPw(response, member);
 

@@ -32,7 +32,7 @@
 <label>Confirm</label><br>
 <input type="password" id="confirm" name="password" class="tayo-input" placeholder="Password"/><br><br>
 
-<button id="joinBtn">회원가입</button>
+<div id="joinBtn" class="tayo-button purple">회원가입</div>
 
 
 
