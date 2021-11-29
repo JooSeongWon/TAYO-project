@@ -64,7 +64,7 @@
 		<div class="board-title">Welcome Tayo!</div>
 		<div class="board-list">
 			<div class="board-items">
-				<img src="${pageContext.request.contextPath}/resources/img/logo2.png" alt="logo" class="board-img">
+				<img src="${pageContext.request.contextPath}/resources/img/work-space2.png" alt="logo" class="board-img">
 			</div>
 			<div class="board-content">
 				<p>같은 공간에 있는 팀원들과 편하게 대화해요!</p>
@@ -74,12 +74,12 @@
 		</div>
 		<div class="board-list">
 			<div class="board-content">
-				<p>같은 공간에 있는 팀원들과 편하게 대화해요!</p>
-				같은 가상공간에서 상대의 모습을 보고 쉽고 빠르게 대화할 수 있습니다.
-				비대면 회의, 프로젝트에서의 커뮤니케이션 어려움을 해소합니다.
+				<p>화면 공유를 통해 진행상황을 보고해요!</p>
+				같은 가상공간에서 상대의 화면을 보고 쉽고 빠르게 진행할 수 있습니다.
+				비대면 회의, 프로젝트에서의 진행상황을 공유할 수 있습니다.
 			</div>
 			<div class="board-items">
-				<img src="${pageContext.request.contextPath}/resources/img/logo2.png" alt="logo" class="board-img">
+				<img src="${pageContext.request.contextPath}/resources/img/work-space.png" alt="logo" class="board-img">
 			</div>
 		</div>
 	</div>
