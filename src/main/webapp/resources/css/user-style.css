@@ -116,7 +116,7 @@ i.footer__icon{
 	font-size: 30px;
 }
 
-.footer__ibox{
+.footer__ibox > i{
 	cursor: pointer;
 }
 

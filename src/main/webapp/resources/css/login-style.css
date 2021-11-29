@@ -1,16 +1,69 @@
 section {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 500px;
+    padding: 0;
 }
 
-section > input:first-child {
-    margin-top: 70px;
+section > input.tayo-input:first-child {
+    margin-top: 120px;
 }
 
-section > input {
-    margin: 4px 0;
+section > input.tayo-input {
+    margin: 8px 0;
+    width: 70%;
+    border-bottom-color: var(--color-light-grey);
 }
 
 section > input.tayo-input::placeholder {
-    color: var(--color-grey);
+    color: var(--color-dark-grey);
+}
+
+.loginBtn {
+    margin-top: 50px;
+    width: 250px;
+    height: 31px;
+    font-weight: bold;
+}
+
+#kakaoLoginBtn {
+    margin-top: 8px;
+    width: 250px;
+    height: 31px;
+    font-weight: bold;
+    color: #FEE500;
+}
+
+.forget-password {
+    margin-top: 30px;
+    color: var(--color-puple);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.under-line {
+    width: 100%;
+    margin-top: 30px;
+    border-bottom: 2px solid var(--color-light-grey);
+}
+
+.join {
+    font-weight: bold;
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+.join > span {
+    color: var(--color-puple);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 550px){
+    section {
+        width: 95%;
+    }
+
+    .loginBtn, #kakaoLoginBtn, section > input.tayo-input {
+        width: 90%;
+    }
 }

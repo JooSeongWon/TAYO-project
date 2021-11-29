@@ -25,18 +25,18 @@
            class="tayo-input" placeholder="PASSWORD">
 
 
-    <div id="loginBtn" class="tayo-button purple loginBtn">Login</div>
+    <div id="loginBtn" class="tayo-button purple loginBtn">LOGIN</div>
 
-    <div type="button" id="kakaoLoginBtn" class="tayo-button purple"
+    <div type="button" id="kakaoLoginBtn" class="tayo-button"
          onclick="location.href ='https://kauth.kakao.com/oauth/authorize?client_id=d688ecbcd7678fc036df85dfda0efcf3&redirect_uri=${redirectUri}'">
-        kakao Login
+        KAKAO LOGIN
     </div>
 
     <div class="forget-password" onclick="location.href='/findpw'" >Forget password?</div>
 
     <div class="under-line"></div>
 
-    <div class="join">Don't have an account? <span>Join now</span></div>
+    <div class="join">Don't have an account? <span onclick="location.href='/join'">Join now</span></div>
 
 </section>
 
