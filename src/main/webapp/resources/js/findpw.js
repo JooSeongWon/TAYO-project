@@ -8,6 +8,16 @@ const findBtn = document.querySelector('#findBtn');
 
 $(function(){
 	$("#findBtn").click(function(){
+
+		if($("#email").val() == ""){
+			showModal("TAYO", "이메일을 입력해주세요");
+			return;
+		}
+		else if($("#phone").val() == ""){
+			showModal("TAYO", "핸드폰번호를 입력해주세요");
+			return;
+		}
+		
 		$.ajax({
 			url : "/findpw",
 			type : "POST",
