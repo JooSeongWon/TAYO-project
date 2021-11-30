@@ -110,7 +110,9 @@ footer {
     padding: 32px 16px;
 }
 
-footer > * {
+.footer__description,
+.footer__title
+{
     margin: 8px;
 }
 
