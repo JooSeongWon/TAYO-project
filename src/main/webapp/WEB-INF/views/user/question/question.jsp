@@ -38,26 +38,29 @@ section {
 	transform: rotate(0.5turn);
 }
 
+.question{
+	font-size: var(--font-small);
+	padding: 8px;
+}
+
 .answer {
 	display: block;
-    transition: all 20ms linear; 
+    transition: all 1200ms linear; 
 	background-color: var(--color-light-grey);
-	
-/* 		transition-property: height, opacity; */
-/* 	transition-duration: 200ms, 200ms; */
-/* 	transition-timing-function: ease; */
+	font-size: var(--font-small);
+	overflow: hidden;
+	box-sizing: border-box;		
 }
 
 .answer.disabled {
-	height: 0;
-	font-size: 0;
-	line-height: 0;
+	max-height: 0;
 }
 
 .tayo-under-line {
-    border-bottom: 2px solid var(-color-light-grey);
+    border-bottom: 2px solid var(--color-light-grey);
     padding-bottom: 6px;
     margin: 0 auto;
+    margin-bottom: 40px;
     width: 350px;
 }
 
@@ -74,6 +77,10 @@ section {
 
 #a{
     color: var(--color-red);
+}
+
+hr{
+margin: 8px;
 }
 
 </style>
