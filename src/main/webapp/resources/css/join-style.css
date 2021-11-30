@@ -1,0 +1,37 @@
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    width: 90%;
+    padding: 0;
+}
+
+section > input.tayo-input:first-child {
+    margin-top: 100px;
+}
+
+section > input.tayo-input {
+    margin: 8px 0;
+    width: 70%;
+    border-bottom-color: var(--color-light-grey);
+}
+
+section > input.tayo-input::placeholder {
+    color: var(--color-dark-grey);
+}
+
+#joinBtn {
+    margin-top: 50px;
+    width: 270px;
+    height: 31px;
+    font-weight: bold;
+    margin-bottom: 70px;
+}
+
+@media screen and (max-width: 550px){
+
+    #joinBtn, section > input.tayo-input {
+        width: 90%;
+    }
+}

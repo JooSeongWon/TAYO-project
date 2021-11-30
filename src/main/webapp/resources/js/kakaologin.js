@@ -1,5 +1,6 @@
 'use strict'
-//입력받은 email, password 데이터를 json데이터 타입으로 /login POST에 전달
+
+//content중앙에 모달창 띄우기
 setModalParentNode(document.querySelector('.page-content'));
 
 const kakaologinBtn = document.querySelector('#kakaologinBtn');
