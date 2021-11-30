@@ -107,7 +107,11 @@ section {
 /* 푸터 */
 footer {
     text-align: center;
-    padding: 24px 16px;
+    padding: 32px 16px;
+}
+
+footer > * {
+    margin: 8px;
 }
 
 /* Responsive */
