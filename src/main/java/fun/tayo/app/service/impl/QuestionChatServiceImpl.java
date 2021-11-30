@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fun.tayo.app.dao.QuestionChatDao;
 import fun.tayo.app.dto.MemberSession;
@@ -23,6 +24,7 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	private final QuestionChatDao questionChatDao;
 	
 	@Override
+	@Transactional
 	public int openChat(MemberSession memberSession) {
 		
 		//채팅방 개설 확인
@@ -59,6 +61,7 @@ public class QuestionChatServiceImpl implements QuestionChatService{
 	}
 	
 	@Override
+	@Transactional
 	public int insertMessage(QuestionMessage questionMessage) {
 		return questionChatDao.insertChatMessage(questionMessage);
 	}
