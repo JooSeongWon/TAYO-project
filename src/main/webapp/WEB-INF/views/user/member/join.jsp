@@ -8,6 +8,7 @@
     <title>타요 - 회원가입</title>
 
     <script src="${pageContext.request.contextPath}/resources/js/login-join.js" defer></script>
+    <link rel="stylesheet" href="/resources/css/join-style.css">
 </head>
 <body>
 <c:import url="../template/header.jsp"/>
@@ -15,27 +16,17 @@
 <%-- 각자의 내용 작성 fixed-center 나 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
 <section class="all-shadow fixed-center">
 
+<input type="text" id="name" name="name" class="tayo-input" placeholder="USER NAME" />
 
+<input type="email" id="email" name="email" class="tayo-input" placeholder="Email" />
 
-<label>USER NAME </label><br>
-<input type="text" id="name" name="name" class="tayo-input" placeholder="USER NAME" /><br><br>
+<input type="text" id="phone" name="phone" class="tayo-input" placeholder="Phone" />
 
-<label>Email </label><br>
-<input type="email" id="email" name="email" class="tayo-input" placeholder="Email" /><br><br>
+<input type="password" id="password" name="password" class="tayo-input" placeholder="Password"/>
 
-<label>Phone</label><br>
-<input type="text" id="phone" name="phone" class="tayo-input" placeholder="Phone" /><br><br>
+<input type="password" id="confirm" name="password" class="tayo-input" placeholder="Confirm"/>
 
-<label>Password</label><br>
-<input type="password" id="password" name="password" class="tayo-input" placeholder="Password"/><br><br>
-
-<label>Confirm</label><br>
-<input type="password" id="confirm" name="password" class="tayo-input" placeholder="Password"/><br><br>
-
-<div id="joinBtn" class="tayo-button purple">회원가입</div>
-
-
-
+<div id="joinBtn" class="tayo-button purple">Sign up</div>
 
 </section>
 
