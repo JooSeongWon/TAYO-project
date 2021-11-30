@@ -30,8 +30,7 @@ section {
 .fa-arrow-down {
 	float: right;
 	cursor: pointer;
- 	transition: all 50ms ease; 
-	
+    transition: all 200ms ease; 	
 }
 
 .fa-arrow-down.active {
@@ -44,20 +43,21 @@ section {
 }
 
 .answer {
-	display: block;
-    transition: all 1200ms linear; 
-	background-color: var(--color-light-grey);
+	display: flex;
+    transition: all 600ms ease; 
+	background-color: #dedcda;
 	font-size: var(--font-small);
 	overflow: hidden;
-	box-sizing: border-box;
+	height: 120px;
+	justify-content: center;
+	align-items: center;
 }
 
 .answer.disabled {
-	max-height: 0;
+	height: 0;
 }
 
 .tayo-under-line {
-    border-bottom: 2px solid var(--color-light-grey);
     padding-bottom: 6px;
     margin: 0 auto;
     margin-bottom: 40px;
@@ -83,6 +83,10 @@ hr{
 margin: 8px;
 }
 
+p{
+margin: 32px;
+}
+
 </style>
     
 </head>
@@ -97,13 +101,12 @@ margin: 8px;
 		<div class="child">
 			<i id="q" class="fab fa-quora"></i>
 				<span class="question">${question.questionContent}</span>
-
+				
 			<i class="fas fa-arrow-down"></i> <br> <hr>
 				<span class="answer disabled">
 
-<!-- 					<i class="fas fa-arrow-right"></i> -->
-			<i id="a" class="fas fa-font"></i>
-					${question.answerContent }
+<!-- 			<i id="a" class="fas fa-font"></i> -->
+					<p>${question.answerContent }</p>
 				</span>
 				
 		</div> <!-- child -->
