@@ -64,7 +64,6 @@ section {
 </head>
 <body>
 <c:import url="../template/header.jsp"/>
-
 <%-- 각자의 내용 작성 all-shadow는 필요없을시 지우고 사용해도 무방 --%>
 <section class="all-shadow">
 	
@@ -83,7 +82,6 @@ section {
 	<div class="tayo-button passwordBtn">Continue</div>		
 
 </section>
-
 
 <script type="text/javascript">
 
@@ -129,7 +127,7 @@ passwordInput.addEventListener('keydown', function(e) {
 });
 
 </script>
-
 <c:import url="../template/footer.jsp"/>
+
 </body>
 </html>
