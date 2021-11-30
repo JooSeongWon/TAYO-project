@@ -189,11 +189,29 @@ public class MemberServiceImpl implements MemberService {
 
     //비밀번호 찾기
     @Override
-    public void findPw(HttpServletResponse response, Member member) throws Exception {
+    public ResponseData findPw(HttpServletResponse response, Member member) throws Exception {
 
+    	ResponseData result = profileService.isValidation("email", member.getEmail());
+    	if (!result.getResult()) {
+    		return result;
+    	}
+    	
+        result = profileService.isValidation("phone", member.getPhone());
+        if (!result.getResult()) {
+            return result;
+        }
+    	
         // 가입된 이메일이로 멤버테이블 조회
         Member memberdata = memberDao.memberCheck(member.getEmail());
-
+        
+        if (memberdata == null) {
+        	return new ResponseData(false, "가입정보가 없습니다.");
+        }
+        
+        if (memberdata.getPassword() == null) {
+        	return new ResponseData(false, "카카오계정입니다<br> 카카오로그인을 진행해주세요");
+        }
+        
         // 핸드폰 번호 조회
         if (member.getPhone().equals(memberdata.getPhone())) {
 
@@ -208,9 +226,13 @@ public class MemberServiceImpl implements MemberService {
             // 비밀번호 변경 메일 발송
             sendEmail(member, "findpw");
 
-
+            return new ResponseData(true, "임시비밀번호 발급 완료test");
+            
+        } else {
+        	
+        	return new ResponseData(false, "가입정보가 없습니다.");
         }
-
+        
     }
 
     @Override

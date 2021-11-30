@@ -162,9 +162,9 @@ public class MemberController {
     
     @ResponseBody
     @RequestMapping(value = "/findpw", method = RequestMethod.POST)
-    public void findPw(@ModelAttribute Member member, HttpServletResponse response) throws Exception {
+    public ResponseData findPw(@ModelAttribute Member member, HttpServletResponse response) throws Exception {
 
-        memberService.findPw(response, member);
+        return memberService.findPw(response, member);
 
     }
 

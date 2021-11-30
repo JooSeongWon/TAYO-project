@@ -31,7 +31,7 @@ public interface MemberService {
 	public void sendEmail(Member member, String div) throws Exception;
 	
 	//비밀번호 찾기
-	void findPw(HttpServletResponse response, Member member) throws Exception;
+	ResponseData findPw(HttpServletResponse response, Member member) throws Exception;
 
 
 }

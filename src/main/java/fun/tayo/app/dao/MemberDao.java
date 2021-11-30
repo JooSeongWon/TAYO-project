@@ -24,13 +24,6 @@ public interface MemberDao {
 	// 이메일 인증 후 authstatus 1로  변경
 	void updateAuthstatus(String email);
 
-	//임시비밀번호 발급
-//	void updateTemporaryPw(String email, String temporaryPw);
-
-	
-	//이메일 체크
-//	String emailCheck(String email);
-
 	//입력한 이메일로 멤버테이블 조회
 	Member memberCheck(String email);
 
