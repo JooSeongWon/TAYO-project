@@ -7,7 +7,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/kakaologin.js" defer></script>
 <link rel="stylesheet" href="/resources/css/kakaojoin-style.css">
 <%--타이틀, 각 페이지따라 적절히 수정 (ex, 타요 - 멤버 프로필)--%>
-<title>타요 - 정보입력</title>
+<title>타요 - 추가정보입력</title>
 
 
 </head>

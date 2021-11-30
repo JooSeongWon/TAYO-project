@@ -49,7 +49,7 @@
 		<div class="input-box">
 		<c:if test="${empty loginMember}">
 			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/login';"><a  href="${pageContext.request.contextPath}/login">login</a></div>
-			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/join';"><a href="${pageContext.request.contextPath}/join">sign up</a></div>
+			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/consent';"><a href="${pageContext.request.contextPath}/consent">sign up</a></div>
 		</c:if>
 		<c:if test="${not empty loginMember}">	
 			<div class="input-items" onclick="location.href='${pageContext.request.contextPath}/work-spaces';"><a href="${pageContext.request.contextPath}/work-spaces">start now</a></div>

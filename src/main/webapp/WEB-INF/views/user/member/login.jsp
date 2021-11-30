@@ -36,7 +36,7 @@
 
     <div class="under-line"></div>
 
-    <div class="join">Don't have an account? <span onclick="location.href='/join'">Join now</span></div>
+    <div class="join">Don't have an account? <span onclick="location.href='/consent'">Join now</span></div>
 
 </section>
 
