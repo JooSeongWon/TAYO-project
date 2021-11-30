@@ -49,7 +49,7 @@ section {
 	background-color: var(--color-light-grey);
 	font-size: var(--font-small);
 	overflow: hidden;
-	box-sizing: border-box;		
+	box-sizing: border-box;
 }
 
 .answer.disabled {
