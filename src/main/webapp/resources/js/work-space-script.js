@@ -90,7 +90,7 @@ async function onMyCamStream() {
     offMyVideoStream();
 
     //스트림 새로 생성 및 새 오퍼
-    myVideoStream = await navigator.mediaDevices.getUserMedia({video: true});
+    myVideoStream = await navigator.mediaDevices.getUserMedia({video: {width: 200, height: 150}});
     for (let user in userMap) {
         if (userMap[user] && userMap[user].inMediaRange) {
             userMap[user].newPeerConnection();
@@ -897,7 +897,7 @@ async function init() {
         console.log(e);
     }
     try {
-        myVideoStream = await navigator.mediaDevices.getUserMedia({video: true});
+        myVideoStream = await navigator.mediaDevices.getUserMedia({video: {width: 200, height: 150}});
     } catch (e) {
         console.log(e);
     }
