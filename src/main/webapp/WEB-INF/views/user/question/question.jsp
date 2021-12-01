@@ -45,12 +45,14 @@ section {
 .answer {
 	display: flex;
     transition: all 600ms ease; 
-	background-color: #dedcda;
+	background-color: var(--color-puple);
 	font-size: var(--font-small);
 	overflow: hidden;
 	height: 120px;
 	justify-content: center;
 	align-items: center;
+	color: var(--color-white);
+	font-weight: bold;
 }
 
 .answer.disabled {
