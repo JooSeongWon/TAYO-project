@@ -14,7 +14,7 @@
 <body>
 	<c:import url="../template/header.jsp" />
 
-	<section class="all-shadow fixed-center">
+	<section class="all-shadow">
 
 			<input type="email" name="email" id="email" value="${sessionScope.kakaoEmail}" class="tayo-input" readonly="readonly" />
 			
