@@ -21,13 +21,11 @@ import fun.tayo.app.service.face.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @SuppressWarnings("StringBufferReplaceableByString")
 public class MemberServiceImpl implements MemberService {
-
 
     private final MemberDao memberDao;
     private final JavaMailSender mailSender;
@@ -91,6 +89,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseData join(Member member, String host) throws Exception {
 
+        System.out.println("mailSender = " + mailSender.getClass());
+
         ResponseData result = profileService.isValidation("name", member.getName());
         if (!result.getResult()) {
             return result;
@@ -129,6 +129,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 인증키 DB에 저장
         memberDao.createAuthkey(member.getEmail(), authkey);
+        member.setAuthkey(authkey);
 
         // 메일 발송
         MailHandler sendMail = new MailHandler(mailSender);
@@ -141,10 +142,9 @@ public class MemberServiceImpl implements MemberService {
                 .append("/emailConfirm?email=")
                 .append(member.getEmail()).append("&key=").append(authkey)
                 .append("' target='_blenk'>가입 완료를 위해 이메일 이곳을 눌러주세요</a>").toString());
-        sendMail.setFrom("MetarBusTayo@gmail.com", "Tayo");
+        sendMail.setFrom("contact@tayo.fun", "타요");
         sendMail.setTo(member.getEmail());
         sendMail.send();
-        member.setAuthkey(authkey);
 
         return new ResponseData(true, "ok");
     }
@@ -191,27 +191,27 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseData findPw(HttpServletResponse response, Member member) throws Exception {
 
-    	ResponseData result = profileService.isValidation("email", member.getEmail());
-    	if (!result.getResult()) {
-    		return result;
-    	}
-    	
+        ResponseData result = profileService.isValidation("email", member.getEmail());
+        if (!result.getResult()) {
+            return result;
+        }
+
         result = profileService.isValidation("phone", member.getPhone());
         if (!result.getResult()) {
             return result;
         }
-    	
+
         // 가입된 이메일이로 멤버테이블 조회
         Member memberdata = memberDao.memberCheck(member.getEmail());
-        
+
         if (memberdata == null) {
-        	return new ResponseData(false, "가입정보가 없습니다.");
+            return new ResponseData(false, "가입정보가 없습니다.");
         }
-        
+
         if (memberdata.getPassword() == null) {
-        	return new ResponseData(false, "카카오계정입니다<br> 카카오로그인을 진행해주세요");
+            return new ResponseData(false, "카카오계정입니다<br> 카카오로그인을 진행해주세요");
         }
-        
+
         // 핸드폰 번호 조회
         if (member.getPhone().equals(memberdata.getPhone())) {
 
@@ -227,38 +227,30 @@ public class MemberServiceImpl implements MemberService {
             sendEmail(member, "findpw");
 
             return new ResponseData(true, "임시비밀번호 발급 완료test");
-            
+
         } else {
-        	
-        	return new ResponseData(false, "가입정보가 없습니다.");
+
+            return new ResponseData(false, "가입정보가 없습니다.");
         }
-        
+
     }
 
     @Override
     public void sendEmail(Member member, String div) throws Exception {
 
-        //이메일 인증
-        // 임의의 비밀번호 생성
-        //		String temporaryPw = new TempKey().getKey(10, false);
-
-        // 인증키 DB에 저장
-//		memberDao.updateTemporaryPw(member.getEmail(), member.getPassword());
-
         // 메일 발송
-		MailHandler sendMail = new MailHandler(mailSender);
+        MailHandler sendMail = new MailHandler(mailSender);
+        sendMail.setSubject("[Tayo 임시 비밀번호 발급메일입니다..]");
 
-		sendMail.setSubject("[Tayo 임시 비밀번호 발급메일입니다..]");
-		sendMail.setText(new StringBuffer().append("<h1>Tayo 임시비밀번호 입니다</h1>")
-				.append("임시비밀번호=").append(member.getPassword())
-				.append("입니다. "
-						+ "로그인 후 마이페이지에서 비밀번호를 변경해주세요!").toString());
-		sendMail.setFrom("MetarBusTayo@gmail.com", "Tayo");
-		sendMail.setTo(member.getEmail());
-		sendMail.send();
-		member.setAuthkey(member.getPassword());
-
-	}
+        sendMail.setText(new StringBuffer().append("<h1>Tayo 임시비밀번호 입니다</h1>")
+                .append("임시비밀번호 [").append(member.getPassword())
+                .append("] 입니다. "
+                        + "로그인 후 마이페이지에서 비밀번호를 변경해주세요!").toString());
+        sendMail.setFrom("contact@tayo.fun", "타요");
+        sendMail.setTo(member.getEmail());
+        sendMail.send();
+        member.setAuthkey(member.getPassword());
+    }
 
 
 }
